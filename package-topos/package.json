@@ -1,0 +1,58 @@
+{
+  "name": "@alexdrel/topos",
+  "version": "0.5.5",
+  "description": "CLI renderer for Topos, bringing rich visualization and coding-agent support to plain-text ASCII diagrams.",
+  "keywords": [
+    "topos",
+    "diagram",
+    "architecture",
+    "ascii",
+    "asciidoc",
+    "ascii-art",
+    "system-design",
+    "documentation",
+    "architecture diagram",
+    "software architecture",
+    "system architecture",
+    "diagram as code",
+    "ascii diagram",
+    "network diagram",
+    "infrastructure diagram",
+    "technical documentation",
+    "coding agents",
+    "ai coding",
+    "svg",
+    "cli",
+    "command-line"
+  ],
+  "author": "Alex Drel",
+  "private": false,
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexdrel/topos.git",
+    "directory": "package-topos"
+  },
+  "homepage": "https://github.com/alexdrel/topos#readme",
+  "bugs": {
+    "url": "https://github.com/alexdrel/topos/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "imports": {
+    "#topos-core": "./dist/topos-core.js"
+  },
+  "bin": {
+    "topos": "dist/topos.js"
+  },
+  "files": [
+    "dist/",
+    "LICENSE",
+    "README.md"
+  ]
+}

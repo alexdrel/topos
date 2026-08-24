@@ -1,0 +1,148 @@
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.menu-content {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  padding: 8px;
+  z-index: 1000;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-content.hidden {
+  display: none;
+}
+
+.menu-content .control-checkbox-label {
+  font-size: 0.68rem;
+  padding: 6px 8px;
+  margin: 0;
+  border-radius: 4px;
+}
+
+.menu-content .control-checkbox-label:hover {
+  background: var(--field-bg);
+}
+
+.menu-separator {
+  height: 1px;
+  background: var(--line);
+  margin: 4px 0;
+}
+
+.menu-item-btn {
+  background: transparent;
+  border: none;
+  color: var(--title-ink);
+  padding: 6px 8px;
+  font-size: 0.68rem;
+  font-family: inherit;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.1s ease;
+
+  display: grid;
+  grid-template-columns: 1fr 40px 52px;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-item-btn .menu-item-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-item-btn .menu-key {
+  grid-column: 2;
+  justify-self: end;
+}
+
+.menu-item-btn .menu-item-hint {
+  grid-column: 3;
+  justify-self: end;
+  width: 48px;
+  text-align: right;
+}
+
+.menu-item-btn:hover {
+  background: var(--field-bg);
+}
+
+.menu-item-btn.active {
+  color: var(--active-text);
+  background: var(--active-bg);
+  font-weight: bold;
+}
+
+.menu-item-btn .btn-glyph {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  width: 14px;
+  display: inline-block;
+  text-align: center;
+}
+
+.menu-key {
+  background: var(--field-bg);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-family: inherit;
+  font-size: 0.6rem;
+  color: var(--subtle-text);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  user-select: none;
+}
+
+.menu-item-hint {
+  opacity: 0.45;
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+}
+
+#export-menu-content .menu-item-btn {
+  grid-template-columns: 1fr auto;
+}
+
+#edit-menu-content {
+  min-width: 240px;
+}
+
+#edit-menu-content .menu-item-btn {
+  grid-template-columns: 1fr auto;
+}
+
+#theme-menu-content {
+  min-width: 160px;
+}
+
+#font-menu-content {
+  min-width: 140px;
+}
+
+#theme-menu-content .menu-item-btn,
+#font-menu-content .menu-item-btn {
+  grid-template-columns: 1fr;
+}
+
+.theme-color-preview {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: inline-block;
+  flex-shrink: 0;
+}

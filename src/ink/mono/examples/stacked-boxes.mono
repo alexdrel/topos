@@ -1,0 +1,406 @@
+{
+    "root": {
+        "i": "02-AAaukhfz7btkf",
+        "v": 611079002,
+        "ss": [
+            {
+                "type": "T",
+                "i": "02-AAa7yla16330m",
+                "v": -345647031,
+                "b": "3|0|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AApjve4z05gjs",
+                "v": -391277995,
+                "b": "5|1|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAeglws545c4",
+                "v": -569182906,
+                "b": "7|2|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAtq3jkxu5r39",
+                "v": 471768706,
+                "b": "3|8|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AA7y4dgxvfbya",
+                "v": -335038492,
+                "b": "4|9|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AA7z5n14vws0q",
+                "v": -630874801,
+                "b": "5|10|18|4",
+                "t": "2",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AA2jyc4joeboi",
+                "v": -165518325,
+                "b": "6|15|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAdzk62pp0ng",
+                "v": 184614568,
+                "b": "4|16|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AA6u02pqq8xes",
+                "v": 44743670,
+                "b": "2|17|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAoe8w0w1d4us",
+                "v": 535654545,
+                "b": "6|24|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAr831sdp3q6",
+                "v": 130417811,
+                "b": "4|23|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAfjc9vy6h259",
+                "v": -829224268,
+                "b": "2|22|18|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AA1wbpz9knq5s",
+                "v": -146445147,
+                "b": "3|31|16|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AA6zjt2szevfh",
+                "v": -331742422,
+                "b": "4|30|16|4",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAhy9s0xquqmm",
+                "v": -732887510,
+                "b": "5|29|16|4",
+                "t": "5",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                },
+                "te": false
+            },
+            {
+                "type": "L",
+                "i": "02-AAd57r1wtdurt",
+                "v": -254961132,
+                "ps": "V|15|5",
+                "pe": "V|15|7",
+                "jps": [
+                    "15|5",
+                    "15|7"
+                ],
+                "e": {
+                    "su": "S1",
+                    "ase": true,
+                    "asu": "A6",
+                    "aee": true,
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": true
+            },
+            {
+                "type": "T",
+                "i": "02-AAh6900pgkqq8",
+                "v": -785819529,
+                "b": "15|3|1|1",
+                "t": "1",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AApwx0uf6qwpk",
+                "v": -95974887,
+                "b": "10|18|1|1",
+                "t": "3",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAyw6bztmd18b",
+                "v": 817426614,
+                "b": "10|23|1|1",
+                "t": "4",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                }
+            }
+        ]
+    },
+    "extra": {
+        "name": "stacked-boxes"
+    },
+    "version": 2,
+    "modified_timestamp_millis": 1776632915567,
+    "connectors": [
+        {
+            "i": "02-AAd57r1wtdurt",
+            "a": 1,
+            "t": "02-AAeglws545c4",
+            "r": "0.5714285714285714|1",
+            "o": "0|0"
+        },
+        {
+            "i": "02-AAd57r1wtdurt",
+            "a": 2,
+            "t": "02-AA7z5n14vws0q",
+            "r": "0.631578947368421|-0.2",
+            "o": "0|0"
+        }
+    ]
+}

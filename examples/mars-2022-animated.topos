@@ -1,0 +1,53 @@
+:map
+                              # Year: 2022
+
+ ## Space
+      ┌─────────────┐                                 ╭─────Mars Orbit────╮
+      │   # JWST   S├┈◎ L2                            │ [    Odyssey   ] S│
+      └─────▵─┬─────┘      ╭───────────X-band────────▶│                   │
+            ┊ │            │                          │ [      MRO     ] S│
+            ┊ │            │                          ╰─────────────▲─────╯
+            ┊ │            │                                        │
+ ## Earth   ┊ │            │                    ## Mars             │
+            ┊ │            │                                    UHF relay
+            ┊ │            │                     <Ingenuity>«───╮   │
+            ┊ │            │                                    │   │
+            ┊ │            │                          ╭─Rovers──┼───▼─────╮
+   ┏━━━━━━━━┻━▼━━━━━━━━━━━━▼━━━━━┓                    │         ⩔         │
+   ┃     Deep Space Network      ┃                    │ [ Perseverance ] A│
+   ┠─────────┬─────────┬─────────┨◃┈┈┈X-band direct┈┈▹│                   │
+   ┃Goldstone│  Madrid │Canberra ┃                    │ [   Curiosity  ] A│
+   ┗━━━━━━━━━┷━━━━┳━━━━┷━━━━━━━━━┛                    │                   │
+                  ║                                   │ [  Opportunity ] X│
+   ╔══════════════╩══════════════╗                    │                   │
+   ║     JPL Mission Control     ║                    │ [    Spirit    ] X│
+   ╚═════════════════════════════╝                    ╰───────────────────╯
+
+:legend
+JPL%: "Jet Propulsion Laboratory ↵ Mission Control" trapez
+Odyssey: "Mars Odyssey"
+MRO: "Mars Reconnaissance Orbiter"
+Spirit, Opportunity: dotted fill=soft
+A: "🔋"
+X: "🪫"
+[Mars Orbit]: fill=none pill
+S: "🛰️"
+[Mars Orbit] > *, [Rovers] > * : rounded
+JWST: "James Webb Space ⏎ Telescope" bevel
+{Space} > (*): soft
+L2: "**Sun–Earth** Lagrange Point 2"
+// Animations perimeter
+Deep% : #DSN ping particle-scale=1 particle-phase=0
+Ingenuity: dashed animate animation-speed=3
+[Mars Orbit]: ping animate particle-count=2
+// Animations edges
+"X-band direct":  animate-reverse animation-speed=0.2
+"UHF relay": animate spark
+X-band: loose animate dashed spark particle-balance=75 particle-count=7
+Ingenuity<->Perseverance: animate dotted animation-speed=slow
+#DSN -> JWST: "S-band" left animate tail=dot animation-speed=slow
+JWST -> #DSN: "Ka-band" block left=1 animate packet particle-count=4 particle-scale=1.6
+// Effects
+Rovers : stroke=chalk
+Rovers > [*] : chalk
+Perseverance, Curiosity: animate animation-speed=slow

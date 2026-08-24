@@ -1,0 +1,27 @@
+:map
+                                            # Mars Rovers
+
+## Earth                                          ## Mars
+                                        
+   ┌─────────────────┐                             ┌──────────────┐          ┌─ROVERS───────────────┐
+   │ Mission Control │-----Daily Route Program---->│ Mars Orbiter │--------->│                      │
+   └─────────────────┘                             └───────┬──────┘          │      Opportunity     │
+            ▲                                              │                 │                      │
+            │                                              │                 │       Curiosity      │
+            │                                              │                 │                      │
+   ┌─OBSERVATORIES───────┐                                 │                 └──────────────────────┘
+   │                     │                                 │
+   │      ┌──────┐       │                                 │
+   │      │  US  │       │◀────────────────────────────────┘
+   │      └──────┘       │              
+   │                     │              
+   │   ┌───────────┐     │              
+   │   │ Australia │     │              
+   │   └───────────┘     │              
+   └─────────────────────┘              
+
+:legend
+{*} : stroke=none
+[/]: green
+Earth: blue
+Mars: red

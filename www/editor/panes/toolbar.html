@@ -1,0 +1,83 @@
+<div class="topbar-actions">
+  <button id="btn-copy-all" class="icon-btn" type="button" title="Copy Map and Legend to Clipboard">
+    <span class="btn-glyph">📋</span>
+    <span>Copy Topos</span>
+  </button>
+  <button id="btn-paste-all" class="icon-btn" type="button" title="Replace with Topos from Clipboard">
+    <span class="btn-glyph">📥</span>
+    <span>Paste Topos</span>
+  </button>
+</div>
+<div class="case-controls">
+  <select id="case-select" class="case-select">
+    <option value="__blank__">Blank</option>
+  </select>
+  <button id="btn-reload-cases" class="icon-btn">Clear</button>
+</div>
+<div class="topbar-actions">
+  <button id="btn-source-focus" class="icon-btn toggle-btn" type="button" aria-pressed="false" title="Edit raw Topos source">
+    <span class="btn-glyph">⌨</span>
+    <span>Source</span>
+  </button>
+  <button id="btn-svg-focus" class="icon-btn toggle-btn" type="button" aria-pressed="false" title="Show SVG on the main panel">
+    <span class="btn-glyph">◧</span>
+    <span>SVG View</span>
+  </button>
+</div>
+<div class="topbar-meta">
+  <button id="btn-export-mono" class="icon-btn" type="button" title="Export to Monosketch">
+    <span class="btn-glyph">↗</span>
+    <span>Monosketch</span>
+  </button>
+  <div class="dropdown">
+    <button id="btn-font-menu" class="icon-btn dropdown-trigger-btn" type="button" title="Editor Font">
+      <span>Font: JuliaMono</span> <span class="btn-glyph" style="font-size: 0.6rem; margin-left: 2px;">▼</span>
+    </button>
+    <div id="font-menu-content" class="menu-content hidden">
+      <button class="menu-item-btn font-option-btn active" data-value="JuliaMono"
+        style="font-family: 'JuliaMono', monospace; font-size: 0.68rem;">JuliaMono</button>
+      <button class="menu-item-btn font-option-btn" data-value="monospace" style="font-family: monospace; font-size: 0.68rem;">System Mono</button>
+      <button class="menu-item-btn font-option-btn" data-value="Roboto Mono"
+        style="font-family: 'Roboto Mono', monospace; font-size: 0.68rem;">Roboto Mono</button>
+      <button class="menu-item-btn font-option-btn" data-value="Fira Mono" style="font-family: 'Fira Mono', monospace; font-size: 0.68rem;">Fira Mono</button>
+    </div>
+  </div>
+
+  <div class="dropdown">
+    <button id="btn-theme-menu" class="icon-btn dropdown-trigger-btn" type="button" title="Editor Theme">
+      <span>Theme: Erebus</span> <span class="btn-glyph" style="font-size: 0.6rem; margin-left: 2px;">▼</span>
+    </button>
+    <div id="theme-menu-content" class="menu-content hidden">
+      <button class="menu-item-btn theme-option-btn active" data-value="erebus">
+        <span class="menu-item-title">
+          <span class="theme-color-preview" style="background: #111; border-color: #222;"></span>
+          <span>Erebus</span>
+        </span>
+      </button>
+      <button class="menu-item-btn theme-option-btn" data-value="solarized-dark">
+        <span class="menu-item-title">
+          <span class="theme-color-preview" style="background: #002b36; border-color: #073642;"></span>
+          <span>Solarized Dark</span>
+        </span>
+      </button>
+      <button class="menu-item-btn theme-option-btn" data-value="solarized-light">
+        <span class="menu-item-title">
+          <span class="theme-color-preview" style="background: #fdf6e3; border-color: #eee8d5;"></span>
+          <span>Solarized Light</span>
+        </span>
+      </button>
+      <button class="menu-item-btn theme-option-btn" data-value="classic">
+        <span class="menu-item-title">
+          <span class="theme-color-preview" style="background: #ffffff; border-color: #cccccc;"></span>
+          <span>Classic</span>
+        </span>
+      </button>
+      <button class="menu-item-btn theme-option-btn" data-value="monokai">
+        <span class="menu-item-title">
+          <span class="theme-color-preview" style="background: #272822; border-color: #3e3d32;"></span>
+          <span>Monokai</span>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>

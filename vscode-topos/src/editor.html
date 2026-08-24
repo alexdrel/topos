@@ -1,0 +1,85 @@
+<!-- deno-fmt-ignore-file -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src {{CSP_SOURCE}} 'unsafe-inline'; script-src {{CSP_SOURCE}};">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topos Editor</title>
+  <script type="module" src="{{SCRIPT_URI}}"></script>
+  <style>
+    :root {
+      /* Typography */
+      --slate-theme-font-family: var(--vscode-editor-font-family);
+
+      /* Canvas */
+      --slate-theme-ink-fg: var(--vscode-editor-foreground);
+      --slate-theme-canvas-bg: var(--vscode-editor-background);
+      --slate-theme-selection-fg: var(--vscode-focusBorder);
+      --slate-theme-active-color: var(--vscode-focusBorder);
+
+      /* Ruler grid */
+      --slate-theme-ruler-grid-fg: var(--vscode-editorRuler-foreground, var(--vscode-descriptionForeground));
+
+      /* UI surfaces and chrome */
+      --slate-theme-ui-bg: var(--vscode-editorWidget-background, var(--vscode-sideBar-background));
+      --slate-theme-ui-fg: var(--vscode-editorWidget-foreground, var(--vscode-editor-foreground));
+      --slate-theme-ui-border: var(--vscode-editorWidget-border, var(--vscode-widget-border));
+      --slate-theme-ui-hover-bg: var(--vscode-toolbar-hoverBackground);
+      --slate-theme-ui-muted-fg: var(--vscode-descriptionForeground);
+      --slate-theme-ui-font-size: var(--vscode-editor-font-size);
+      --slate-theme-chrome-fg: var(--vscode-editor-foreground);
+
+      /* Interaction feedback */
+      --slate-theme-marquee-border: var(--vscode-focusBorder);
+      --slate-theme-tear-positive-bg: var(--vscode-diffEditor-insertedTextBackground);
+      --slate-theme-tear-negative-bg: var(--vscode-diffEditor-removedTextBackground);
+
+      /* Projection roles */
+      --slate-theme-role-text-fg: var(--vscode-editor-foreground);
+      --slate-theme-role-inline-fg: var(--vscode-editorBracketHighlight-foreground1);
+      --slate-theme-geometry: var(--vscode-editorBracketHighlight-foreground2);
+      --slate-theme-role-control-fg: var(--vscode-editorBracketHighlight-foreground3);
+    }
+
+    body.vscode-high-contrast,
+    body.vscode-high-contrast-light {
+      --slate-theme-role-line-fg: var(--vscode-editorBracketHighlight-foreground2);
+      --slate-theme-role-box-fg: var(--vscode-editorBracketHighlight-foreground2);
+      --slate-theme-role-glyph-fg: var(--vscode-editorBracketHighlight-foreground2);
+      --slate-theme-role-mixed-fg: var(--vscode-editorBracketHighlight-foreground2);
+    }
+
+    body.vscode-light {
+      --slate-theme-ruler-grid-fg: var(--vscode-editor-foreground);
+    }
+
+    html, body, #editor-mount {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      box-sizing: border-box;
+      background: var(--vscode-editor-background, #1e1e1e);
+    }
+
+    body {
+      font-family: var(--vscode-editor-font-family, monospace);
+      font-size: var(--vscode-editor-font-size, 12px);
+    }
+
+    #editor-mount:focus-within::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--vscode-focusBorder) 25%, transparent);
+    }
+  </style>
+</head>
+<body>
+  <div id="editor-mount" class="slate-surface"></div>
+</body>
+</html>

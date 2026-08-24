@@ -1,0 +1,213 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Topos",
+  "scopeName": "source.topos",
+  "patterns": [
+    {
+      "include": "#section"
+    },
+    {
+      "include": "#map"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "match": "(//).*$",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.comment.topos"
+        }
+      },
+      "name": "comment.line.double-slash.topos"
+    },
+    "section": {
+      "patterns": [
+        {
+          "begin": "^(\\s*)(:map)(?=\\s|$)",
+          "beginCaptures": {
+            "2": {
+              "name": "keyword.control.directive.topos"
+            }
+          },
+          "end": "^(?=\\s*:legend(?:\\s|$))|\\z",
+          "patterns": [
+            {
+              "include": "#sectionHeader"
+            },
+            {
+              "include": "#map"
+            }
+          ]
+        },
+        {
+          "begin": "^(\\s*)(:legend)(?=\\s|$)",
+          "beginCaptures": {
+            "2": {
+              "name": "keyword.control.directive.topos"
+            }
+          },
+          "end": "\\z",
+          "patterns": [
+            {
+              "include": "#sectionHeader"
+            },
+            {
+              "include": "#comment"
+            },
+            {
+              "include": "#legendRule"
+            },
+            {
+              "include": "#annotation"
+            }
+          ]
+        }
+      ]
+    },
+    "sectionHeader": {
+      "begin": "(?<=:map)\\s+|(?<=:legend)\\s+",
+      "end": "$",
+      "patterns": [
+        {
+          "include": "#string"
+        },
+        {
+          "match": "=",
+          "name": "keyword.operator.assignment.topos"
+        }
+      ]
+    },
+    "legendRule": {
+      "begin": "^(\\s*)(?!//|:map(?:\\s|$)|:legend(?:\\s|$))(?=\\S)",
+      "contentName": "entity.name.selector.topos",
+      "end": "\\s*(:)|$",
+      "endCaptures": {
+        "1": {
+          "name": "keyword.operator.rule.topos"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#selectorLeaf"
+        },
+        {
+          "include": "#selectorOperator"
+        }
+      ]
+    },
+    "annotation": {
+      "patterns": [
+        {
+          "include": "#string"
+        },
+        {
+          "match": "@[\\w-]+",
+          "name": "entity.name.type.topos"
+        },
+        {
+          "match": "\\b[\\w-]+(?= ?=)",
+          "name": "variable.other.property.topos"
+        },
+        {
+          "match": "=|,",
+          "name": "keyword.operator.topos"
+        },
+        {
+          "match": "(?<![-\\w])(?:#[0-9a-fA-F]{3,8}|-?(?:\\d+(?:\\.\\d+)?|\\.\\d+)(?:%|px|em)?)(?![-\\w])",
+          "name": "constant.numeric.topos"
+        },
+        {
+          "match": "\\b[\\w-]+\\b",
+          "name": "constant.language.topos"
+        }
+      ]
+    },
+    "map": {
+      "patterns": [
+        {
+          "include": "#label"
+        },
+        {
+          "match": "#",
+          "name": "constant.other.heading.topos"
+        },
+        {
+          "match": "[⏎↵¶␠⍽]",
+          "name": "constant.other.text-control.topos"
+        },
+        {
+          "match": "[▶►⯈◀◄⯇▼▲▸◂▾▴▷▻◁◅▽△▹◃▿▵→←↓↑»⇒«⇐⩔⇓︾⩓⇑︽●○◎◆◇□■]",
+          "name": "keyword.operator.glyph.topos"
+        },
+        {
+          "match": "[─-╿]",
+          "name": "keyword.operator.wire.topos"
+        }
+      ]
+    },
+    "label": {
+      "match": "\\[[^]\\r\\n]+\\]",
+      "name": "string.unquoted.label.topos"
+    },
+    "selectorLeaf": {
+      "patterns": [
+        {
+          "match": "\\[\\s*\\*\\s*\\]",
+          "name": "keyword.operator.wildcard.topos"
+        },
+        {
+          "match": "\\[\\s*/\\s*\\]",
+          "name": "keyword.operator.root.topos"
+        },
+        {
+          "match": "(?<![\\w/])/(?![\\w/])",
+          "name": "keyword.operator.root.topos"
+        },
+        {
+          "include": "#label"
+        }
+      ]
+    },
+    "string": {
+      "begin": "\"",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.topos"
+        }
+      },
+      "end": "\"",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.topos"
+        }
+      },
+      "name": "string.quoted.double.topos",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.topos"
+        }
+      ]
+    },
+    "selectorOperator": {
+      "patterns": [
+        {
+          "match": "<~>|<->|>>|<~|~>|~~|<-|->|--|>|\\^",
+          "name": "keyword.operator.relation.topos"
+        },
+        {
+          "match": "(?<=\\*)-|-(?=\\*)|(?<!\\S)-",
+          "name": "keyword.operator.relation.topos"
+        },
+        {
+          "match": "[\\*%]",
+          "name": "keyword.operator.wildcard.topos"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.sequence.topos"
+        }
+      ]
+    }
+  }
+}

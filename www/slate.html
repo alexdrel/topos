@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<!--
+  Lightweight VS Code extension webview harness.
+  The source textarea synchronizes live through EditorModel.syncDocumentSource(),
+  matching document updates in the extension host and production editor.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Topos Slate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.061/juliamono.css" />
+    <style>
+    :root {
+      --bg: #1e1e2e;
+      --surface: #181825;
+      --border: #313244;
+      --text: #cdd6f4;
+      --muted: #6c7086;
+      --accent: #89b4fa;
+      --btn-bg: #313244;
+      --btn-hover: #45475a;
+      --font-mono: "JuliaMono", "Fira Mono", "Cascadia Code", ui-monospace, monospace;
+      --slate-theme-font-family: var(--font-mono);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .toolbar-title {
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      margin-right: 8px;
+    }
+
+    .toolbar-sep {
+      color: var(--border);
+      user-select: none;
+    }
+
+    #slate-status {
+      min-width: 260px;
+      margin-left: 16px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    button {
+      padding: 4px 12px;
+      background: var(--btn-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    button:hover {
+      background: var(--btn-hover);
+    }
+    button:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    .hint {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .workspace {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .editor-panel {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .editor-panel:focus-within::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 10000;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
+    }
+
+    #editor-mount {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .source-panel {
+      width: 480px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #source-out {
+      flex: 1;
+      margin: 0;
+      padding: 12px;
+      background: var(--surface);
+      color: #d9ceb2;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.5;
+      resize: none;
+      border: none;
+      outline: none;
+      white-space: pre;
+      overflow: auto;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="toolbar">
+        <span class="toolbar-title">Topos Slate</span>
+        <span class="toolbar-sep">|</span>
+        <button id="btn-undo" disabled>↩ Undo</button>
+        <button id="btn-redo" disabled>↪ Redo</button>
+        <span class="hint">Cmd+drag: box · Alt+drag: line · Click inside box: text · Arrows: nudge</span>
+        <span id="slate-status"></span>
+      </div>
+      <div class="workspace">
+        <div class="editor-panel">
+          <div id="editor-mount" class="slate-surface"></div>
+        </div>
+        <div class="source-panel">
+          <textarea id="source-out" spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="./slate.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+        ## EARTH                                       ## MARS
+
+
+  ┌─────────────────┐                                        ┌──────────────┐
+  │ Mission Control │ ────────Daily Route Program───────────⯈│ Mars Orbiter │
+  └─────────────────┘                                        └──────┬───────┘
+                                                                    │
+                                                                    ▼
+                                                             ┌─ROVERS───────┐
+                                                             │              │
+                                                             │  Opportunity │
+                                                             │              │
+                                                             │   Curiosity  │
+                                                             │              │
+                                                             └──────────────┘
+
+:legend
+[/]: green
+{EARTH}: blue stroke=none
+{MARS}: red stroke=none

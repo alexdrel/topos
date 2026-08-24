@@ -1,0 +1,17 @@
+                             # Year: 2004
+
+           ┌────────X-band──────────────────▶[ 🛰️ Mars Odyssey ]
+           │                                          ▲
+           │                                          │
+           │                                      UHF relay
+           │                                          │
+           ▼                                          │
+ ┏━Ground Segment━━━━┓                   ┌──Rovers────▼───────────┐
+ ┃                   ┃                   │                        │
+ ┃ Deep Space Network┃◃┈┈X-band direct┈┈▹│                        │
+ ┃                   ┃                   │     [    Spirit    ]   │
+ ┣━━━━━━━━━━━━━━━━━━━┫                   │                        │
+ ┃                   ┃                   │     [  Opportunity ]   │
+ ┃JPL Mission Control┃                   │                        │
+ ┃                   ┃                   │                        │
+ ┗━━━━━━━━━━━━━━━━━━━┛                   └────────────────────────┘

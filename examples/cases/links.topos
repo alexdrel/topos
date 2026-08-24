@@ -1,0 +1,19 @@
+Markdown links can use short references:
+
+┌──────────┐
+│          │
+│   Docs   │
+│          │
+└──────────┘
+
+Read [the Topos repository](#topos)
+
+The same [reference](#topos) can be reused.
+
+An [unresolved reference](#missing) stays ordinary text.
+
+Direct [URLs](https://example.com) work when source width is not a concern.
+
+:legend w=30
+Docs: href="https://example.com"
+#topos: href="https://github.com/alexdrel/topos"

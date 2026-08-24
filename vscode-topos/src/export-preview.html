@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src blob: data:; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Preview</title>
+    <style>
+    :root {
+      color-scheme: light dark;
+      --checker-base: #d0d0d0;
+      --checker-contrast: #888;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: auto;
+      background: var(--vscode-editor-background);
+      color: var(--vscode-editor-foreground);
+      font-family: var(--vscode-font-family, system-ui, sans-serif);
+    }
+
+    #preview {
+      box-sizing: border-box;
+      width: fit-content;
+      margin: 24px auto;
+      padding: 12px;
+      background-color: var(--checker-base);
+      background-image:
+        linear-gradient(45deg, var(--checker-contrast) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--checker-contrast) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--checker-contrast) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--checker-contrast) 75%);
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+      background-size: 20px 20px;
+    }
+
+    #preview > svg,
+    #preview > img {
+      display: block;
+      max-width: none;
+      height: auto;
+    }
+
+    #status {
+      padding: 24px;
+      color: var(--vscode-descriptionForeground);
+    }
+    </style>
+  </head>
+  <body>
+    <div id="status">Rendering export preview…</div>
+    <main id="preview" hidden></main>
+    <script>
+    const vscode = acquireVsCodeApi();
+    const preview = document.getElementById("preview");
+    const status = document.getElementById("status");
+
+    let currentSvg;
+    globalThis.addEventListener("message", async (event) => {
+      try {
+        if (event.data.type === "render") {
+          currentSvg = event.data.svg;
+          preview.innerHTML = currentSvg;
+          showPreview();
+          await painted();
+          vscode.postMessage({ type: "previewReady" });
+        } else if (event.data.type === "rasterize" && currentSvg) {
+          status.textContent = "Rendering PNG preview…";
+          status.hidden = false;
+          preview.hidden = true;
+          const png = await rasterize(currentSvg);
+          const image = new Image();
+          image.src = png;
+          await image.decode();
+          preview.replaceChildren(image);
+          showPreview();
+          await painted();
+          vscode.postMessage({ type: "pngReady", png });
+        }
+      } catch (error) {
+        vscode.postMessage({
+          type: "error",
+          message: error instanceof Error ? error.message : String(error),
+        });
+      }
+    });
+
+    function showPreview() {
+      status.hidden = true;
+      preview.hidden = false;
+    }
+
+    async function rasterize(svg) {
+      const image = new Image();
+      const sourceUrl = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+      try {
+        image.src = sourceUrl;
+        await image.decode();
+        const canvas = document.createElement("canvas");
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        const context = canvas.getContext("2d");
+        if (!context || canvas.width === 0 || canvas.height === 0) {
+          throw new Error("SVG has no rasterizable dimensions.");
+        }
+        context.drawImage(image, 0, 0);
+        const blob = await new Promise((resolve, reject) => {
+          canvas.toBlob((value) => value ? resolve(value) : reject(new Error("Could not encode PNG.")), "image/png");
+        });
+        return await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error ?? new Error("Could not read PNG data."));
+          reader.readAsDataURL(blob);
+        });
+      } finally {
+        URL.revokeObjectURL(sourceUrl);
+      }
+    }
+
+    function painted() {
+      return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    }
+
+    vscode.postMessage({ type: "ready" });
+    </script>
+  </body>
+</html>

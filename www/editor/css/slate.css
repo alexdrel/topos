@@ -1,0 +1,90 @@
+.slate-pane {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  scrollbar-gutter: stable;
+  font-family: var(--editor-font), monospace;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.slate-pane.slate-surface {
+  /* Canvas */
+  --slate-theme-ink-fg: var(--canvas-ink);
+  --slate-theme-selection-fg: var(--accent);
+  --slate-theme-canvas-bg: var(--surface-grad-end);
+  --slate-theme-active-color: var(--accent);
+
+  /* Ruler grid */
+  --slate-theme-ruler-grid-fg: var(--line);
+
+  /* Projection roles */
+  --slate-theme-role-text-fg: var(--canvas-ink);
+  --slate-theme-role-inline-fg: #ffd700;
+  --slate-theme-geometry: #da70d6;
+  --slate-theme-role-control-fg: #179fff;
+
+  /* UI surfaces */
+  --slate-theme-ui-bg: var(--panel-grad-start);
+  --slate-theme-ui-fg: var(--canvas-ink);
+  --slate-theme-ui-border: var(--line);
+  --slate-theme-ui-hover-bg: var(--active-bg);
+  --slate-theme-ui-muted-fg: var(--subtle-text);
+}
+
+body[data-theme="solarized-light"] .slate-pane.slate-surface,
+body[data-theme="classic"] .slate-pane.slate-surface {
+  --slate-theme-role-inline-fg: #0431fa;
+  --slate-theme-geometry: #319331;
+  --slate-theme-role-control-fg: #7b3814;
+}
+
+body[data-theme="solarized-light"] .slate-pane.slate-surface {
+  --slate-theme-role-text-fg: #657b83;
+  --slate-theme-ruler-grid-fg: color-mix(in srgb, var(--line) 75%, var(--canvas-ink));
+}
+
+body[data-theme="erebus"] .slate-pane.slate-surface {
+  --slate-theme-ruler-grid-fg: color-mix(in srgb, var(--line) 75%, var(--canvas-ink));
+}
+
+body[data-theme="solarized-dark"] .slate-pane.slate-surface {
+  --slate-theme-ruler-grid-fg: color-mix(in srgb, var(--line) 75%, var(--canvas-ink));
+  --slate-theme-role-text-fg: color-mix(in srgb, #839496 50%, var(--canvas-ink));
+  --slate-theme-role-inline-fg: #cdcdcd;
+  --slate-theme-geometry: #b58900;
+  --slate-theme-role-control-fg: #d33682;
+}
+
+.surface-panel.svg-focus .slate-pane {
+  display: none;
+}
+
+.slate-surface-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+}
+
+.slate-toolbar-left,
+.slate-toolbar-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slate-toolbar-left {
+  gap: 0;
+}
+
+.slate-toolbar-tools {
+  justify-self: center;
+}
+
+.slate-toolbar-left .cheatsheet-toggle-btn {
+  margin-left: 0;
+}
+
+.slate-surface-toolbar .surface-edit-controls {
+  justify-self: end;
+  margin-left: 0;
+}

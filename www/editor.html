@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Topos Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Mono&family=Inter:wght@400;500;600&family=Playpen+Sans:wght@400;600&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.061/juliamono.css" />
+    <link rel="stylesheet" href="./editor/css/editor.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header id="topbar" class="topbar"></header>
+
+      <main class="workspace">
+        <section class="surface-panel">
+          <div id="surface-toolbar-mount" class="surface-head"></div>
+          <div id="surface-stack" class="surface-stack">
+            <div id="slate-pane-mount"></div>
+            <div id="source-mount"></div>
+            <div id="main-enamel-pane" class="enamel-pane main-enamel-pane"></div>
+          </div>
+        </section>
+
+        <div id="workspace-splitter" class="panel-splitter panel-splitter-vertical" aria-hidden="true"></div>
+
+        <section class="side-panel">
+          <div id="glyph-section" class="pane-section source-glyph-pane hidden"></div>
+          <div id="inspector-section" class="inspector-section sidebar-top-pane">
+            <div id="btn-inspector-toggle" class="inspector-head-btn" aria-expanded="true">
+              <div class="inspector-head-main">
+                <span class="inspector-head-title">Inspector</span>
+                <span id="inspector-meta" class="inspector-meta hidden"></span>
+              </div>
+              <span id="inspector-chevron" class="pane-chevron">▾</span>
+            </div>
+
+            <div id="inspector-body" class="inspector-body"></div>
+          </div>
+          <div id="side-splitter" class="panel-splitter panel-splitter-horizontal" aria-hidden="true"></div>
+
+          <div id="legend-section" class="pane-section"></div>
+
+          <div id="legend-splitter" class="panel-splitter panel-splitter-horizontal" aria-hidden="true"></div>
+
+          <div id="enamel-section" class="pane-section"></div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./editor/app.ts"></script>
+  </body>
+</html>

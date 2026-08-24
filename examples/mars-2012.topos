@@ -1,0 +1,28 @@
+:map
+                                       # Year: 2012         ┌─Mars Orbit────────┐
+                                                            │ [    Odyssey   ] S│
+                   ┌───────X-band──────────────────────────▶│                   │
+                   │                                        │ [      MRO     ] S│
+                   │                                        └─────────▲─────────┘
+                   │                                                  │
+                   │                                                  │
+┏━Ground Segment━━━▼━━━━━━━━━━━━━━━━┓                             UHF relay
+┃  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓  ┃                                 │
+┃  ┃     Deep Space Network      ┃  ┃                                 │
+┃  ┠─────────┬─────────┬─────────┨  ┃                                 │
+┃  ┃Goldstone│  Madrid │Canberra ┃  ┃                       ┌─Rovers──▼─────────┐
+┃  ┗━━━━━━━━━┷━━━━━━━━━┷━━━━━━━━━┛  ┃◃┈┈┈X-band direct┈┈┈┈┈▹│ [  Opportunity ] A│
+┃                                   ┃                       │                   │
+┃  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓  ┃                       │ [   Curiosity  ] A│
+┃  ┃     JPL Mission Control     ┃  ┃                       │                   │
+┃  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  ┃                       │ [    Spirit    ] X│
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛                       └───────────────────┘
+
+:legend
+Odyssey: "Mars Odyssey"
+MRO: "Mars Reconnaissance Orbiter"
+Spirit: dotted fill=soft href="https://xkcd.com/695/"
+A: "🔋"
+X: "🪫"
+[Mars Orbit]: fill=none
+S: "🛰️"

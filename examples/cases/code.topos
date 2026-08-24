@@ -1,0 +1,22 @@
+Fenced text selects code mode automatically:
+                                   ```
+~~~                                const planets = [
+const greeting = "Hello";             "Earth",
+console.log(greeting);                "Mars",
+~~~                                   "Jupiter",
+                                    ];
+                                   ```
+
+
+Code mode can also be applied post hoc:
+
+| Form                | Meaning
+| ------------------- | --------------------------------
+| `#id`               | Explicit entity ID
+| `[Mission Control]` | Box label
+| `<diamond>`         | Named hub marker
+
+Text keeps  **bold**,  _italic_, and  `code`  literal.
+:legend
+%Form%: code
+%Text keeps%: text

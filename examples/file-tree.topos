@@ -1,0 +1,40 @@
+topos/
+├── src/                         diagram core
+│   ├── trace/
+│   ├── refine/
+│   ├── legend/
+│   ├── enamel/
+│   │   └── compendium/          rendering vocabulary
+│   ├── ink/
+│   └── topos.ts
+│
+├── src-editor/                  visual editor
+│   ├── model/
+│   └── slate/
+│
+├── package-topos/               command-line package
+│   ├── cli.ts
+│   └── inspect.ts
+│
+├── vscode-topos/                VS Code extension
+│   ├── src/
+│   └── resources/
+│
+├── www/                         browser hosts
+│   └── editor/                  standalone web editor
+│
+├── docs/                        public documentation
+│   ├── Topos Guide.md
+│   ├── Topos.md
+│   └── Coding Agent Instructions.md
+│
+└── examples/
+
+:legend
+topos/ - src/, src/ - *, enamel/ - *: orange
+topos/ - src-editor/, src-editor/ - *: purple
+topos/ - package-topos/, package-topos/ - *: orange
+topos/ - vscode-topos/, vscode-topos/ - *: purple
+topos/ - www/, www/ - *: orange
+topos/ - docs/, docs/ - *: purple
+topos/ - examples/: orange

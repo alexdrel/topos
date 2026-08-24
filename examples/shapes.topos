@@ -1,0 +1,42 @@
+
+                # Document Processing Service
+
+                                 ┌┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┐
+                                 ┊               Processing Cloud @cloud                  ┊
+                                 ┊                                                        ┊
+                                 ┊                                                        ┊
+                                 ┊                                                        ┊
+                                 ┊                             ┌───────────────────────┐  ┊
+   ┌───────────────────┐         ┊                           ┌─┴─────────────────────┐ │  ┊
+   │                   │         ┊                         ┌─┴─────────────────────┐ │ │  ┊
+   │                   │         ┊  ┌─────────────┐        │                       │ │ │  ┊
+   │    Web Client     ├─────────┼─▶│  Upload Srv ├───────▶│   Conversion Workers  │ ├─┘  ┊
+   │                   │         ┊  └─────────────┘        │                       ├─┘    ┊
+   │                   │         ┊                         └──┬────────────────────┘      ┊
+   └────────▲──────────┘         ┊                            │                           ┊
+            │                    ┊                            │                           ┊
+            │                    ┊                            │  ┌────────────────┐       ┊
+            │                    ┊                            │  │ Processing logs│       ┊
+            │                    ┊                            │  │ @file          │       ┊
+            │                    ┊                            │  └────────────────┘       ┊
+            │                    ┊                            │                           ┊
+            │                    ┊                            │                           ┊
+            │                    └┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┘
+            │                                                 ╰────────────╮
+            │                                                              │
+    ┌───────┴──────┐           ```                        ┌────────────────▼────────────────┐
+    │  Documents   │           CREATE TABLE documents (   │                                 │
+    │  @folder     │             id UUID,                 │           Document Store        │
+    └──────────────┘             status                   │           @database             │
+                                   LowCardinality(String) │                                 │
+                               ) ENGINE = MergeTree       └─────────────────────────────────┘
+                               ORDER BY id;
+                               ```
+
+:legend
+Documents: "Local Documents"
+[Web Client]: @browser stack=4,-1,2
+[Processing logs]: stack=2,-1
+[Upload Srv]: "Upload Service" stack
+[Conversion Workers] ~> [Processing logs]: head=dart
+%CREATE% : right=map soft

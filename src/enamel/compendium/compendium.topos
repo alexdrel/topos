@@ -1,0 +1,235 @@
+:map compendium=true bg=#25719a ink=#e6a83d paper=#cdff42
+                           # Topos Visual Compendium
+
+   #sub.green This file catalogs core Enamel visual schemas using inline map
+   sigils and regions. ⏎ Extracted from `compendium.svg` visual layout.
+
+## Semantic Shapes
+
+┌─────────────┐ ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│  database   │ │    file     │  │   folder    │  │   cloud     │
+│  @database  │ │    @file    │  │   @folder   │  │   @cloud    │
+└─────────────┘ └─────────────┘  └─────────────┘  └─────────────┘
+
+
+┌─────────────┐ ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│   browser   │ │   windows   │  │     mac     │  │     ui      │  │     ux      │
+│  @browser   │ │  @windows   │  │    @mac     │  │    @ui      │  │    @ux      │
+└─────────────┘ └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘
+
+## Edge Styles
+
+[x] ────────────▶ [Normal] ┈┈ .dotted ┈┈▶ [Dotted]       ┌─────────┐
+                                                         │ Chevron │
+[x] ◀━━━━━━━━━━━▶ [ Bold ] ┄┄ .dashed ┄┄▶ [Dashed]       └────▲────┘
+                                                              │
+┌───────┐                                                     │
+│ Block ├──────────────────.block.chevron─────────────────────┘
+└───────┘
+
+
+## Corners
+
+[sharp]      ┌───────▶[rounded]     ┌───────▶[bevel]        ┌───────▶■
+   │         │           │          │           │           │
+   │         │           │          │           │           │
+   └──────[tight]        └──────▶[loose]        └──────▶[rhombus]
+
+
+## Markers
+
+[   arrow  ]─────▶[ double-arrow ]   [   triangle  ]─────▶[triangle-hollow]
+
+[   dart   ]─────▶[  dart-hollow ]   [   crowfoot  ]─────▶[      dot      ]
+
+[  circle  ]─────▶[  circle-dot  ]   [square-hollow]─────▶[    square     ]
+
+[  diamond ]─────▶[diamond-hollow]   [   hexagon   ]─────▶[    end-cap    ]
+
+## Hub Variants
+
+◆ diamond        ■ square          ● hexagon   ○ circle
+
+◇ diamond-hollow □ square-hollow   ● dot       ◎ circle-dot
+
+
+## Node Geometry
+
+[ sharp ]  ( pill )   < rhombus >   { skew }
+
+┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐
+│  sharp    │  │   tight   │  │  rounded  │  │   loose   │  │   pill    │
+└───────────┘  └───────────┘  └───────────┘  └───────────┘  └───────────┘
+
+┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐
+│  double   │  │   bevel   │  │  rhombus  │  │   skew    │  │  trapez   │
+└───────────┘  └───────────┘  └───────────┘  └───────────┘  └───────────┘
+
+## Text, Code & Links
+
+Read [Topos documentation](#docs)                    `inline code`
+
+**Bold text**  _italic text_  ~~struck text~~        ```
+                                                     const G = 6.674e-11;
+First line ⏎ second line ¶ indented paragraph        const M = 5.972e24;
+                                                     const r = 42164000;
+Text mode keeps **formatting markers** literal.      const v = Math.sqrt((G * M) / r);
+                                                     ```
+
+## Color & Fill
+
+[black] [gray] [ red ] [orange] [yellow] [green] [blue] [purple] [white]
+
+[ fill black ] [ fill gray ] [ fill red ] [ fill orange ] [ fill yellow]
+
+[ fill green ] [ fill blue ] [ fill purple ] [ fill white ]
+
+None -> [ none ] [ ghost ] [ soft ] [ strong ] [ heavy ] [ solid ]
+
+[fill none] [fill ghost] [fill soft] [fill strong] [fill heavy] [fill solid]
+
+## Fill Patterns
+
+[ hatch ] [ backhatch ]  [ crosshatch ]  [ stripes ]
+
+[ stroke-red fill-blue label-purple .stroke-red .fill-blue .label-purple ]
+
+[ stroke-blue fill-red label-orange .stroke-blue .fill-red .label-orange ]
+
+[ stroke-purple fill-none label-red .stroke-purple .fill-none .label-red ]
+
+
+## Filters
+
+┌─────────┐ ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐
+│ sketch  │ │  xkcd   │  │  chalk  │  │ shadow  │  │  neon   │  │  glow   │
+│ .sketch │ │  .xkcd  │  │ .chalk  │  │ .shadow │  │  .neon  │  │  .glow  │
+└─────────┘ └─────────┘  └─────────┘  └─────────┘  └─────────┘  └─────────┘
+
+## Stacked Boxes
+
+┌────────────────┐         ┌────────────────┐    ┌────────────────┐
+│┌───────────────┴┐      ┌─┴──────────────┐ │    │                ├─┐
+││┌───────────────┴┐   ┌─┴──────────────┐ │ │    │                │ ├─┐
+└┤│                │   │                │ ├─┘    └─┬──────────────┘ │ │
+ └┤                │   │                ├─┘        └─┬──────────────┘ │
+  └────────────────┘   └────────────────┘            └────────────────┘
+
+## Animation & Particles
+
+[  Flow ]┄┄ .dashed.animate ┄┄┄▶[ Moving dashes]  ┌───────────┐  ┌┄┄┄┄┄┄┄┄┄┄┄┄┐
+                                                  │           │  ┆            ┆
+[ Spark ]── .spark.animate ────▶[ Moving spark ]  │ Perimeter │  ┆  Marching  ┆
+                                                  │ Sparks¶   │  ┆  Ants¶     ┆
+[  Ping ]── .ping.animate ─────▶[  Moving ping ]  │           │  ┆            ┆
+                                                  └───────────┘  └┄┄┄┄┄┄┄┄┄┄┄┄┘
+[Chevron]── .chevron.animate ──▶[  Destination ]
+                                                      [ Moving chevrons ]
+[ Packet]── .packet.animate ───▶[Moving payload]              ▲
+                                                              │
+[ Block chevron ]─ .block.chevron.animate ────────────────────┘
+
+## Animated Filters
+
+┌─────────┐ ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐
+│ sketch  │ │  xkcd   │  │  chalk  │  │ shadow  │  │  neon   │  │  glow   │
+│ .sketch │ │  .xkcd  │  │ .chalk  │  │ .shadow │  │  .neon  │  │  .glow  │
+└─────────┘ └─────────┘  └─────────┘  └─────────┘  └─────────┘  └─────────┘
+
+
+:legend
+#sub: center
+
+[sharp] -> *: sharp
+[tight] -> *: tight
+[rounded] -> *: rounded
+[loose] -> *: loose
+[bevel] -> *: bevel
+[rhombus] -> *: rhombus
+
+[arrow] -> [double-arrow]: tail=arrow head=double-arrow
+[triangle] -> [triangle-hollow]: tail=triangle head=triangle-hollow
+[dart] -> [dart-hollow]: tail=dart head=dart-hollow
+[crowfoot] -> [dot]: tail=crowfoot head=dot
+[circle] -> [circle-dot]: tail=circle head=circle-dot
+[square-hollow] -> [square]: tail=square-hollow head=square
+[diamond] -> [diamond-hollow]: tail=diamond head=diamond-hollow
+[hexagon] -> [end-cap]: tail=hexagon head=end-cap
+{Markers} > *-* : green
+
+hexagon: hexagon
+
+[tight]: tight
+[rounded]: rounded
+[loose]: loose
+[pill]: pill
+[double]: double
+[bevel]: bevel
+[rhombus]: rhombus
+[skew]: skew
+[trapez]: trapez
+
+#docs: href="https://github.com/alexdrel/topos"
+%Text mode keeps%: text
+
+[ink]: ink
+[black]: black
+[gray]: gray
+[red]: red
+[orange]: orange
+[yellow]: yellow
+[green]: green
+[blue]: blue
+[purple]: purple
+[white]: white
+
+[fill ink]: fill=ink
+[fill black]: fill=black
+[fill gray]: fill=gray
+[fill red]: fill=red
+[fill orange]: fill=orange
+[fill yellow]: fill=yellow
+[fill green]: fill=green
+[fill blue]: fill=blue
+[fill purple]: fill=purple
+[fill white]: fill=white
+
+[tint]: red tint
+[none]: red none
+[ghost]: red ghost
+[soft]: red soft
+[strong]: red strong
+[heavy]: red heavy
+[solid]: red solid
+
+[fill tint]: fill=blue,tint
+[fill none]: fill=blue,none
+[fill ghost]: fill=blue,ghost
+[fill soft]: fill=blue,soft
+[fill strong]: fill=blue,strong
+[fill heavy]: fill=blue,heavy
+[fill solid]: fill=blue,solid
+
+[hatch]: fill=hatch
+[backhatch]: fill=backhatch
+[crosshatch]: fill=crosshatch
+[stripes]: fill=stripes
+
+{Filters} > * : @database
+
+[Spark] -> [Moving spark]: particle-density=2
+Perimeter%: animate spark particle-density=2
+Marching%: animate
+
+{Animated Filters} > * : animate @database
+
+/ink: var(--tp-ink)
+/black: #1a202c
+/gray: #4a5568
+/red: #e53e3e
+/orange: #ed8936
+/yellow: #ecc94b
+/green: #48bb78
+/blue: #4299e1
+/purple: #9f7aea
+/white: #f7fafc

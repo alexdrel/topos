@@ -1,0 +1,29 @@
+        # Region Layouts
+
+  ## R1
+
+     [ A ] [ B ] [ C ]
+
+  ## R2.A          ## R2.B
+
+     [ D ] [ E ]   [ F ] [ G ]
+
+  ## R3.A          ## R3.B
+
+     [ H ] [ I ]   [ J ] [ K ]
+
+  ## R4
+
+     [ L ] [ M ] [ N ]
+
+  ## R5.A   ## R5.B   ## R5.C
+
+     [ O ]  [ P ]     [ Q ]
+
+  ## R6.A   ## R6.B   ## R6.C
+
+     [ R ]  [ S ]     [ T ]
+
+  ## R7.A   ## R7.B   ## R7.C
+
+     [ U ]  [ V ]     [ W ]

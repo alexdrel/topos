@@ -1,0 +1,42 @@
+
+                          # A Topos Diagram at Work
+
+╭───────────── Plain Text Source ─╮          ╭─────────────── Viewer & Editor ─╮
+│:map                             │          │                                 │
+│                                 │          │  ┌─────────┐      ┌─────────┐   │
+│  [Browser]────────────▸[ API ]  │          │  │ Browser ├─────▶│   API   │   │
+│                           │     │          │  └─────────┘      └────┬────┘   │
+│                           ▾     ◀───Edit───▶                        │        │
+│                         [ DB ]  │          │                        │        │
+│:legend                          │          │                        ▼        │
+│Browser: blue                    │          │                  ┌────────────┐ │
+│API: pill red                    │          │                  │  Database  │ │
+│DB: "Database"                   │          │                  └────────────┘ │
+╰────┬────────────┬───────────────╯          ╰─────────────────────────────────╯
+     │            │
+     │            │
+     │            │
+     Embed        ╰─Export─╮
+     │                     │            ╭──────────────────────────────────────╮
+     │                     │            │  LLM Comprehension & Version Control │
+╭────┴─Markdown─╮      ╭───●───╮        │ ╭──────────╮  ╭───────────── diff ─╮ │
+│               │      │       │        │ │          │  │                    │ │
+│ ┌───────────┐ │      │       │        │ │# LLMs can│  │- [Browser] - > [DB]│ │
+│ │ [B]-->[A] │ │      │       │        │ │grok it!¶ │  │                    │ │
+│ └───────────┘ │   ╭──▼──╮ ╭──▼──╮     │ │          │  │+ [API]             │ │
+│               │   │ SVG │ │ PNG │     │ ╰──────────╯  ╰────────────────────╯ │
+╰───────────────╯   ╰─────╯ ╰─────╯     ╰──────────────────────────────────────╯
+
+:legend width=2400
+Browser, B: blue
+API: pill red
+Database: @database
+Edit: block
+%Plain% > *: code sharp strong fill=none ink
+
+SVG, PNG: @file
+A: rounded red
+LLMs%: soft label=strong
+[diff]: label=black fill-color = #DDD font = "Fira Code"
+[diff] > (*): code label-color=green
+[diff] > %- %: label-color=red

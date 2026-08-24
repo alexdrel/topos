@@ -1,0 +1,91 @@
+<!-- deno-fmt-ignore-file -->
+<button class="slate-guide-btn slate-canvas-guide-btn" type="button" tabindex="-1" hidden>Open Guide</button>
+<button class="slate-help-btn" type="button" tabindex="-1">?</button>
+<button class="slate-create-btn" type="button" tabindex="-1" title="Create">＋</button>
+<div class="slate-cheatsheet-overlay" hidden>
+  <section class="slate-cheatsheet-card">
+    <header class="slate-cheatsheet-header">
+      <h2>Controls</h2>
+      <button class="slate-guide-btn slate-cheatsheet-guide-btn" type="button" tabindex="-1" hidden>Open Guide</button>
+    </header>
+    <div class="slate-cheatsheet-body">
+      <div class="slate-cheatsheet-column">
+        <section>
+          <h3>Switch views</h3>
+          <dl>
+            <div><dt><kbd>{{shift}}</kbd> <kbd>{{mod}}</kbd> <kbd>V</kbd></dt><dd>Switch between Editor and Viewer</dd></div>
+            <div><dt><kbd>{{shift}}</kbd> <kbd>{{mod}}</kbd> <kbd>D</kbd></dt><dd>Switch between Diagram and Text Editors</dd></div>
+          </dl>
+        </section>
+        <section>
+          <h3>Create</h3>
+          <dl>
+            <div><dt><kbd>Double-click</kbd></dt><dd>Text in empty space</dd></div>
+            <div><dt><kbd>{{mod}}</kbd> <kbd>Drag</kbd></dt><dd>Box</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>Drag</kbd></dt><dd>Line</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>Click</kbd></dt><dd>Hub</dd></div>
+            <div><dt><kbd>{{shift}}</kbd> <kbd>Space</kbd></dt><dd>Glyph palette</dd></div>
+          </dl>
+        </section>
+        <section>
+          <h3>Edit</h3>
+          <dl>
+            <div><dt><kbd>Double-click</kbd> / <kbd>Enter</kbd></dt><dd>Edit text or label</dd></div>
+            <div><dt><kbd>Space</kbd></dt><dd>Change formatting</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>A</kbd></dt><dd>Unicode / ASCII</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>R</kbd></dt><dd>Round / sharp corners</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>S</kbd></dt><dd>Cycle box stack</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>{{shift}}</kbd> <kbd>S</kbd></dt><dd>Cycle stack layout</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>B</kbd></dt><dd>Enbox selection</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>I</kbd></dt><dd>Toggle note / inline</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>{{shift}}</kbd> <kbd>I</kbd></dt><dd>Cycle inline brackets</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>F</kbd></dt><dd>Reverse arrow</dd></div>
+            <div><dt><kbd>Delete</kbd> / <kbd>Backspace</kbd></dt><dd>Delete selection</dd></div>
+          </dl>
+        </section>
+      </div>
+      <div class="slate-cheatsheet-column">
+        <section>
+          <h3>Select</h3>
+          <dl>
+            <div><dt><kbd>Click</kbd></dt><dd>Element</dd></div>
+            <div><dt><kbd>{{shift}}</kbd> <kbd>Click</kbd></dt><dd>Toggle element</dd></div>
+            <div><dt><kbd>{{mod}}</kbd> <kbd>Click</kbd></dt><dd>Container + toggle contents</dd></div>
+            <div><dt><kbd>Drag</kbd> (+ <kbd>{{shift}}</kbd> / <kbd>{{shift}}</kbd> <kbd>{{alt}}</kbd>)</dt><dd>Replace / add / subtract marquee</dd></div>
+            <div><dt><kbd>{{mod}}</kbd> <kbd>A</kbd> / <kbd>{{mod}}</kbd> <kbd>{{alt}}</kbd> <kbd>A</kbd></dt><dd>Document / all map elements</dd></div>
+            <div><dt><kbd>Escape</kbd></dt><dd>Cancel action or selection</dd></div>
+          </dl>
+        </section>
+        <section>
+          <h3>Move and resize</h3>
+          <dl>
+            <div><dt><kbd>Drag</kbd></dt><dd>Move selection</dd></div>
+            <div><dt><kbd>Arrow keys</kbd></dt><dd>Nudge selection</dd></div>
+            <div><dt><kbd>{{shift}}</kbd> <kbd>Arrow keys</kbd></dt><dd>Resize box</dd></div>
+            <div><dt><kbd>{{mod}}</kbd> <kbd>{{shift}}</kbd> <kbd>Drag</kbd></dt><dd>Drag right/down to expand; left/up to collapse space</dd></div>
+            <div><dt><kbd>{{alt}}</kbd> <kbd>G</kbd></dt><dd>Toggle ruler grid</dd></div>
+          </dl>
+        </section>
+        <section>
+          <h3>Clipboard and history</h3>
+          <dl>
+            <div><dt><kbd>{{mod}}</kbd> <kbd>C</kbd> / <kbd>X</kbd> / <kbd>V</kbd></dt><dd>Copy / cut / paste</dd></div>
+            <div><dt><kbd>{{mod}}</kbd> <kbd>Z</kbd> / <kbd>{{shift}}</kbd> <kbd>{{mod}}</kbd> <kbd>Z</kbd></dt><dd>Undo / redo</dd></div>
+            <div><dt><kbd>{{mod}}</kbd> <kbd>D</kbd></dt><dd>Duplicate down</dd></div>
+            <div><dt><kbd>{{mod}}</kbd> <kbd>]</kbd></dt><dd>Duplicate right</dd></div>
+            <div><dt><kbd>{{shift}}</kbd> <kbd>{{mod}}</kbd> <kbd>Arrow keys</kbd></dt><dd>Duplicate direction</dd></div>
+            <div><dt><kbd>{{shift}}</kbd> <kbd>{{mod}}</kbd> <kbd>Enter</kbd></dt><dd>Rebuild diagram</dd></div>
+          </dl>
+        </section>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="slate-legend-panel">
+  <button class="slate-legend-tab-btn" type="button" tabindex="-1" data-state="edit">
+    <span data-label="create">Create Legend</span>
+    <span data-label="edit">Edit Legend</span>
+    <span data-label="select">Select Legend</span>
+    <span data-label="exclude">Exclude Legend</span>
+  </button>
+</div>

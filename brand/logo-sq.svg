@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" xmlns="http://www.w3.org/2000/svg" viewBox="-28.8 -48 302.4 288" style="--tp-paper: #f3f1ea; --tp-ink: #b8521b">
+  <defs>
+    <style id="tp-base">
+      <![CDATA[
+  svg {
+    fill: none;
+    font-family: var(--tp-font, var(--tp-diagram-font, ui-sans-serif)), ui-sans-serif, sans-serif;
+    font-size: 14px;
+    font-weight: var(--tp-font-weight, var(--tp-diagram-font-weight, 500));
+
+    pointer-events: none;
+  }
+
+  .tp-node, .tp-edge {
+    --tp-entity-fill: initial;
+    --tp-entity-stroke: initial;
+    --tp-entity-label: initial;
+  }
+
+  .tp {
+    stroke: var(--tp-entity-stroke, color-mix(in oklch, var(--tp-stroke, var(--tp-ink, currentcolor)) var(--tp-stroke-mix, 100%), var(--tp-paper, white)));
+    fill: var(--tp-entity-fill, var(--tp-local-fill, color-mix(in oklch, var(--tp-fill, var(--tp-stroke, var(--tp-ink, currentcolor))) var(--tp-fill-mix, 12%), transparent)));
+    color: var(--tp-stroke);
+  }
+
+  .tpc-label {
+    font-family: var(--tp-font, var(--tp-diagram-font, ui-sans-serif)), ui-sans-serif, sans-serif;
+    font-weight: var(--tp-font-weight, var(--tp-diagram-font-weight, 500));
+    stroke: none;
+    fill: var(--tp-entity-label, color-mix(in oklch, var(--tp-label, var(--tp-stroke, var(--tp-ink, currentcolor))) var(--tp-label-mix, 100%), var(--tp-paper, white)));
+  }
+
+  /* Color and intensity */
+  .tp-none {
+    --tp-entity-fill: transparent;
+    --tp-entity-stroke: transparent;
+    --tp-entity-label: transparent;
+  }
+  .tp-tint { --tp-fill-mix: 12%; --tp-stroke-mix: 80%; --tp-label-mix: 85%; }
+
+  .tp-ghost  { --tp-fill-mix: 4%;  --tp-stroke-mix: 25%; --tp-label-mix: 30%; }
+  .tp-soft   { --tp-fill-mix: 8%;  --tp-stroke-mix: 45%; --tp-label-mix: 50%; }
+  .tp-strong { --tp-fill-mix: 35%; --tp-stroke-mix: 90%; --tp-label-mix: 95%; }
+  .tp-heavy  { --tp-fill-mix: 65%; --tp-stroke-mix: 95%; --tp-label-mix: 98%; }
+  .tp-solid  { --tp-fill-mix: 100%; --tp-stroke-mix: 100%; --tp-label-mix: 100%; }
+
+  .tp-fill-none { --tp-entity-fill: transparent; }
+  .tp-stroke-none { --tp-entity-stroke: transparent; }
+  .tp-fill-ghost, .tp-fill-soft, .tp-fill-strong, .tp-fill-heavy, .tp-fill-solid { --tp-entity-fill: initial; }
+  .tp-fill-ghost  { --tp-fill-mix: 4%; }
+  .tp-fill-soft   { --tp-fill-mix: 8%; }
+  .tp-fill-strong { --tp-fill-mix: 35%; }
+  .tp-fill-heavy  { --tp-fill-mix: 65%; }
+  .tp-fill-solid  { --tp-fill-mix: 100%; }
+
+  .tp-stroke-ghost, .tp-stroke-soft, .tp-stroke-strong, .tp-stroke-heavy, .tp-stroke-solid { --tp-entity-stroke: initial; }
+  .tp-stroke-ghost  { --tp-stroke-mix: 25%; }
+  .tp-stroke-soft   { --tp-stroke-mix: 45%; }
+  .tp-stroke-strong { --tp-stroke-mix: 90%; }
+  .tp-stroke-heavy  { --tp-stroke-mix: 95%; }
+  .tp-stroke-solid  { --tp-stroke-mix: 100%; }
+
+  .tp-label-ghost, .tp-label-soft, .tp-label-strong, .tp-label-heavy, .tp-label-solid { --tp-entity-label: initial; }
+  .tp-label-ghost  { --tp-label-mix: 30%; }
+  .tp-label-soft   { --tp-label-mix: 50%; }
+  .tp-label-strong { --tp-label-mix: 95%; }
+  .tp-label-heavy  { --tp-label-mix: 98%; }
+  .tp-label-solid  { --tp-label-mix: 100%; }
+  .tp-label-none { --tp-entity-label: transparent; }
+
+  /* Text */
+  /* Bradley Hand is available in standalone SVGs on macOS; the web editor loads Playpen Sans. */
+  .tp-sketch text { font-family: var(--tp-font, 'Playpen Sans', 'Bradley Hand', cursive); }
+  .tp-mono { font-family: ui-monospace, monospace; }
+  .tp-code .tpc-label { font-family: var(--tp-font, ui-monospace, monospace); }
+  .tpc-link { cursor: pointer; }
+  .tpc-link-text {
+    pointer-events: all;
+    text-decoration: underline;
+  }
+
+  /* Nodes and edges */
+  .tp-box > .tpc-shape { stroke-dasharray: none; stroke-width: 10; }
+  #face > .tpc-shape { --tp-entity-fill: #f6eae3; }
+  #face > .tp-box > .tpc-shape { stroke-width: 8; }
+  .tp-region > .tpc-shape {
+    --tp-fill-mix: 6%;
+    --tp-stroke-mix: 40%;
+    stroke-dasharray: none;
+    stroke-width: 1;
+  }
+  .tp-inline > .tpc-shape { stroke-width: 1.4; }
+  <!-- .tp-note > .tpc-shape { stroke-dasharray: 1 4; stroke-width: 0.33; } -->
+
+  .tp-root > .tpc-label { font-size: 20px; }
+
+  .tp-node {
+    &.tp-dashed > .tpc-shape { stroke-dasharray: 4 3; }
+    &.tp-dotted > .tpc-shape { stroke-dasharray: 1 4; }
+    &.tp-bold > .tpc-shape { stroke-width: 2.8; }
+  }
+
+  .tp.tp-edge {
+    .tpc-label { font-size: 12px; }
+
+    & > .tpc-shape {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    &.tp-block > .tpc-shape {
+      fill: var(--tp-entity-fill, var(--tp-local-fill, color-mix(in oklch, var(--tp-fill, var(--tp-stroke, var(--tp-ink, currentcolor))) var(--tp-fill-mix, 12%), transparent)));
+    }
+
+    &.tp-double > .tpc-shape {stroke-width: 8;}
+    &.tp-dashed > .tpc-shape { stroke-dasharray: 4 3; }
+    &.tp-dotted > .tpc-shape { stroke-dasharray: 1 4; }
+    &.tp-bold > .tpc-shape { stroke-width: 2.2; }
+  }
+
+  /* Stacks and doubling */
+  .tpc-shape {
+    &.tp-hollow{
+      --tp-local-fill: color-mix(in oklch, var(--tp-fill, var(--tp-paper, white)) calc(var(--tp-fill-mix, 12%) / 2), var(--tp-paper, white)) !important;
+
+    }
+
+    &.tp-opaque {
+      --tp-local-fill: color-mix(in oklch, var(--tp-fill, var(--tp-paper, white)) var(--tp-fill-mix, 12%), var(--tp-paper, white)) !important;
+    }
+
+    &.tp-transparent {
+      fill: none !important;
+      --tp-local-fill: none !important;
+    }
+
+    .tp-node.tp-double > & {
+      stroke-width: 1;
+    }
+  }
+
+  /* Compendium parts */
+  .d-marker-parts {
+    stroke: context-stroke;
+
+    &.tp-solid { fill: context-stroke; }
+    &.tp-hollow { fill: var(--tp-paper, var(--tp-ink, currentcolor)); }
+  }
+
+  .d-hub-parts {
+    stroke: var(--tp-entity-stroke, var(--tp-stroke, var(--tp-ink, currentcolor)));
+    stroke-width: 1.4;
+
+    &.tp-solid { fill: context-stroke; }
+    &.tp-hollow { fill: var(--tp-paper, var(--tp-ink, currentcolor)); }
+  }
+
+  #face > .tp-box .tp-hub { --tp-entity-stroke: #35623d; }
+
+  .d-pattern-parts {
+    /* context-stroke NOT WORKING in Chrome */
+    stroke: var(--tp-entity-stroke, var(--tp-stroke, var(--tp-ink, currentcolor)));
+    stroke-opacity: 0.6;
+  }
+
+  /* Animation and particles */
+  :is(.tp-animate, .tp-animate-reverse).tp-dashed > .tpc-shape { animation: tp-flow-dashed calc(var(--tp-animation-duration, 3.2s) / 20) linear var(--tp-animation-delay, 0s) infinite; }
+  :is(.tp-animate, .tp-animate-reverse).tp-dotted > .tpc-shape { animation: tp-flow-dotted calc(var(--tp-animation-duration, 3.2s) / 28) linear var(--tp-animation-delay, 0s) infinite; }
+  .tp-animate-reverse > .tpc-shape { animation-direction: reverse !important; }
+
+  @keyframes tp-flow-dashed {
+    to { stroke-dashoffset: -7px; }
+  }
+
+  @keyframes tp-flow-dotted {
+    to { stroke-dashoffset: -5px; }
+  }
+
+  .tpc-particle.tp-spark {
+    fill: var(--tp-entity-stroke, var(--tp-stroke, var(--tp-ink, currentcolor)));
+    stroke: none;
+  }
+
+  .tpc-particle.tp-ping {
+    fill: none;
+    stroke: var(--tp-entity-stroke, var(--tp-stroke, var(--tp-ink, currentcolor)));
+    stroke-width: 2;
+  }
+
+  .tpc-particle-ping-shape {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: tp-particle-ping 1.6s linear infinite;
+    animation-play-state: var(--tp-animation-state, running);
+  }
+
+  @keyframes tp-particle-ping {
+    0%, 100% { transform: scale(0.5); opacity: 0.9; }
+    50% { transform: scale(1.3); opacity: 0.25; }
+  }
+
+  .tpc-particle.tp-packet {
+    fill: var(--tp-entity-stroke, var(--tp-stroke, var(--tp-ink, currentcolor)));
+    stroke: none;
+  }
+
+  .tpc-particle.tp-chevron {
+    fill: none;
+    stroke: var(--tp-entity-stroke, var(--tp-stroke, var(--tp-ink, currentcolor)));
+    stroke-width: 2.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :is(.tp-animate, .tp-animate-reverse) > .tpc-shape { animation: none; }
+    /* CSS cannot pause SVG animateMotion. Hide all particles so reduced-motion behavior does not depend on authored animation Eidos. */
+    .tpc-particle { display: none; }
+  }
+
+  .tp-animation-disabled {
+    --tp-animation-state: paused;
+  }
+
+  .tp-animation-disabled :is(.tp-animate, .tp-animate-reverse) > .tpc-shape { animation: none; }
+
+]]>
+    </style>
+    <marker id="tpc-arr-dart" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto-start-reverse">
+      <polygon points="5.3,3.6 8.8,5 5.3,6.4" class="d-marker-parts tp-solid"/>
+    </marker>
+    <symbol id="tpc-hub-dot" viewBox="0 0 100 100" class="tp d-hub-parts tp-solid" preserveAspectRatio="xMidYMid">
+      <circle class="tp d-hub-parts tp-solid" cx="50" cy="50" r="46" vector-effect="non-scaling-stroke"/>
+    </symbol>
+    <symbol id="tpc-hub-diamond" viewBox="0 0 100 100" class="tp d-hub-parts tp-solid" preserveAspectRatio="xMidYMid">
+      <polygon class="tp d-hub-parts tp-solid" points="50,4 96,50 50,96 4,50" vector-effect="non-scaling-stroke"/>
+    </symbol>
+  </defs>
+  <g class="tp tp-node tp-root">
+    <g class="tp tp-node tp-box tp-pill" id="face">
+      <rect x="-12" y="-38.4" width="268.8" height="268.8" rx="36" ry="36" fill="#f3f1ea" stroke="none"/>
+      <rect class="tp tpc-shape" x="10.4" y="0" width="224" height="192" rx="32" ry="32"/>
+      <g class="tp tp-node tp-box tp-rounded tp-fill-ghost">
+        <rect class="tp tpc-shape" x="28.8" y="24" width="72" height="72" rx="20" ry="20"/>
+        <g class="tp tp-node tp-hub">
+          <use class="tp tpc-shape" x="50.4" y="45.6" width="28.8" height="28.8" href="#tpc-hub-dot"/>
+        </g>
+      </g>
+      <g class="tp tp-node tp-box tp-rounded tp-fill-ghost">
+        <rect class="tp tpc-shape" x="144" y="24" width="72" height="72" rx="20" ry="20"/>
+        <g class="tp tp-node tp-hub">
+          <use class="tp tpc-shape" x="165.6" y="45.6" width="28.8" height="28.8" href="#tpc-hub-dot"/>
+        </g>
+      </g>
+      <g class="tp tp-node tp-hub">
+        <use class="tp tpc-shape" x="102.4" y="93" width="40" height="40" href="#tpc-hub-diamond"/>
+      </g>
+      <g class="tp tp-edge tp-double tp-loose">
+        <path d="M 64.8,98 L 64.8,132 Q 64.8,156 88.8,156 L 156,156 Q 180,156 180,132 L 180,104" class="tp tpc-shape" marker-end="url(#tpc-arr-dart)"/>
+      </g>
+    </g>
+  </g>
+</svg>

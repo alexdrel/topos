@@ -1,0 +1,50 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Current Test File",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "deno",
+      "runtimeArgs": [
+        "test",
+        "--inspect-wait=0.0.0.0:9229",
+        "--allow-all",
+        "${file}"
+      ],
+      "attachSimplePort": 9229
+    },
+    {
+      "request": "launch",
+      "name": "Launch Current Script",
+      "type": "node",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "env": {},
+      "runtimeExecutable": "deno",
+      "runtimeArgs": [
+        "run",
+        "--inspect-wait",
+        "--allow-all"
+      ],
+      "attachSimplePort": 9229
+    },
+    // Launch the Topos extension in a new Extension Development Host window.
+    {
+      "name": "Launch Topos Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "cwd": "${workspaceFolder}/vscode-topos",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-topos",
+        "--disable-extensions",
+        "${workspaceFolder}"
+      ]
+    }
+  ]
+}

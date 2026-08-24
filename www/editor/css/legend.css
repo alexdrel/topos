@@ -1,0 +1,36 @@
+#legend-section {
+  flex: 0 0 var(--legend-size);
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--panel-soft-start) 0%, var(--panel-soft-end) 100%);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+}
+
+#legend-pane {
+  min-height: 0;
+}
+
+#legend-input {
+  width: 100%;
+  height: 100%;
+  display: block;
+  resize: none;
+  border: none;
+  padding: 10px;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+}
+
+.side-panel.legend-collapsed #legend-pane {
+  display: none;
+}
+
+.side-panel.legend-collapsed #legend-section {
+  flex: 0 0 auto !important;
+}
+
+.side-panel.legend-collapsed #legend-splitter {
+  display: none;
+}

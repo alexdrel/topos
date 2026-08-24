@@ -1,0 +1,519 @@
+{
+  "name": "topos",
+  "displayName": "Topos - AI-Era ASCII Diagrams",
+  "description": "Direct graphical editing and rich visualization for plain-text ASCII diagrams, with Markdown integration, SVG/PNG export, CLI rendering, and coding-agent support.",
+  "version": "0.5.5",
+  "publisher": "alexdrel",
+  "private": true,
+  "type": "module",
+  "license": "SEE LICENSE IN LICENSE",
+  "icon": "resources/logo-sq.png",
+  "galleryBanner": {
+    "color": "#f3f1ea",
+    "theme": "light"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexdrel/topos.git"
+  },
+  "homepage": "https://github.com/alexdrel/topos#readme",
+  "bugs": {
+    "url": "https://github.com/alexdrel/topos/issues"
+  },
+  "keywords": [
+    "topos",
+    "diagram",
+    "architecture",
+    "ascii",
+    "asciidoc",
+    "ascii-art",
+    "system-design",
+    "documentation",
+    "architecture diagram",
+    "software architecture",
+    "system architecture",
+    "diagram as code",
+    "ascii diagram",
+    "network diagram",
+    "infrastructure diagram",
+    "technical documentation",
+    "coding agents",
+    "ai coding",
+    "markdown",
+    "svg",
+    "visual-editor"
+  ],
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "files": [
+    "EDITOR-LICENSE",
+    "LICENSE",
+    "README.md",
+    "bin/",
+    "docs/Topos Guide.md",
+    "docs/Coding Agent Instructions.md",
+    "language-configuration.json",
+    "out/extension.js",
+    "out/topos-core.js",
+    "out/topos.js",
+    "out/webview.js",
+    "resources/"
+  ],
+  "vsce": {
+    "followSymlinks": true
+  },
+  "imports": {
+    "#topos-core": "./out/topos-core.js"
+  },
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "activationEvents": [
+    "onLanguage:markdown",
+    "onLanguage:topos",
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Topos",
+      "properties": {
+        "topos.editor.fontSizeIncrease": {
+          "type": "number",
+          "default": 20,
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Percentage added to the font size in the visual editor."
+        },
+        "topos.editor.fontFamily": {
+          "type": "string",
+          "default": "",
+          "description": "Override the visual editor font family. Fira Code and JuliaMono are recommended for consistent diagram spacing."
+        },
+        "topos.editor.selectionColor": {
+          "type": "string",
+          "default": "",
+          "description": "Override the visual editor selection color with a CSS color. Leave empty to use the current theme."
+        },
+        "topos.editor.selectionSizeIncrease": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 200,
+          "description": "Percentage added to the size of visual selection indicators and their pointer targets in the visual editor."
+        },
+        "topos.editor.rulerGrid": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show the ruler grid when opening the visual editor. Alt+G toggles it temporarily in the current editor."
+        }
+      }
+    },
+    "markdown.markdownItPlugins": true,
+    "configurationDefaults": {
+      "[topos]": {
+        "files.trimTrailingWhitespace": true,
+        "files.trimFinalNewlines": true,
+        "files.insertFinalNewline": true,
+        "editor.wordWrap": "off",
+        "editor.wordBasedSuggestions": "off",
+        "editor.occurrencesHighlight": "off",
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "editor.autoIndent": "none",
+        "editor.guides.indentation": false
+      }
+    },
+    "languages": [
+      {
+        "id": "topos",
+        "aliases": [
+          "Topos",
+          "topos"
+        ],
+        "extensions": [
+          ".topos"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./resources/topos-icon.svg",
+          "dark": "./resources/topos-icon.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "topos",
+        "scopeName": "source.topos",
+        "path": "./resources/topos.tmLanguage.json"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "topos.viewer",
+        "displayName": "Topos Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.topos"
+          }
+        ],
+        "priority": "option"
+      },
+      {
+        "viewType": "topos.editor",
+        "displayName": "Topos Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.topos"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "topos.slate.create",
+        "label": "Create"
+      }
+    ],
+    "commands": [
+      {
+        "command": "topos.newDiagram",
+        "title": "New Diagram",
+        "category": "Topos",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "topos.openGuide",
+        "title": "Open Guide to Topos Diagrams",
+        "category": "Topos",
+        "icon": "$(book)"
+      },
+      {
+        "command": "topos.copyCodingAgentInstructions",
+        "title": "Copy Coding Agent Instructions",
+        "category": "Topos",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "topos.openPreviewToSide",
+        "title": "Open Preview to the Side",
+        "category": "Topos",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "topos.export",
+        "title": "Export Diagram",
+        "category": "Topos",
+        "icon": "$(export)"
+      },
+      {
+        "command": "topos.edit",
+        "title": "Open in Diagram Editor",
+        "category": "Topos",
+        "icon": "$(editor-layout)"
+      },
+      {
+        "command": "topos.view",
+        "title": "View Diagram",
+        "category": "Topos",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "topos.reopenAsView",
+        "title": "Reopen as View",
+        "category": "Topos",
+        "icon": "$(eye)",
+        "enablement": "(resourceExtname == .topos || editorLangId == topos) && activeCustomEditorId != topos.viewer || activeCustomEditorId == topos.editor"
+      },
+      {
+        "command": "topos.reopenAsText",
+        "title": "Reopen as Text",
+        "category": "Topos",
+        "icon": "$(file-code)",
+        "enablement": "activeCustomEditorId == topos.editor || activeCustomEditorId == topos.viewer"
+      },
+      {
+        "command": "topos.reopenAsEditor",
+        "title": "Open in Diagram Editor",
+        "category": "Topos",
+        "icon": "$(editor-layout)",
+        "enablement": "(resourceExtname == .topos || editorLangId == topos) && activeCustomEditorId != topos.editor || activeCustomEditorId == topos.viewer"
+      },
+      {
+        "command": "topos.viewer.toggleFit",
+        "title": "Toggle Actual Size / Fit Diagram",
+        "category": "Topos"
+      },
+      {
+        "command": "topos.viewer.cycleTheme",
+        "title": "Cycle Theme",
+        "category": "Topos",
+        "icon": "$(color-mode)"
+      },
+      {
+        "command": "topos.viewer.toggleForce",
+        "title": "Toggle Appearance Override",
+        "category": "Topos"
+      },
+      {
+        "command": "topos.slate.style",
+        "title": "Style…"
+      },
+      {
+        "command": "topos.slate.editText",
+        "title": "Edit Text"
+      },
+      {
+        "command": "topos.slate.duplicateRight",
+        "title": "Duplicate Right"
+      },
+      {
+        "command": "topos.slate.duplicateDown",
+        "title": "Duplicate Down"
+      },
+      {
+        "command": "topos.slate.toggleContents",
+        "title": "Toggle Contents"
+      },
+      {
+        "command": "topos.slate.delete",
+        "title": "Delete"
+      },
+      {
+        "command": "topos.slate.createText",
+        "title": "Text"
+      },
+      {
+        "command": "topos.slate.createBox",
+        "title": "Box"
+      },
+      {
+        "command": "topos.slate.createLine",
+        "title": "Line"
+      },
+      {
+        "command": "topos.slate.createHub",
+        "title": "Hub"
+      },
+      {
+        "command": "topos.slate.replay",
+        "title": "Replay Trace"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "topos.slate.replay",
+        "key": "ctrl+alt+shift+r",
+        "mac": "cmd+alt+shift+r",
+        "when": "toposEditor && !inputFocus"
+      },
+      {
+        "command": "topos.reopenAsView",
+        "key": "ctrl+shift+v",
+        "mac": "cmd+shift+v",
+        "when": "(resourceExtname == .topos || editorLangId == topos) && activeCustomEditorId != topos.viewer || activeCustomEditorId == topos.editor"
+      },
+      {
+        "command": "topos.reopenAsEditor",
+        "key": "ctrl+shift+v",
+        "mac": "cmd+shift+v",
+        "when": "activeCustomEditorId == topos.viewer"
+      },
+      {
+        "command": "topos.openPreviewToSide",
+        "key": "ctrl+k v",
+        "mac": "cmd+k v",
+        "when": "(resourceExtname == .topos || editorLangId == topos || activeCustomEditorId == topos.editor) && activeCustomEditorId != topos.viewer"
+      },
+      {
+        "command": "topos.reopenAsEditor",
+        "key": "ctrl+shift+d",
+        "mac": "cmd+shift+d",
+        "when": "activeCustomEditorId == topos.viewer"
+      },
+      {
+        "command": "topos.reopenAsEditor",
+        "key": "ctrl+shift+d",
+        "mac": "cmd+shift+d",
+        "when": "(resourceExtname == .topos || editorLangId == topos) && activeCustomEditorId != topos.editor && activeCustomEditorId != topos.viewer"
+      },
+      {
+        "command": "topos.reopenAsText",
+        "key": "ctrl+shift+d",
+        "mac": "cmd+shift+d",
+        "when": "activeCustomEditorId == topos.editor"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "topos.reopenAsEditor",
+          "when": "false"
+        },
+        {
+          "command": "topos.slate.replay",
+          "when": "false"
+        },
+        {
+          "command": "topos.viewer.toggleFit",
+          "when": "toposViewer"
+        },
+        {
+          "command": "topos.viewer.cycleTheme",
+          "when": "toposViewer"
+        },
+        {
+          "command": "topos.viewer.toggleForce",
+          "when": "toposViewer"
+        },
+        {
+          "command": "topos.slate.style",
+          "when": "false"
+        },
+        {
+          "command": "topos.slate.editText",
+          "when": "false"
+        },
+        {
+          "command": "topos.slate.duplicateRight",
+          "when": "false"
+        },
+        {
+          "command": "topos.slate.duplicateDown",
+          "when": "false"
+        },
+        {
+          "command": "topos.slate.toggleContents",
+          "when": "false"
+        },
+        {
+          "command": "topos.slate.delete",
+          "when": "false"
+        },
+        {
+          "command": "topos.slate.createText",
+          "when": "false"
+        },
+        {
+          "command": "topos.slate.createBox",
+          "when": "false"
+        },
+        {
+          "command": "topos.slate.createLine",
+          "when": "false"
+        },
+        {
+          "command": "topos.slate.createHub",
+          "when": "false"
+        }
+      ],
+      "webview/context": [
+        {
+          "submenu": "topos.slate.create",
+          "group": "0_create@10",
+          "when": "toposEditor && !toposEditorSelection"
+        },
+        {
+          "command": "topos.slate.editText",
+          "group": "1_modification@10",
+          "when": "toposEditor && toposEditorSelection"
+        },
+        {
+          "command": "topos.slate.style",
+          "group": "1_modification@20",
+          "when": "toposEditor && toposEditorSelection"
+        },
+        {
+          "command": "topos.slate.toggleContents",
+          "group": "1_modification@30",
+          "when": "toposEditor && toposEditorCanToggleContents"
+        },
+        {
+          "command": "topos.slate.duplicateRight",
+          "group": "2_duplicate@10",
+          "when": "toposEditor && toposEditorSelection"
+        },
+        {
+          "command": "topos.slate.duplicateDown",
+          "group": "2_duplicate@20",
+          "when": "toposEditor && toposEditorSelection"
+        },
+        {
+          "command": "topos.slate.delete",
+          "group": "5_cutcopypaste@4",
+          "when": "toposEditor && toposEditorSelection"
+        }
+      ],
+      "topos.slate.create": [
+        {
+          "command": "topos.slate.createText",
+          "group": "1_create@10"
+        },
+        {
+          "command": "topos.slate.createBox",
+          "group": "1_create@20"
+        },
+        {
+          "command": "topos.slate.createLine",
+          "group": "1_create@30"
+        },
+        {
+          "command": "topos.slate.createHub",
+          "group": "1_create@40"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "topos.openPreviewToSide",
+          "group": "navigation@30",
+          "when": "(resourceExtname == .topos || editorLangId == topos || activeCustomEditorId == topos.editor) && activeCustomEditorId != topos.viewer"
+        },
+        {
+          "command": "topos.reopenAsView",
+          "group": "navigation@20",
+          "when": "(resourceExtname == .topos || editorLangId == topos || activeCustomEditorId == topos.editor) && activeCustomEditorId != topos.viewer"
+        },
+        {
+          "command": "topos.reopenAsText",
+          "group": "navigation@10",
+          "when": "activeCustomEditorId == topos.editor || activeCustomEditorId == topos.viewer"
+        },
+        {
+          "command": "topos.export",
+          "group": "navigation@20",
+          "when": "activeCustomEditorId == topos.viewer"
+        },
+        {
+          "command": "topos.viewer.cycleTheme",
+          "group": "navigation@15",
+          "when": "toposViewer"
+        },
+        {
+          "command": "topos.reopenAsEditor",
+          "group": "navigation@10",
+          "when": "activeCustomEditorId == topos.viewer"
+        },
+        {
+          "command": "topos.reopenAsEditor",
+          "group": "navigation@10",
+          "when": "(resourceExtname == .topos || editorLangId == topos) && activeCustomEditorId != topos.editor && activeCustomEditorId != topos.viewer && activeWebviewPanelId != topos.view && activeWebviewPanelId != topos.preview"
+        },
+        {
+          "command": "topos.edit",
+          "group": "navigation@10",
+          "when": "activeWebviewPanelId == topos.view"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "check": "deno check --config ./deno.json ./src/extension.ts ./src/webview/main.ts",
+    "compile": "deno task --cwd .. ext:compile",
+    "lint": "deno lint --config ./deno.json",
+    "watch": "deno task --cwd .. ext:watch"
+  },
+  "devDependencies": {}
+}

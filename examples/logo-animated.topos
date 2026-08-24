@@ -1,0 +1,16 @@
+╭───────────────╮
+│ ╭───╮   ╭───╮ │
+│ │ ● │   │ ● │ │
+│ ╰─┬─╯   ╰─▴─╯ │
+│   │   ◆   │   │
+│   ╰───────╯   │
+╰───────────────╯
+
+:legend ink=#b8521b
+*-*: loose double
+/ > [*]: pill #face
+#face > [*]: fill=ghost
+
+# animations
+<●>: sketch animate
+*-*: dashed animate

@@ -1,0 +1,14 @@
+ ┌────────────┐ ┌──────────┐
+ │ Hidden     │ │ No label │
+ │            │ └──────────┘
+ │            │
+ │ ┌───────┐  │
+ │ │ Child │  │
+ │ │       │  │
+ │ └───────┘  │
+ │            │
+ └────────────┘
+:legend
+[Hidden]: none stroke=blue
+[Child]: red
+[No label]: label=none

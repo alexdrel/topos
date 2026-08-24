@@ -1,0 +1,45 @@
+:map
+
+                              # Year: 2022
+ ## Space
+      ┌─────────────┐                                 ╭─────Mars Orbit────╮
+      │   # JWST   S├┈◎ L2                            │ [    Odyssey   ] S│
+      └────▲────────┘                                 │                   │
+           │                   ╭────────X-band───────▶│ [      MRO     ] S│
+           │                   │                      ╰─────────────▲─────╯
+           │    (Roadster)     │     ( Teapot )                     │
+           │                   │                                    │
+ ## Earth  │                   │                ## Mars             │
+           │                   │                                UHF relay
+           ├──▶{Webb Images}   │                 <Ingenuity>«───╮   │
+           │                   │                                │   │
+           │                   │                      ╭─Rovers──┼───▼─────╮
+   ┏━━━━━━━▼━━━━━━━━━━━━━━━━━━━▼━┓                    │         ⩔         │
+   ┃     Deep Space Network      ┃                    │ [ Perseverance ] A│
+   ┠─────────┬─────────┬─────────┨◃┈┈┈X-band direct┈┈▹│                   │
+   ┃Goldstone│  Madrid │Canberra ┃                    │ [   Curiosity  ] A│
+   ┗━━━━━━━━━┷━━━━┳━━━━┷━━━━━━━━━┛                    │                   │
+                  ║                                   │ [  Opportunity ] X│
+   ╔══════════════╩══════════════╗                    │                   │
+   ║     JPL Mission Control     ║                    │ [    Spirit    ] X│
+   ╚═════════════════════════════╝                    ╰───────────────────╯
+
+:legend
+JPL%: "Jet Propulsion Laboratory ↵ Mission Control" trapez
+Odyssey: "Mars Odyssey"
+MRO: "Mars Reconnaissance Orbiter"
+Spirit, Opportunity: dotted fill=soft
+Spirit: href="https://xkcd.com/695/"
+Opportunity: href="https://xkcd.com/1504/"
+A: "🔋"
+X: "🪫"
+[Mars Orbit]: fill=none pill
+S: "🛰️"
+[Mars Orbit] > *, [Rovers] > * : rounded
+{Mars}: href="https://xkcd.com/2433/"
+JWST: "James Webb Space ⏎ Telescope" bevel
+{Webb Images}: "Desktop wallpapers" href="https://science.nasa.gov/mission/webb/multimedia/images/"
+{Space} > (*): soft
+Roadster: "🚗 Tesla Roadster"
+Teapot: "🫖 Russell's Teapot"  href="https://en.wikipedia.org/wiki/Russell%27s_teapot"
+L2: "**Sun–Earth** Lagrange Point 2"

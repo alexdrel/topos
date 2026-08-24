@@ -1,0 +1,64 @@
+                              # Animation Gallery
+
+┌───────────────────────┐  ┌───────────────────────┐  ┌───────────────────────┐
+│        Sketch         │  │         XKCD          │  │         Chalk         │
+└───────────────────────┘  └───────────────────────┘  └───────────────────────┘
+
+┌───────────────────────┐  ┌───────────────────────┐  ┌───────────────────────┐
+│        Shadow         │  │         Glow          │  │         Neon          │
+└───────────────────────┘  └───────────────────────┘  └───────────────────────┘
+
+┌───────────────────────┐  ┌───────────────────────┐  ┌───────────────────────┐
+│    Perimeter Spark    │  │    Perimeter Ping     │  │    Perimeter Packet   │
+└───────────────────────┘  └───────────────────────┘  └───────────────────────┘
+
+[Moving chevrons]──────────────────────────────────────────────────────┐
+                                                                       │
+                                                                       ▼
+                                                              [   Backwards   ]
+
+[    Dashed     ]┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄▶[   Dash flow   ]
+
+[    Dotted     ]┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈▶[   Dot flow    ]
+
+[     Spark     ]────────────────────────────────────────────▶[ One particle  ]
+
+[     Ping      ]────────────────────────────────────────────▶[Expanding ring ]
+
+[     Both      ]┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄▶[ Flow + spark  ]
+
+[    Reverse    ]────────────────────────────────────────────▶[    Random     ]
+
+[    Chevron    ]────────────────────────────────────────────▶[  Downscaled   ]
+
+[    Packet     ]────────────────────────────────────────────▶[Moving payload ]
+
+[    Chevron    ]────────────────────────────────────────────▶[     Block     ]
+
+[ Bidir chevron ]◀───────────────────────────────────────────▶[  75% balance  ]
+
+[  Bidir spark  ]◀───────────────────────────────────────────▶[ 50/50 Random  ]
+
+:legend
+Sketch: sketch animate
+XKCD: xkcd animate
+Chalk: chalk animate
+Shadow: shadow animate
+Glow: glow animate
+Neon: neon animate
+[Perimeter Spark]: spark animate  particle-count=5 particle-random=3
+[Perimeter Ping]: ping animate animation-speed=slow
+[Perimeter Packet]: packet animate particle-count=4
+
+[Dashed] -> [Dash flow]: bold dashed animate
+[Dotted] -> [Dot flow]: dotted animate
+[Spark] -> [One particle]: spark animate
+[Ping] -> [Expanding ring]: ping animate
+[Both] -> [Flow + spark]: dashed spark animate
+[Reverse] -> [Random]: spark animate-reverse animation-speed=2 particle-count=3 particle-random=2
+[Chevron] -> *: chevron animate particle-density=4 particle-scale=0.6
+[Packet] -> [Moving payload]: packet animate particle-density=2 particle-scale=1.3
+[Chevron] -> [Block]: block chevron
+[Moving chevrons] -> [Backwards]: block chevron animate-reverse
+[Bidir chevron] <-> *: block chevron animate particle-balance=75
+[Bidir spark] <-> *: spark animate particle-density=2 particle-random=4

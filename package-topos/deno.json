@@ -1,0 +1,8 @@
+{
+  "extends": "../deno.json",
+  "nodeModulesDir": "none",
+  "imports": {
+    "#topos-core": "./topos-core.ts",
+    "@std/assert": "jsr:@std/assert@^1.0.19"
+  }
+}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="128" height="128">
+<!-- Topos file icon: two nodes (eyes), a hub-dot (nose), a rounded routed edge (mouth). -->
+<rect x="2" y="5" width="9" height="10" rx="2" fill="none" stroke="#c97020" stroke-width="2"/>
+<rect x="21" y="5" width="9" height="10" rx="2" fill="none" stroke="#c97020" stroke-width="2"/>
+<circle cx="16" cy="15" r="2.3" fill="#c97020"/>
+<path d="M6.5 15 V19 Q6.5 22 9.5 22 H22.5 Q25.5 22 25.5 19 V16.5" fill="none" stroke="#c97020" stroke-width="2" stroke-linecap="round"/>
+<polygon points="25.5,15 23.3,18.5 27.7,18.5" fill="#c97020"/>
+</svg>

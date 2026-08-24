@@ -1,0 +1,13 @@
+┌─────┬─────┬─────┬─────┐
+│  A  │  B  │  C  │  D  │
+├─────┼─────┼─────┼─────┤
+│  E  │  F  │  G  │  H  │
+├─────┼─────┼─────┼─────┤
+│  I  │  J  │  K  │  L  │
+├─────┼─────┼─────┼─────┤
+│  M  │  N  │  O  │  P  │
+└─────┴─────┴─────┴─────┘
+
+:legend
+A, C, F, H, I, K, N, P: fill=yellow,strong label=blue
+B, D, E, G, J, L, M, O: fill=blue,strong label=yellow

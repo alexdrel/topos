@@ -1,0 +1,66 @@
+{
+    "version": "0.5.5",
+    "tasks": {
+        "serve": "deno run -A npm:vite",
+        "gen:compendium": "deno task gen:defs && deno run -A package-topos/cli.ts src/enamel/compendium/compendium.topos -o src/enamel/compendium/compendium.svg",
+        "gen:defs": "deno run --allow-read --allow-write scripts/extract-defs.ts",
+        "ext:check": "deno task --cwd vscode-topos check",
+        "ext:compile": "deno bundle --config vscode-topos/deno.json --external vscode --external '#topos-core' --platform deno --format esm vscode-topos/src/extension.ts --output vscode-topos/out/extension.js && deno bundle --config vscode-topos/deno.json --platform browser --format esm vscode-topos/src/webview/main.ts --output vscode-topos/out/webview.js && deno bundle --config deno.json --platform deno --format esm package-topos/topos-core.ts --output vscode-topos/out/topos-core.js && deno bundle --config deno.json --platform deno --format esm --external '#topos-core' package-topos/cli.ts --output vscode-topos/out/topos.js",
+        "ext:lint": "deno task --cwd vscode-topos lint",
+        "ext:watch": "deno bundle --config vscode-topos/deno.json --external vscode --external '#topos-core' --platform deno --format esm vscode-topos/src/extension.ts --output vscode-topos/out/extension.js --watch & deno bundle --config vscode-topos/deno.json --platform browser --format esm vscode-topos/src/webview/main.ts --output vscode-topos/out/webview.js --watch & deno bundle --config deno.json --platform deno --format esm package-topos/topos-core.ts --output vscode-topos/out/topos-core.js --watch & deno bundle --config deno.json --platform deno --format esm --external '#topos-core' package-topos/cli.ts --output vscode-topos/out/topos.js --watch",
+        "package:build": "deno bundle --config deno.json --platform deno --format esm package-topos/topos-core.ts --output package-topos/dist/topos-core.js && deno bundle --config deno.json --platform deno --format esm --external '#topos-core' package-topos/cli.ts --output package-topos/dist/topos.js",
+        "test": "deno check --quiet && deno lint && deno test -A --quiet --reporter=dot",
+        "coverage": "deno test -A --clean --coverage=coverage --quiet --reporter=dot"
+    },
+    "exclude": [
+        "tmp/",
+        "vscode-topos/out/"
+    ],
+    "lint": {
+        "include": [
+            "src/",
+            "src-editor/",
+            "www"
+        ]
+    },
+    "test": {
+        "exclude": [
+            "tmp/"
+        ]
+    },
+    "fmt": {
+        "useTabs": false,
+        "lineWidth": 160,
+        "indentWidth": 2,
+        "proseWrap": "never",
+        "include": [
+            "docs/",
+            "src/",
+            "src-editor/",
+            "www/",
+            "vscode-topos/src/",
+            "package-topos/",
+            "scripts/",
+            "vite.config.ts"
+        ],
+        "exclude": [
+            "**/*.gen.ts",
+            "**/*.test.ts",
+            "**/compendium*",
+            "package-topos/dist/",
+            "vscode-topos/out/"
+        ]
+    },
+    "imports": {
+        "#topos-core": "./package-topos/topos-core.ts",
+        "@deno/vite-plugin": "npm:@deno/vite-plugin@^2.0.2",
+        "@std/assert": "jsr:@std/assert@^1.0.19",
+        "@std/path": "jsr:@std/path@^1.1.4",
+        "@xmldom/xmldom": "npm:@xmldom/xmldom@0.8.11",
+        "vscode": "npm:@types/vscode@^1.100.0",
+        "vite": "npm:vite@^8.2.1"
+    },
+    "unstable": [
+        "raw-imports"
+    ]
+}

@@ -1,0 +1,51 @@
+           #t
+
+┌───────────────────────┐
+│ b                     │
+│                       │
+│                       │
+└─────────────────────l─┘
+
+┌─R1────────────────────┐
+│  Opportunity          │
+│  Perseverance         │
+│  Curiosity            │
+│  Spirit               │
+└───────────────────────┘
+
+┌─R2────────────────────┐
+│     Opportunity       │
+│     Perseverance      │
+│     Curiosity         │
+│     Spirit            │
+└───────────────────────┘
+
+┌─R3────────────────────┐
+│          Opportunity  │
+│          Perseverance │
+│          Curiosity    │
+│          Spirit       │
+└───────────────────────┘
+
+┌─R4────────────────────┐
+│     Opportunity       │
+│                       │
+│    Perseverance       │
+│                       │
+│      Curiosity        │
+│                       │
+│       Spirit          │
+└───────────────────────┘
+
+┌─R5────────────────────┐
+│   [ Opportunity  ]    │
+│   [ Perseverance ]    │
+│   [  Curiosity   ]    │
+│   [   Spirit     ]    │
+└───────────────────────┘
+
+
+:legend
+t: "Long title text"
+l: "Long label text"
+b: "   Long note text that wraps with ⏎ carret. Usage line paragraph symbol.¶ The End."

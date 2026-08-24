@@ -1,0 +1,37 @@
+.topbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--topbar-start) 0%, var(--topbar-end) 100%);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-meta {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.case-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.case-select {
+  width: 360px;
+  min-width: 360px;
+  max-width: 360px;
+}

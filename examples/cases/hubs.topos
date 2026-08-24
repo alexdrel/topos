@@ -1,0 +1,26 @@
+
+            ■ Top
+            │
+            ▼
+ □─────────>◎<────────────□
+            │
+            │
+            │
+            ▼
+     Bottom ◇ 
+
+
+        ┌─inet_srv──┐          
+        │           │          
+        □  http     │          
+        │           │          
+        □  https    │          
+        │           │          
+        □  ftp      │          
+        │           │          
+        └───────────┘
+                              
+:legend
+<*>: circle
+Top: diamond-hollow label=left
+Bottom: diamond label=right

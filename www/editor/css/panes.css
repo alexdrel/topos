@@ -1,0 +1,207 @@
+.surface-panel.svg-focus .surface-caret {
+  display: none;
+}
+
+.side-panel {
+  --side-split-size: 8px;
+  --inspector-size: calc((100% - var(--side-split-size) * 2) * 0.4);
+  --legend-size: calc((100% - var(--side-split-size) * 2) * 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 8px;
+  min-height: 0;
+}
+
+body.svg-focus .side-panel #inspector-section,
+body.svg-focus .side-panel #side-splitter,
+body.svg-focus .side-panel #legend-splitter,
+body.svg-focus .side-panel #enamel-section {
+  display: none !important;
+}
+
+body.svg-focus .side-panel #legend-section {
+  flex: 1 1 auto !important;
+}
+
+body.source-focus .side-panel > :not(#glyph-section) {
+  display: none !important;
+}
+
+body.source-focus .side-panel #glyph-section {
+  display: grid !important;
+  flex: 1 1 auto;
+}
+
+.sidebar-top-pane {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--panel-soft-start) 0%, var(--panel-soft-end) 100%);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  flex: 0 0 var(--inspector-size);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pane-head:hover .pane-head-toggle,
+.pane-head:hover .pane-chevron {
+  color: var(--accent);
+}
+
+.side-panel.inspector-collapsed .sidebar-top-pane .pane-chevron,
+.side-panel.inspector-collapsed .inspector-section .pane-chevron,
+.side-panel.legend-collapsed .pane-section #legend-chevron,
+.side-panel.enamel-collapsed #enamel-section .pane-chevron {
+  transform: rotate(-90deg);
+}
+
+/* --- Inspector Collapse --- */
+.side-panel.inspector-collapsed #inspector-body,
+.side-panel.inspector-collapsed #glyph-pane {
+  display: none;
+}
+.side-panel.inspector-collapsed .sidebar-top-pane,
+.side-panel.inspector-collapsed #inspector-section {
+  flex: 0 0 auto !important;
+}
+.side-panel.inspector-collapsed #side-splitter {
+  display: none;
+}
+
+/* --- Enamel Collapse --- */
+.side-panel.enamel-collapsed #enamel-pane,
+.side-panel.enamel-collapsed .enamel-head-controls,
+.side-panel.enamel-collapsed #enamel-section .pane-chevron {
+  display: none;
+}
+.side-panel.enamel-collapsed #enamel-section {
+  flex: 0 0 auto !important;
+}
+
+/* --- Dynamic Space Filling --- */
+/* If Enamel is collapsed, Legend must fill its void */
+.side-panel.enamel-collapsed:not(.legend-collapsed) #legend-section {
+  flex: 1 1 auto !important;
+}
+/* If both Enamel and Legend are collapsed, Inspector must fill their void */
+.side-panel.enamel-collapsed.legend-collapsed:not(.inspector-collapsed) #inspector-section {
+  flex: 1 1 auto !important;
+}
+
+.pane-section {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--panel-soft-start) 0%, var(--panel-soft-end) 100%);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pane-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--panel-head-start) 0%, var(--panel-head-end) 100%);
+  padding: 9px 12px;
+  gap: 8px;
+  min-width: 0;
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pane-head-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border: none;
+  background: transparent;
+  color: var(--title-ink);
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex: 1 1 auto;
+  min-width: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.pane-head-toggle:hover {
+  color: var(--accent);
+}
+
+.pane-body {
+  overflow: auto;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pane-chevron {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease, color 0.1s ease;
+  flex: 0 0 auto;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) minmax(260px, 38vh);
+  }
+
+  #workspace-splitter {
+    display: none;
+  }
+}
+
+@keyframes error-flash {
+  0% {
+    background-color: var(--field-bg);
+  }
+  25% {
+    background-color: #ff4d4d;
+    color: white;
+  }
+  100% {
+    background-color: var(--field-bg);
+  }
+}
+
+.error-flash {
+  animation: error-flash 0.8s ease-in-out;
+}
+
+.control-separator {
+  color: var(--line);
+  margin: 0 4px;
+  user-select: none;
+}
+
+.control-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--title-ink);
+  cursor: pointer;
+  user-select: none;
+  margin-right: 4px;
+}
+
+.control-checkbox-label input {
+  cursor: pointer;
+  margin: 0;
+}

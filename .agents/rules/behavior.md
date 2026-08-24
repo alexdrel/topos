@@ -1,0 +1,10 @@
+# Agent Behavior Guidelines
+
+- **Prioritize Interactive Discussion**: Always prioritize active discussion, UX design, and architectural alignment with the user before jumping into code changes or planning artifacts. Indulge the user when they want to discuss UX, architecture, or logic.
+- **Improvement opportunities**: Surface improvement and refactoring opportunities for discussion, but don’t silently expand scope.
+- **Work in conversational slices**: For exploratory refactors, align on one ownership or UX decision, implement that coherent slice, verify it, and then reassess with the user before widening scope.
+- **Treat friction as design feedback**: If a small change requires a disproportionate amount of work or touches unexpected owners, stop and discuss it. The friction may expose an architectural mistake; do not bury that signal under forwarding callbacks, workarounds, or incidental complexity.
+- **Recover intent from existing tests**: Treat existing tests as evidence of intended behavior, not automatically as the specification. When a sound change conflicts with a test, identify the user-facing or architectural intent behind the fixture before changing the implementation. Do not distort a design or add workarounds merely to preserve obsolete implementation details captured by an assertion; update the test to express the actual contract instead. If the intended contract is unclear, stop and consult the user rather than guessing.
+- **Prefer visible structure over clever abstraction**: Start with the simplest component and DOM structure that expresses ownership clearly. Introduce abstractions only when they remove real duplication or enable required reuse.
+- **Follow implementation with a cleanup pass**: Once the new behavior works, inspect for obsolete APIs, selectors, state, forwarding, and files left behind by the previous architecture.
+- **Validate interactive work visually**: Automated tests establish structural safety but do not validate layout and interaction quality. Treat user or browser visual verification as part of the iteration cadence.

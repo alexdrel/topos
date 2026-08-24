@@ -1,0 +1,29 @@
+┌───────────────────────────┐
+│                           │
+│   This is a               │
+│   long _paragraph         │
+│   with three lines_ or    │
+│   **even four** lines.    │
+│                           │
+└───────────────────────────┘
+
+┌─────────────────────────┐
+│ ¶ This is line one that │
+│ wraps with ⏎ carret.    │
+│ `Usage line` paragraph  │
+│ symbol.¶ The End.       │
+└─────────────────────────┘
+
+┌───────────────────────────────────┐
+│                                   │
+│       Very Long Component         │
+│       Descriptive Name ¶          │
+│                                   │
+└───────────────────────────────────┘
+
+┌───────────────────────────────────┐
+│                                   │
+│       # Very Long Component       │
+│       Descriptive Name            │
+│                                   │
+└───────────────────────────────────┘

@@ -1,0 +1,74 @@
+
+      # Topos Architecture        ┌─Topos @file───┐
+                               ┏━━■ :map          ◁─────────────────────────┐
+                               ┃  │   [A]->[B]    │                         │
+                               ┃  │               │                         │
+                               ┃  │       :legend ■────┐                    │
+      Open Source              ┃  └───────────────┘    │                    │
+      MIT License              ┃                       │              ╭─────┴─────────────Ink──╮
+                               ┃                       │              │                        │
+                               ┃                       │              │   projectTracesToGrid  │
+                         ┏━━━━━▼━━━━━━━━━ Trace ━━┓    │              │                        │
+                         ┃  ┆                     ┃    │              ╰─────△──────────────────╯
+     ╭──────────────╮    ┃  ┆  [ perimeterAnt ]   ┃    │                    │
+     │   Glyphs     │    ┃  ┆                     ┃    │                    │
+     │   Traits     ├┄┄┄┄┫  ┆  [  arrowMouse  ]   ┃    │           ╭┈┈┈┈┈┈┈┈┼┈┈┈┈┈Source-Available╮
+     │   TextGrid   │    ┃  ┆                     ┃    │           ┊        │                     ┊
+     │   claimMask  │    ┃  ┆  [  textTurtle  ]   ┃    │           ┊  ┏━━━━━┷━━━━━━━━━ Model ━━┓  ┊
+     ╰──────────────╯    ┃  ⩔                     ┃    │           ┊  ┃                        ┃  ┊
+                         ┗━━━━━┳━━━━━━━━━━━━━━━━━━┛    │           ┊  ┃   [    document    ]   ┃  ┊
+                               ┃                       │           ┊  ┃                        ┃  ┊
+                               ┠───────────────────────┼───────────┼─▷┃   [    mutation    ]   ┃  ┊
+                               ┃                       │           ┊  ┃                        ┃  ┊
+                         ┏━━━━━▼━━━━━━━━━ Refine ━┓    │           ┊  ┃   [    clipboard   ]   ┃  ┊
+                         ┃  ┆                     ┃    │           ┊  ┃                        ┃  ┊
+                         ┃  ┆  [ buildNodeTree]   ┃    │           ┊  ┗━━━━━━━━━━━━△━━━━━━━━━━━┛  ┊
+                         ┃  ┆                     ┃    │           ┊               │              ┊
+                         ┃  ┆  [ resolveEdges ]   ┃    │           ┊               │              ┊
+                         ┃  ┆                     ┃    │           ┊               │              ┊
+                         ┃  ┆  [resolveRegions]   ┃    │           ┊  ┏━━━━━━━━━━━━▽━━ Slate ━━┓  ┊
+                         ┃  ⩔                     ┃    │           ┊  ┃                        ┃  ┊
+                         ┗━━━━━┳━━━━━━━━━━━━━━━━━━┛    │           ┊  ┃   [    selection    ]  ┃  ┊
+                               ┃                       │           ┊  ┃                        ┃  ┊
+                               ┃                       │    ┌┈┈┈┈┈┈┼┈┈┫   [   interactions  ]  ┃  ┊
+                               ┃                       │    ┊      ┊  ┃                        ┃  ┊
+                         ┏━━━━━▼━━━━━━━━━ Legend ━┓    │    ┊      ┊  ┃   [   chrome/menus  ]  ┃  ┊
+                         ┃  ┆                     ┃    │    ┊      ┊  ┃                        ┃  ┊
+                         ┃  ┆  [  parseLegend ]   ◀────┘    ┊      ┊  ┗━━━━━━━━━━━━━━━━━━━━━━┯━┛  ┊
+                         ┃  ┆                     ┃         ┊      ┊                         │    ┊
+                         ┃  ┆  [   annotate   ]   ┃         ┊      ╰┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┼┈┈┈┈╯
+                         ┃  ┆                     ┃         ┊                                │
+                         ┃  ┆  [synthesizeEdge]   ┃         ┊                                │
+                         ┃  ⩔                     ┃   ╭─────┴────╮                           │
+                         ┗━━━━━┳━━━━━━━━━━━━━━━━━━┛   │  JSONML  │                           │
+                               ┃                      ╰─────┬────╯                           │
+                               ┃                            ┊                                │
+                               ┃                            ┊                                │
+     ┌───Compendium─┐    ┏━━━━━▼━━━━━━━━━ Enamel ━┓         ┊         ╔════VS Code Extension═╧═╗
+     │   styles     │    ┃  ┆                     ┃         ┊         ║                        ║
+     │   colors     │    ┃  ┆  [    shapes    ]   ┃         ┊         ║  [       slate      ]  ║
+     │   markers    │    ┃  ┆                     ┃         ┊         ║                        ║
+     │   patterns   ├────┨  ┆  [    labels    ]   ┣┈┈┈┈┈┈┈┈┈┘         ║  [     markdown     ]  ║
+     │   symbols    │    ┃  ┆                     ┃                   ║                        ║
+     │   particles  │    ┃  ┆  [  animations  ]   ┠───────────────────╢  [      viewer      ]  ║
+     │   effects    │    ┃  ⩔                     ┃                   ║                        ║
+     └─────────@file┘    ┗━━━━━━━━━━━━┳━━━━━━━━━━━┛                   ║  [  legend language ]  ║
+                                      ┃                               ║                        ║
+                                      ┃                               ║  [      export      ]  ║
+                                      ▽                               ║                        ║
+                                                                      ╚════════════════════════╝
+                         ┌────────────────────────┐
+                         │                        │
+                         │                        │
+                         │       SVG @browser     │
+                         │                        │
+                         │                        │
+                         └────────────────────────┘
+
+:legend
+[/]: label-color = #c97020
+Trace, Refine, Ink, ^Glyph%, ^Glyph% - Trace: blue
+Legend, Compendium, Enamel, Compendium - Enamel: green
+Topos, SVG: orange
+Source-Available: fill=ghost purple loose
+Model<->Slate: block

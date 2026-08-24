@@ -1,0 +1,32 @@
+{
+  "nodeModulesDir": "none",
+  "imports": {
+    "#topos-core": "../package-topos/topos-core.ts",
+    "@std/assert": "jsr:@std/assert@^1.0.19",
+    "vscode": "npm:@types/vscode@^1.100.0"
+  },
+  "compilerOptions": {
+    "lib": [
+      "ES2024",
+      "DOM"
+    ],
+    "strict": true,
+    "types": [
+      "npm:@types/vscode@^1.100.0"
+    ]
+  },
+  "lint": {
+    "include": [
+      "src/"
+    ]
+  },
+  "exclude": [
+    "out/"
+  ],
+  "fmt": {
+    "lineWidth": 150,
+    "exclude": [
+      "out/"
+    ]
+  }
+}

@@ -1,0 +1,995 @@
+{
+    "root": {
+        "i": "02-AA9kAcXelUPm4EB7ef6SHqy6ljZ",
+        "v": -990878664,
+        "ss": [
+            {
+                "type": "T",
+                "i": "02-AAox0bzEn05aJqiKJPOZiU9gWMJ",
+                "v": 1581158437,
+                "b": "20|22|12|5",
+                "t": " AA",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AA5D3bzVCViT2AysMvDJ3UtMqA-",
+                "v": -984243811,
+                "b": "38|22|9|5",
+                "t": "BB",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AACUHdz9wvYFIsXQDzYq_ZW4_hh",
+                "v": 555761752,
+                "ps": "H|31|24",
+                "pe": "V|37|24",
+                "jps": [
+                    "31|24",
+                    "37|24"
+                ],
+                "e": {
+                    "su": "S1",
+                    "ase": true,
+                    "asu": "A6",
+                    "aee": true,
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": false
+            },
+            {
+                "type": "L",
+                "i": "02-AAPbKdzYzU5T3mGRpPrbruDROW8",
+                "v": 1941118851,
+                "ps": "V|42|26",
+                "pe": "V|25|26",
+                "jps": [
+                    "42|26",
+                    "42|28",
+                    "25|28",
+                    "25|26"
+                ],
+                "e": {
+                    "su": "S1",
+                    "ase": true,
+                    "asu": "A6",
+                    "aee": true,
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": true
+            },
+            {
+                "type": "T",
+                "i": "02-AABff03dyyF8B2MchcxRpsmeVTz",
+                "v": -1904643339,
+                "b": "9|4|38|11",
+                "t": "Top",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "YYYY"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AA7Qh03L0SnoJfZFCfYn7FOU_34",
+                "v": 1559165515,
+                "b": "26|6|17|7",
+                "t": "CC",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S2",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AAVCn03wU_UIN7lmIpuQLnVy-Jj",
+                "v": -1180782838,
+                "ps": "V|42|22",
+                "pe": "V|35|12",
+                "jps": [
+                    "42|22",
+                    "42|17",
+                    "35|17",
+                    "35|12"
+                ],
+                "e": {
+                    "su": "S2",
+                    "ase": true,
+                    "asu": "A220",
+                    "aee": true,
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAiN303oFZ40GDcDVOhCoQ0bsXN",
+                "v": 2073918339,
+                "b": "12|8|10|5",
+                "t": "DD",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S3",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AAIB5038IeUqKqlnib0wixain1j",
+                "v": -816008421,
+                "ps": "V|18|12",
+                "pe": "V|25|22",
+                "jps": [
+                    "18|12",
+                    "18|17",
+                    "25|17",
+                    "25|22"
+                ],
+                "e": {
+                    "su": "S1",
+                    "ase": true,
+                    "asu": "A21",
+                    "aee": true,
+                    "aeu": "A12",
+                    "du": "1|0|0"
+                },
+                "em": true
+            },
+            {
+                "type": "T",
+                "i": "02-AAHIM130dtQw7rybs8uUDTHSmX-",
+                "v": 453048747,
+                "b": "15|19|39|12",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S2",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AA0_Q23obH1Kwvn_AWdqmpJkJoQ",
+                "v": -746172840,
+                "b": "38|17|3|3",
+                "t": "Foo",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 0,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AA6Zc23X1UyfNKA5C21vdG95kRc",
+                "v": 56732632,
+                "b": "33|28|5|1",
+                "t": " Bar ",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 0,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAdcu23IPiVoMj0_Zj0pTmx2gKW",
+                "v": 81955966,
+                "b": "28|19|8|1",
+                "t": " Bottom ",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 0,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AA5LB43ULEMVeVbxIANJ0G9bEYh",
+                "v": 1584624690,
+                "ps": "H|26|7",
+                "pe": "V|16|8",
+                "jps": [
+                    "26|7",
+                    "16|7",
+                    "16|8"
+                ],
+                "e": {
+                    "su": "S1",
+                    "ase": true,
+                    "asu": "A61",
+                    "aee": true,
+                    "aeu": "A5",
+                    "du": "1|0|0"
+                },
+                "em": true
+            },
+            {
+                "type": "T",
+                "i": "02-AAvaTa4UTBgTRv1B-zREgXU9DgO",
+                "v": -2124087086,
+                "b": "93|5|18|5",
+                "t": "A",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAmZVa4ZhQiKisIHttmrAYrt-i_",
+                "v": 1273029259,
+                "b": "113|8|7|6",
+                "t": "C",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AA2JYa40CT9QKEn_60eKWH_1MUS",
+                "v": 905725856,
+                "b": "91|11|18|5",
+                "t": "B",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAlEXWCrD1ER6WB3fNu1ckWLr6G",
+                "v": 1697798342,
+                "b": "149|9|40|16",
+                "t": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S3",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 0,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AAcpgXCrOYmw-xxQQ-9OJsdV0Eb",
+                "v": 109684083,
+                "ps": "H|210|11",
+                "pe": "V|210|11",
+                "jps": [
+                    "210|11",
+                    "214|11",
+                    "214|8",
+                    "249|8",
+                    "249|31",
+                    "204|31",
+                    "204|5",
+                    "210|5",
+                    "210|11"
+                ],
+                "e": {
+                    "su": "S1",
+                    "ase": true,
+                    "asu": "A6",
+                    "aeu": "A6",
+                    "du": "1|0|0"
+                },
+                "em": true
+            },
+            {
+                "type": "T",
+                "i": "02-AAaT8zHWisL5rswWGI8KYKM3Og2",
+                "v": 1026663919,
+                "b": "77|21|17|9",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S3",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AA0M9zH80UlKTTp1_AJ6Z9uzIGk",
+                "v": 1673562109,
+                "b": "79|22|21|12",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S3",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAYxJ0MVHWe14TYheHDJr5OruwL",
+                "v": 2080055980,
+                "b": "146|23|36|3",
+                "t": "\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S3",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 0,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AA007yMnyVYKaTIlC86TtZa4SmC",
+                "v": 1333508480,
+                "b": "141|6|29|29",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S3",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                },
+                "te": false
+            },
+            {
+                "type": "T",
+                "i": "02-AA5yPTNyiC8QAIohexc5E3DnGxL",
+                "v": 1968213358,
+                "b": "57|-13|18|7",
+                "t": "A",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 2
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AA5yPTN7LY3Ko9QlaJIg-w_9U4h",
+                "v": 479713497,
+                "b": "63|-12|10|3",
+                "t": "B",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AAF3TbWhmnFPs__s5lnhHc3dtSA",
+                "v": 583489775,
+                "ps": "H|112|-13",
+                "pe": "V|112|-7",
+                "jps": [
+                    "112|-13",
+                    "112|-7"
+                ],
+                "e": {
+                    "su": "S1",
+                    "asu": "A1",
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": false
+            },
+            {
+                "type": "L",
+                "i": "02-AAbqVbWsBvbJQ6mFX0uV6VK4DCV",
+                "v": 499274207,
+                "ps": "H|105|-10",
+                "pe": "V|112|-10",
+                "jps": [
+                    "105|-10",
+                    "112|-10"
+                ],
+                "e": {
+                    "su": "S1",
+                    "asu": "A1",
+                    "aee": true,
+                    "aeu": "A2",
+                    "du": "1|0|0"
+                },
+                "em": false
+            },
+            {
+                "type": "L",
+                "i": "02-AAJ6YbWfV1zFx83t7CnxeeDbSXz",
+                "v": 1588533004,
+                "ps": "H|119|-10",
+                "pe": "V|112|-10",
+                "jps": [
+                    "119|-10",
+                    "112|-10"
+                ],
+                "e": {
+                    "su": "S1",
+                    "asu": "A1",
+                    "aee": true,
+                    "aeu": "A2",
+                    "du": "1|0|0"
+                },
+                "em": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAFC6wZE77yy3Hl9jX-e2w6krFX",
+                "v": 1948658184,
+                "b": "138|-11|8|3",
+                "t": "A",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 2
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAFC6wZQEmx8dYN8e0DARe4abrF",
+                "v": -1675950322,
+                "b": "145|-6|9|3",
+                "t": "B",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AAd--wZ6X0WqEN3utOBWrv5wS3d",
+                "v": 90524509,
+                "ps": "V|141|-9",
+                "pe": "V|148|-6",
+                "jps": [
+                    "141|-9",
+                    "141|-7",
+                    "148|-7",
+                    "148|-6"
+                ],
+                "e": {
+                    "su": "S1",
+                    "asu": "A1",
+                    "aee": true,
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": false
+            },
+            {
+                "type": "T",
+                "i": "02-AAMWy1ZSEty34bVWecUxi8gQQR3",
+                "v": -925459057,
+                "b": "175|-13|8|3",
+                "t": "A",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 2
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAMWy1ZDB6O1i7ek7y0Iu10mz7X",
+                "v": 584631099,
+                "b": "189|-13|9|3",
+                "t": "B",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AAMWy1Z9Brsce-qoZV3A78bMLQn",
+                "v": 660746421,
+                "ps": "H|182|-12",
+                "pe": "H|197|-12",
+                "jps": [
+                    "182|-12",
+                    "185|-12",
+                    "185|-16",
+                    "202|-16",
+                    "202|-12",
+                    "197|-12"
+                ],
+                "e": {
+                    "su": "S1",
+                    "ase": true,
+                    "asu": "A221",
+                    "aee": true,
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": true
+            },
+            {
+                "type": "T",
+                "i": "02-AAxqTpEuKW4Jt8VESsXULGnW0br",
+                "v": 83167926,
+                "b": "14|-14|18|7",
+                "t": "A",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAxqTpEwXyJf7h3_gobaSzag4jJ",
+                "v": 1734355058,
+                "b": "14|-14|10|3",
+                "t": "B",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAwrn-EzrZkuI1Eg4cQRx1RsARR",
+                "v": -1419979866,
+                "b": "22|-10|10|3",
+                "t": "C",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAsYlCeTjzTO4NxbZhspINS28Lh",
+                "v": 448741356,
+                "b": "216|-13|8|3",
+                "t": "A",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 2
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAsYlCeqaV5eoiFlFZcouLz7dqq",
+                "v": -1505040698,
+                "b": "223|-8|13|7",
+                "t": "B",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AAsYlCesHG_WcueRKRw3jGAprtl",
+                "v": 824041850,
+                "ps": "V|219|-11",
+                "pe": "V|229|-6",
+                "jps": [
+                    "219|-11",
+                    "219|-9",
+                    "229|-9",
+                    "229|-6"
+                ],
+                "e": {
+                    "su": "S1",
+                    "asu": "A1",
+                    "aee": true,
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": true
+            },
+            {
+                "type": "L",
+                "i": "02-AAAGgqfzVQ0v_CShlS07skA6ug9",
+                "v": 2137912554,
+                "ps": "H|86|-13",
+                "pe": "V|86|-8",
+                "jps": [
+                    "86|-13",
+                    "87|-13",
+                    "87|-8",
+                    "86|-8"
+                ],
+                "e": {
+                    "su": "S1",
+                    "asu": "A1",
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": true
+            },
+            {
+                "type": "T",
+                "i": "02-AAK2iqf-iUAqlF5LdSXib5LIK_x",
+                "v": 1297852891,
+                "b": "83|-13|2|1",
+                "t": "A",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S3",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 0,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAddkqfWHhQMXaU6EltY4mqj9XV",
+                "v": -100598595,
+                "b": "83|-8|1|1",
+                "t": "B\n",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S3",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 0,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AAC1Pejme3iVhZKm89igFWRuJbH",
+                "v": 1061187543,
+                "ps": "H|91|-13",
+                "pe": "V|91|-8",
+                "jps": [
+                    "91|-13",
+                    "90|-13",
+                    "90|-8",
+                    "91|-8"
+                ],
+                "e": {
+                    "su": "S1",
+                    "asu": "A1",
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": true
+            },
+            {
+                "type": "T",
+                "i": "02-AAgyXejSMJpp8PHq3fSVYqhROtu",
+                "v": -51473010,
+                "b": "93|-13|2|1",
+                "t": "C",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S3",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 0,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AA5PaejCDAPd3c7AlmXsFGH97yQ",
+                "v": -1252899814,
+                "b": "93|-8|2|1",
+                "t": "D",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": false,
+                        "bu": "S3",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 0,
+                    "tva": 0
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AAqo2JtlYEgdi-qRz4IzFyKRCQe",
+                "v": 1465652371,
+                "b": "247|-10|14|7",
+                "t": "",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S2",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                },
+                "te": false
+            },
+            {
+                "type": "L",
+                "i": "02-AAe23JtEWrjVQFLDDJFQ-rMziSQ",
+                "v": -1720229663,
+                "ps": "H|253|-10",
+                "pe": "V|253|-8",
+                "jps": [
+                    "253|-10",
+                    "253|-8"
+                ],
+                "e": {
+                    "su": "S1",
+                    "asu": "A1",
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": true
+            }
+        ]
+    },
+    "extra": {
+        "name": "Undefined",
+        "offset": "-70|304"
+    },
+    "version": 2,
+    "modified_timestamp_millis": 1773516617035,
+    "connectors": [
+        {
+            "i": "02-AAd--wZ6X0WqEN3utOBWrv5wS3d",
+            "a": 1,
+            "t": "02-AAFC6wZE77yy3Hl9jX-e2w6krFX",
+            "r": "0.5|1",
+            "o": "0|0"
+        },
+        {
+            "i": "02-AAd--wZ6X0WqEN3utOBWrv5wS3d",
+            "a": 2,
+            "t": "02-AAFC6wZQEmx8dYN8e0DARe4abrF",
+            "r": "0.45454545454545453|0",
+            "o": "0|0"
+        },
+        {
+            "i": "02-AAMWy1Z9Brsce-qoZV3A78bMLQn",
+            "a": 1,
+            "t": "02-AAMWy1ZSEty34bVWecUxi8gQQR3",
+            "r": "1|0.5",
+            "o": "0|0"
+        },
+        {
+            "i": "02-AAMWy1Z9Brsce-qoZV3A78bMLQn",
+            "a": 2,
+            "t": "02-AAMWy1ZDB6O1i7ek7y0Iu10mz7X",
+            "r": "1|0.5",
+            "o": "0|0"
+        },
+        {
+            "i": "02-AAsYlCesHG_WcueRKRw3jGAprtl",
+            "a": 1,
+            "t": "02-AAsYlCeTjzTO4NxbZhspINS28Lh",
+            "r": "0.42857142857142855|1",
+            "o": "0|0"
+        }
+    ]
+}

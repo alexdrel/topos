@@ -1,0 +1,16 @@
+#!/bin/sh
+
+TOPOS_RUNTIME=${TOPOS_RUNTIME:-'{{TOPOS_RUNTIME}}'}
+TOPOS_SCRIPT=${TOPOS_SCRIPT:-'{{TOPOS_SCRIPT}}'}
+
+if [ ! -x "$TOPOS_RUNTIME" ]; then
+  echo "topos: extension runtime is unavailable; reload or reinstall the Topos extension" >&2
+  exit 1
+fi
+
+if [ ! -f "$TOPOS_SCRIPT" ]; then
+  echo "topos: extension CLI is unavailable; reload or reinstall the Topos extension" >&2
+  exit 1
+fi
+
+ELECTRON_RUN_AS_NODE=1 exec "$TOPOS_RUNTIME" "$TOPOS_SCRIPT" "$@"

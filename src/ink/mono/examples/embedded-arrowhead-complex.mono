@@ -1,0 +1,91 @@
+{
+    "root": {
+        "i": "02-AA43mcdwokq6g",
+        "v": 1200691041,
+        "ss": [
+            {
+                "type": "T",
+                "i": "02-AA0oy7tnYMCm7_o6S5TsdRG4ZO0",
+                "v": -982658630,
+                "b": "1|3|8|3",
+                "t": "A",
+                "e": {
+                    "be": {
+                        "fe": false,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 2
+                }
+            },
+            {
+                "type": "T",
+                "i": "02-AA0oy7tEqPQbgGNsgsZrhszbpYF",
+                "v": -1128257346,
+                "b": "15|3|9|3",
+                "t": "B",
+                "e": {
+                    "be": {
+                        "fe": true,
+                        "fu": "F1",
+                        "be": true,
+                        "bu": "S1",
+                        "du": "1|0|0",
+                        "rc": "NNNN"
+                    },
+                    "tha": 1,
+                    "tva": 1
+                }
+            },
+            {
+                "type": "L",
+                "i": "02-AA0oy7tYtyNVdWzdpAGHxvEt4f_",
+                "v": 476108383,
+                "ps": "H|8|4",
+                "pe": "H|23|4",
+                "jps": [
+                    "8|4",
+                    "11|4",
+                    "11|0",
+                    "28|0",
+                    "28|4",
+                    "23|4"
+                ],
+                "e": {
+                    "su": "S1",
+                    "ase": true,
+                    "asu": "A221",
+                    "aee": true,
+                    "aeu": "A1",
+                    "du": "1|0|0"
+                },
+                "em": true
+            }
+        ]
+    },
+    "extra": {
+        "name": "Topos Diagram"
+    },
+    "version": 2,
+    "modified_timestamp_millis": 1773518776260,
+    "connectors": [
+        {
+            "i": "02-AA0oy7tYtyNVdWzdpAGHxvEt4f_",
+            "a": 1,
+            "t": "02-AA0oy7tnYMCm7_o6S5TsdRG4ZO0",
+            "r": "1|0.5",
+            "o": "0|0"
+        },
+        {
+            "i": "02-AA0oy7tYtyNVdWzdpAGHxvEt4f_",
+            "a": 2,
+            "t": "02-AA0oy7tEqPQbgGNsgsZrhszbpYF",
+            "r": "1|0.5",
+            "o": "0|0"
+        }
+    ]
+}
