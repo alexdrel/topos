@@ -2211,7 +2211,7 @@
       "npm:@types/vscode@^1.100.0"
     ],
     "links": {
-      "npm:topos@0.5.5": {}
+      "npm:@alexdrel/topos@0.5.6": {}
     }
   }
 }

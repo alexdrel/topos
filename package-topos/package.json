@@ -1,6 +1,6 @@
 {
   "name": "@alexdrel/topos",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "CLI renderer for Topos, bringing rich visualization and coding-agent support to plain-text ASCII diagrams.",
   "keywords": [
     "topos",

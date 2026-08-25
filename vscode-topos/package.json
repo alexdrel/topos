@@ -2,7 +2,7 @@
   "name": "topos",
   "displayName": "Topos - AI-Era ASCII Diagrams",
   "description": "Direct graphical editing and rich visualization for plain-text ASCII diagrams, with Markdown integration, SVG/PNG export, CLI rendering, and coding-agent support.",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "publisher": "alexdrel",
   "private": true,
   "type": "module",

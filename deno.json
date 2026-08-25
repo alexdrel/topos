@@ -1,5 +1,5 @@
 {
-    "version": "0.5.5",
+    "version": "0.5.6",
     "tasks": {
         "serve": "deno run -A npm:vite",
         "gen:compendium": "deno task gen:defs && deno run -A package-topos/cli.ts src/enamel/compendium/compendium.topos -o src/enamel/compendium/compendium.svg",

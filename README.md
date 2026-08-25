@@ -12,6 +12,10 @@ Because the diagram remains ordinary text, it fits naturally into the workflows 
 
 When presentation matters, the same source renders as polished SVG or PNG.
 
+See Topos in action: edit the diagram directly while its readable text source and rendered view stay in sync.
+
+![Editing a Topos diagram visually while its text source and rendered view stay in sync](media/editor-demo.gif)
+
 Topos is currently best experienced through the VS Code extension. For syntax, examples, and a guided progression, read the [Guide to Topos Diagrams](<docs/Topos Guide.md>).
 
 Here is Topos at work:
