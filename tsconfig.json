@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2024",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "types": ["node", "vite/client"],
+    "paths": {
+      "#topos-core": ["./package-topos/topos-core.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src-editor/**/*.ts", "www/**/*.ts", "package-topos/**/*.ts", "scripts/**/*.ts", "vite.config.ts"],
+  "exclude": ["package-topos/dist", "node_modules", "tmp"]
+}

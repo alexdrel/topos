@@ -1,12 +1,12 @@
-import { assertObjectMatch } from "@std/assert";
-import { matchChild, testParseDiagram, testCompleted, flushPendingWrites } from "../../test/test-utils.ts";
+import { parseDiagram } from "../refine.ts";
+import { test } from "node:test";
+import { partialDeepStrictEqual as assertObjectMatch } from "node:assert/strict";
+import { matchChild } from "../../test/test-utils.ts";
 import { DEFAULT_PEN } from "../../style.ts";
-
-Deno.test.afterEach(flushPendingWrites);
 
 const UNI = DEFAULT_PEN;
 
-Deno.test("Stacked Box Recognition", (t) => {
+test("Stacked Box Recognition", () => {
   const diagram = `
    ┌────────────────┐
    │ ┌──────────────┴─┐
@@ -22,14 +22,13 @@ Deno.test("Stacked Box Recognition", (t) => {
     └┤                │
      └────────────────┘
   `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   // Each stacked group should be a single outer box, not 3 nested boxes.
   matchChild(root, { label: "1", style: UNI, $children: 0 }, 0, 2);
   matchChild(root, { label: "STACK", style: UNI, $children: 1 }, 1, 2);
-  testCompleted(t);
 });
 
-Deno.test("Stacked Box Has No Phantom Edges", (t) => {
+test("Stacked Box Has No Phantom Edges", () => {
   const diagram = `
    ┌────────────────┐
    │ ┌──────────────┴─┐
@@ -38,14 +37,13 @@ Deno.test("Stacked Box Has No Phantom Edges", (t) => {
      └─┤                │
        └────────────────┘
   `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   // Each stacked group should be a single outer box, not 3 nested boxes.
   const matchedChild = matchChild(root, { label: "1", style: UNI, $children: 0, $edges: 0 });
   assertObjectMatch(matchedChild.stack!, { layers: 3, dx: -2, dy: -1 });
-  testCompleted(t);
 });
 
-Deno.test("Stacked Box Reversed Offsets", (t) => {
+test("Stacked Box Reversed Offsets", () => {
   const diagram = `
         ┌────────────────┐
       ┌─┴──────────────┐ │
@@ -63,17 +61,15 @@ Deno.test("Stacked Box Reversed Offsets", (t) => {
     └─┬──────────────┘ │
       └────────────────┘
   `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   // Each stacked group should be a single outer box, not 3 nested boxes.
   const matchedChild = matchChild(root, { label: "3", style: UNI, $children: 0, $edges: 0 }, 0, 2);
   assertObjectMatch(matchedChild.stack!, { layers: 4, dx: 2, dy: -1 });
   const matchedChild1 = matchChild(root, { label: "4", style: UNI, $children: 0, $edges: 0 }, 1, 2);
   assertObjectMatch(matchedChild1.stack!, { layers: 3, dx: 2, dy: 1 });
-
-  testCompleted(t);
 });
 
-Deno.test("Stacked Box Label On Lower Top Edge", (t) => {
+test("Stacked Box Label On Lower Top Edge", () => {
   const diagram = `\
     ┌────────────────┐
   ┌─┴──────────────┐ │
@@ -82,13 +78,12 @@ Deno.test("Stacked Box Label On Lower Top Edge", (t) => {
 │                ├─┘
 └────────────────┘
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const stack = matchChild(root, { label: "3", style: UNI, $children: 0, $edges: 0 });
   assertObjectMatch(stack.stack!, { layers: 3, dx: 2, dy: -1 });
-  testCompleted(t);
 });
 
-Deno.test("Stacked Box Right-Aligned Label On Lower Top Edge", (t) => {
+test("Stacked Box Right-Aligned Label On Lower Top Edge", () => {
   const diagram = `\
     ┌────────────────┐
   ┌─┴──────────────┐ │
@@ -97,13 +92,12 @@ Deno.test("Stacked Box Right-Aligned Label On Lower Top Edge", (t) => {
 │                ├─┘
 └────────────────┘
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const stack = matchChild(root, { label: "3", style: UNI, $children: 0, $edges: 0 });
   assertObjectMatch(stack.stack!, { layers: 3, dx: 2, dy: -1 });
-  testCompleted(t);
 });
 
-Deno.test("Stacked Box Up-Right Offset", (t) => {
+test("Stacked Box Up-Right Offset", () => {
   const diagram = `
      ┌──────────────┐
     ┌┤              │
@@ -112,8 +106,7 @@ Deno.test("Stacked Box Up-Right Offset", (t) => {
    │└─────────────┬┘
    └──────────────┘
   `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const matchedChild = matchChild(root, { label: "5", style: UNI, $children: 0, $edges: 0 }, 0, 1);
   assertObjectMatch(matchedChild.stack!, { layers: 3, dx: -1, dy: 1 });
-  testCompleted(t);
 });

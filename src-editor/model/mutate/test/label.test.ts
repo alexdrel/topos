@@ -1,11 +1,13 @@
-import { assertEquals, assertThrows } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertThrows } from "../../../../src/test/assertions.ts";
 import { Dir } from "../../../../src/geo.ts";
 import { projectTracesToGrid } from "../../../../src/ink/ink.ts";
 import { traceMap } from "../../../../src/trace/trace-map.ts";
 import { createLabel, moveTraces, reconcileLabels, resizeBoxTrace, setLabel } from "../../mutate.ts";
 import { findTrace, matchTraceMap } from "../../../../src/trace/test/trace-utils.ts";
 
-Deno.test("trace: move box does not move contained label text", () => {
+test("trace: move box does not move contained label text", () => {
   const state = traceMap(`\
 ┌─────┐
 │  A  │
@@ -22,7 +24,7 @@ Deno.test("trace: move box does not move contained label text", () => {
     └─────┘`);
 });
 
-Deno.test("trace: move ceiling label independently from box outline", () => {
+test("trace: move ceiling label independently from box outline", () => {
   const state = traceMap(`\
 ┌── Top ──┐
 │         │
@@ -37,7 +39,7 @@ Deno.test("trace: move ceiling label independently from box outline", () => {
 └── Top ──┘`);
 });
 
-Deno.test("trace: edit label trace text", () => {
+test("trace: edit label trace text", () => {
   const state = traceMap(`\
 ┌─Box─┐
 │     │
@@ -50,7 +52,7 @@ Deno.test("trace: edit label trace text", () => {
   assertEquals(label.text, "Tag");
 });
 
-Deno.test("trace: break association by moving label away from perimeter", () => {
+test("trace: break association by moving label away from perimeter", () => {
   const state = traceMap(`\
 ┌─Top─┐
 │     │
@@ -74,7 +76,7 @@ Deno.test("trace: break association by moving label away from perimeter", () => 
 Top`);
 });
 
-Deno.test("trace: associate text to parent box by moving it onto the perimeter", () => {
+test("trace: associate text to parent box by moving it onto the perimeter", () => {
   const state = traceMap(`\
 ┌─────┐
 │     │
@@ -102,7 +104,7 @@ Note`);
    └─────┘`);
 });
 
-Deno.test("trace: group move does not erroneously associate non-overlapping labels during intermediate steps", () => {
+test("trace: group move does not erroneously associate non-overlapping labels during intermediate steps", () => {
   const state = traceMap(`\
 ┌─┐
 │ │
@@ -135,7 +137,7 @@ Deno.test("trace: group move does not erroneously associate non-overlapping labe
           A`);
 });
 
-Deno.test("trace: create and set labels preserve text before geometric reconciliation", () => {
+test("trace: create and set labels preserve text before geometric reconciliation", () => {
   const state = traceMap(`\
 ┌─────┐
 │     │
@@ -201,7 +203,7 @@ Deno.test("trace: create and set labels preserve text before geometric reconcili
 
 });
 
-Deno.test("trace: a new label crosses a vertical line and remains associated", () => {
+test("trace: a new label crosses a vertical line and remains associated", () => {
   const state = traceMap(`\
   │
   │
@@ -226,7 +228,7 @@ Deno.test("trace: a new label crosses a vertical line and remains associated", (
   assertEquals(reparsedLine.rawLabels?.[0].text, "Hi");
 });
 
-Deno.test("trace: a new label uses the longest segment of a mixed line", () => {
+test("trace: a new label uses the longest segment of a mixed line", () => {
   const state = traceMap(`\
 ──┐
   │

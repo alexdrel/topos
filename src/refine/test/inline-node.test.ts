@@ -1,86 +1,78 @@
-import { testParseDiagram, testCompleted, flushPendingWrites } from '../../test/test-utils.ts';
-
+import { parseDiagram } from "../refine.ts";
+import { test } from "node:test";
 
 import { matchChild, matchEdge } from '../../test/test-utils.ts';
 
-Deno.test.afterEach(flushPendingWrites);
-
-Deno.test("Inline Annotations", (t) => {
+test("Inline Annotations", () => {
   const diagram = `
 EARTH                                                        MARS
 `;
 
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "EARTH", nodeType: "note", x: 0, y: 1 }, 0, 2);
   matchChild(root, { label: "MARS", nodeType: "note", x: 61, y: 1 }, 1, 2);
-  testCompleted(t);
 });
 
-Deno.test("Inline Nodes Basic", (t) => {
+test("Inline Nodes Basic", () => {
   const diagram = `
 <User> -> [API Gateway] -> (Database)
 `;
 
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "User", nodeType: "inline", bracket: "<>", $children: 0 }, 0, 3);
   matchChild(root, { label: "API Gateway", nodeType: "inline", bracket: "[]", $children: 0 }, 1, 3);
   matchChild(root, { label: "Database", nodeType: "inline", bracket: "()", $children: 0 }, 2, 3);
 
   matchEdge(root, { source: "User", target: "API Gateway" }, 0, 2);
   matchEdge(root, { source: "API Gateway", target: "Database" }, 1, 2);
-  testCompleted(t);
 });
 
-Deno.test("Adjacent Bracketed Tokens", (t) => {
+test("Adjacent Bracketed Tokens", () => {
   const diagram = `
 [A] [B][C]
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "A", nodeType: "inline", bracket: "[]" }, 0, 3);
   matchChild(root, { label: "B", nodeType: "inline", bracket: "[]" }, 1, 3);
   matchChild(root, { label: "C", nodeType: "inline", bracket: "[]" }, 2, 3);
-  testCompleted(t);
 });
 
-Deno.test("Inline Nodes With Internal Spaces and Multiple Space Separation", (t) => {
+test("Inline Nodes With Internal Spaces and Multiple Space Separation", () => {
   const diagram = `
 [API Gateway]   (Primary DB)
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "API Gateway", nodeType: "inline", bracket: "[]", $children: 0 }, 0, 2);
   matchChild(root, { label: "Primary DB", nodeType: "inline", bracket: "()", $children: 0 }, 1, 2);
-  testCompleted(t);
 });
 
-Deno.test("Inline Nodes With Hyphenated Labels", (t) => {
+test("Inline Nodes With Hyphenated Labels", () => {
   const diagram = `
 [API-GW] -> [auth_service]
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "API-GW", nodeType: "inline", bracket: "[]", $children: 0 }, 0, 2);
   matchChild(root, { label: "auth_service", nodeType: "inline", bracket: "[]", $children: 0 }, 1, 2);
 
   matchEdge(root, { source: "API-GW", target: "auth_service" }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Inline Nodes With Slashes And Dots", (t) => {
+test("Inline Nodes With Slashes And Dots", () => {
   const diagram = `
 [api/v2] -> [svc.core]
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const src = matchChild(root, { label: "api/v2", nodeType: "inline", bracket: "[]", $children: 0 }, 0, 2);
   const dst = matchChild(root, { label: "svc.core", nodeType: "inline", bracket: "[]", $children: 0 }, 1, 2);
 
   matchEdge(root, { source: src, target: dst }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Inline Nodes With Connectors", (t) => {
+test("Inline Nodes With Connectors", () => {
   const diagram = `
 [A]->[B] -> (C) -> <D>
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const a = matchChild(root, { label: "A", nodeType: "inline", bracket: "[]", $children: 0 }, 0, 4);
   const b = matchChild(root, { label: "B", nodeType: "inline", bracket: "[]", $children: 0 }, 1, 4);
   const c = matchChild(root, { label: "C", nodeType: "inline", bracket: "()", $children: 0 }, 2, 4);
@@ -89,64 +81,57 @@ Deno.test("Inline Nodes With Connectors", (t) => {
   matchEdge(root, { source: a, target: b }, 0, 3);
   matchEdge(root, { source: b, target: c }, 1, 3);
   matchEdge(root, { source: c, target: d }, 2, 3);
-  testCompleted(t);
 });
 
-Deno.test("Inline Nodes Mixed Nested Delimiters Use Grammar Styles", (t) => {
+test("Inline Nodes Mixed Nested Delimiters Use Grammar Styles", () => {
   const diagram = `
 [ A (B) <C> ]
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "A (B) <C>", nodeType: "inline", bracket: "[]", $children: 0 }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Nested Brackets of the Same Type", (t) => {
+test("Nested Brackets of the Same Type", () => {
   const diagram = `
 [DB [PG1] [PG2]]
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "DB [PG1] [PG2]", nodeType: "inline", bracket: "[]", $children: 0 }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Nested Brackets of the Same Type (Single Line)", (t) => {
+test("Nested Brackets of the Same Type (Single Line)", () => {
   const diagram = `
 [ DB [ PG1 ] [ PG2 ] ]
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "DB [ PG1 ] [ PG2 ]", nodeType: "inline", bracket: "[]", $children: 0 }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Single-Spaced Adjacent Brackets", (t) => {
+test("Single-Spaced Adjacent Brackets", () => {
   const diagram = `
 [A] [B]
 [C] [D]
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "A", nodeType: "inline", bracket: "[]" }, 0, 4);
   matchChild(root, { label: "B", nodeType: "inline", bracket: "[]" }, 1, 4);
   matchChild(root, { label: "C", nodeType: "inline", bracket: "[]" }, 2, 4);
   matchChild(root, { label: "D", nodeType: "inline", bracket: "[]" }, 3, 4);
-  testCompleted(t);
 });
 
-Deno.test("Spaced Brackets converted to inline nodes", (t) => {
+test("Spaced Brackets converted to inline nodes", () => {
   const diagram = `
 [A]    [B]
 [C]    [D]
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const _a = matchChild(root, { label: "A", nodeType: "inline" }, 0, 4);
   const _b = matchChild(root, { label: "B", nodeType: "inline" }, 1, 4);
   const _c = matchChild(root, { label: "C", nodeType: "inline" }, 2, 4);
   const _d = matchChild(root, { label: "D", nodeType: "inline" }, 3, 4);
-
-  testCompleted(t);
 });
 
-Deno.test("Inline Nodes Multi-Line", (t) => {
+test("Inline Nodes Multi-Line", () => {
   const diagram = `
 <User> -> [API Gateway] -> (Database)
 
@@ -156,7 +141,7 @@ Deno.test("Inline Nodes Multi-Line", (t) => {
 ╰────────────────────────────╯
 `;
 
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const inlineUser = matchChild(root, { label: "User", nodeType: "inline", bracket: "<>", $children: 0 }, 0, 4);
   const api = matchChild(root, { label: "API Gateway", nodeType: "inline", bracket: "[]", $children: 0 }, 1, 4);
   const db = matchChild(root, { label: "Database", nodeType: "inline", bracket: "()", $children: 0 }, 2, 4);
@@ -167,17 +152,15 @@ Deno.test("Inline Nodes Multi-Line", (t) => {
   matchChild(box, { label: "User", nodeType: "inline", bracket: "<>", $children: 0 }, 0, 2);
   matchChild(box, { label: "API Gateway", nodeType: "inline", bracket: "[]", $children: 0 }, 1, 2);
   matchEdge(box, { source: "User", target: "API Gateway" });
-
-  testCompleted(t);
 });
 
-Deno.test("Inline Nodes Multi-Line With Noise", (t) => {
+test("Inline Nodes Multi-Line With Noise", () => {
   const diagram = `
 [API] -> (DB)
 Some text here
 <User> -> [API2]
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const api = matchChild(root, { label: "API", nodeType: "inline", bracket: "[]", $children: 0 }, 0, 5);
   const db = matchChild(root, { label: "DB", nodeType: "inline", bracket: "()", $children: 0 }, 1, 5);
   /*noise*/    matchChild(root, { label: "Some text here", nodeType: "note", y: 2, $children: 0 }, 2, 5);
@@ -186,19 +169,17 @@ Some text here
 
   matchEdge(root, { source: api, target: db }, 0, 2);
   matchEdge(root, { source: user, target: api2 }, 1, 2);
-  testCompleted(t);
 });
 
-Deno.test("Bracketed Tokens In Prose Remain Plain Text", (t) => {
+test("Bracketed Tokens In Prose Remain Plain Text", () => {
   const diagram = `
 This is a paragraph with [not a node] embedded in text.
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "This is a paragraph with [not a node] embedded in text.", nodeType: "note", x: 0, $children: 0 }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Inline Nodes within boxes (Rovers test case)", (t) => {
+test("Inline Nodes within boxes (Rovers test case)", () => {
   const diagram = `\
  ┌─ROVERS────────────────┐
  │   [ Opportunity  ]    │
@@ -207,24 +188,22 @@ Deno.test("Inline Nodes within boxes (Rovers test case)", (t) => {
  │   [   Spirit     ]    │
  └───────────────────────┘
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const rovers = matchChild(root, { label: "ROVERS", nodeType: "box", $children: 4 }, 0, 1);
   matchChild(rovers, { label: "Opportunity", nodeType: "inline", bracket: "[]" }, 0, 4);
   matchChild(rovers, { label: "Perseverance", nodeType: "inline", bracket: "[]" }, 1, 4);
   matchChild(rovers, { label: "Curiosity", nodeType: "inline", bracket: "[]" }, 2, 4);
   matchChild(rovers, { label: "Spirit", nodeType: "inline", bracket: "[]" }, 3, 4);
-  testCompleted(t);
 });
 
-Deno.test("Inline nodes may contain structural glyphs", (t) => {
+test("Inline nodes may contain structural glyphs", () => {
   const diagram = `\
 [Unmatched │ Wire ]
 
 Normal text [Note
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { label: "Unmatched │ Wire", nodeType: "inline", bracket: "[]" }, 0, 2);
   matchChild(root, { label: "Normal text [Note", nodeType: "note" }, 1, 2);
-  testCompleted(t);
 });
 

@@ -142,11 +142,11 @@ The gallery and its Enamel definitions have separate editing surfaces:
 
 - **Gallery**: Make layout and catalogue changes in `src/enamel/compendium/compendium.topos`, then regenerate everything with:
   ```bash
-  deno task gen:compendium
+  npm run gen:compendium
   ```
 - **Definitions**: Edit filters, patterns, markers, symbols, or styles inside `src/enamel/compendium/compendium.svg`, then preserve those edits with:
   ```bash
-  deno task gen:defs
+  npm run gen:defs
   ```
 
 The extracted `<defs>` tree is stored structurally in `src/enamel/compendium/compendium.gen.json` and embedded by subsequent gallery compilations.

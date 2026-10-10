@@ -3,8 +3,8 @@ import type { Loc, Rect } from "../../src/geo.ts";
 import { PROJECTION_ROLES, type ProjectionSpan } from "../../src/ink/ink.ts";
 import type { GridMetrics } from "./grid.ts";
 import * as dom from "./dom.ts";
-import chromeTemplate from "./chrome.html?raw" with { type: "text" };
-import slateCss from "./slate.css?raw" with { type: "text" };
+import chromeTemplate from "./chrome.html?raw";
+import slateCss from "./slate.css?raw";
 
 const SLATE_STYLE_ID = "topos-slate-styles";
 const RULER_GRID_COLUMNS = 5;

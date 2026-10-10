@@ -1,7 +1,8 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { parseTopos, splitToposFile } from "../topos.ts";
 
-Deno.test("splitToposFile strips named :map header", () => {
+test("splitToposFile strips named :map header", () => {
   const input = `\
 :map main flow
 ┌───┐
@@ -12,7 +13,7 @@ Deno.test("splitToposFile strips named :map header", () => {
   assertEquals(legend, undefined);
 });
 
-Deno.test("splitToposFile supports named :legend header", () => {
+test("splitToposFile supports named :legend header", () => {
   const input = `\
 :map main
 (A)──>(B)
@@ -24,7 +25,7 @@ Deno.test("splitToposFile supports named :legend header", () => {
   assertEquals(legend, { header: ":legend semantics", content: ["[A]: #a@svc", "[B]: #b@svc"] });
 });
 
-Deno.test("splitToposFile parses a quoted map title and legend parameters", () => {
+test("splitToposFile parses a quoted map title and legend parameters", () => {
   const input = `\
 :map "Platform map"
 (A)
@@ -39,7 +40,7 @@ Deno.test("splitToposFile parses a quoted map title and legend parameters", () =
   assertEquals(diagram.parameters, { theme: "dark", bg: "deep blue" });
 });
 
-Deno.test("splitToposFile accepts a quoted title on either section header", () => {
+test("splitToposFile accepts a quoted title on either section header", () => {
   const legendTitle = parseTopos(`\
 :map
 (A)
@@ -53,7 +54,7 @@ Deno.test("splitToposFile accepts a quoted title on either section header", () =
   assertEquals(laterTitle.root.text, "Later title");
 });
 
-Deno.test("splitToposFile keeps map unchanged when no section headers are present", () => {
+test("splitToposFile keeps map unchanged when no section headers are present", () => {
   const input = `\
 ┌───┐
 │ A │
@@ -63,12 +64,12 @@ Deno.test("splitToposFile keeps map unchanged when no section headers are presen
   assertEquals(legend, undefined);
 });
 
-Deno.test("splitToposFile preserves a final empty line", () => {
+test("splitToposFile preserves a final empty line", () => {
   assertEquals(splitToposFile(":map").map, { header: ":map", content: [] });
   assertEquals(splitToposFile(":map\n").map, { header: ":map", content: [""] });
 });
 
-Deno.test("splitToposFile recognizes directives only in strict order at column zero", () => {
+test("splitToposFile recognizes directives only in strict order at column zero", () => {
   const leadingBlank = splitToposFile("\n:map\n(A)");
   assertEquals(leadingBlank.map, { header: "", content: ["", ":map", "(A)"] });
 

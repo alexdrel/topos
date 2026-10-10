@@ -1,5 +1,13 @@
 import type { Attrs, Child, XmlEl } from "./jsonml.ts";
 
+interface XmlDomNode {
+  readonly nodeType: number;
+  readonly nodeName: string;
+  readonly nodeValue: string | null;
+  readonly childNodes: { readonly length: number; item(index: number): XmlDomNode | null };
+  readonly attributes?: { readonly length: number; item(index: number): { readonly name: string; readonly value: string } | null };
+}
+
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
 const CDATA_SECTION_NODE = 4;
@@ -9,7 +17,7 @@ function textLines(text: string): string[] {
   return text.match(/[^\n]*\n|[^\n]+/g) ?? [];
 }
 
-function domChildToJsonMl(node: Node): Child | undefined {
+function domChildToJsonMl(node: XmlDomNode): Child | undefined {
   if (node.nodeType === ELEMENT_NODE) return domToJsonMl(node);
   if (node.nodeType === COMMENT_NODE) return ["$comment", {}, ...textLines(node.nodeValue ?? "")];
   if (node.nodeType === CDATA_SECTION_NODE) return ["$cdata", {}, ...textLines(node.nodeValue ?? "")];
@@ -23,9 +31,9 @@ function domChildToJsonMl(node: Node): Child | undefined {
 }
 
 /** Convert an XML DOM element subtree to JsonML without depending on a DOM implementation. */
-export function domToJsonMl(node: Node): XmlEl {
+export function domToJsonMl(node: XmlDomNode): XmlEl {
   const attrs: Attrs = {};
-  const attributes = node.nodeType === ELEMENT_NODE ? (node as Element).attributes : undefined;
+  const attributes = node.nodeType === ELEMENT_NODE ? node.attributes : undefined;
   if (attributes) {
     for (let i = 0; i < attributes.length; i++) {
       const attribute = attributes.item(i);

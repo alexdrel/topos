@@ -60,8 +60,12 @@ description: Topos Architecture
 
 # Runtime & Tooling
 
-- **Deno (Core)**: Executes core parser logic, tests (`deno test`), and headless generation (via XML String Builder, no DOM).
-- **CLI (`package-topos/cli.ts`)**: Shared headless entry point for rendering `.topos` source to SVG and inspecting the resolved semantic diagram.
+- **Node (Checks & Tests)**: TypeScript 7 checks the project; Node's test runner executes TypeScript through `oxc-node`.
+- **Package Build**: esbuild bundles the core and CLI into `package-topos/dist/`. CLI tests run from TypeScript source through `oxc-node`, without a build prerequisite.
+- **Builds**: `scripts/build.ts` shares esbuild settings for the extension and package bundles. Full builds and watch produce both `vscode-topos/out/` and `package-topos/dist/`; `--package` builds only the npm package.
+- **Asset Generation**: Node runs `scripts/extract-defs.ts` directly; Compendium generation uses the built CLI. Neither requires a TypeScript loader.
+- **Development Server**: `npm run serve` runs Vite under Node for the web editor and Slate harness.
+- **CLI (`npm run --silent cli -- <arguments>`)**: Shared headless entry point for rendering `.topos` source to SVG and inspecting the resolved semantic diagram.
 - **Vite (Frontend)**: Bundles the browser editor and serves CSS/TS assets.
 
 # Production Editor

@@ -1,11 +1,12 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { Dir } from "../../../src/geo.ts";
 import { traceMap } from "../../../src/trace/trace-map.ts";
 import { insertTraceText, traceSelectionToText } from "../clipboard.ts";
 import { expandTraceSelection, normalizeTraceSelection } from "../selection.ts";
 import { findTrace, matchTraceMap } from "../../../src/trace/test/trace-utils.ts";
 
-Deno.test("trace clipboard: selected traces render to cropped plain text", () => {
+test("trace clipboard: selected traces render to cropped plain text", () => {
   const state = traceMap(`\
 ┌─────┐
 │  A  │
@@ -21,7 +22,7 @@ B ───▶ C`);
 └─────┘`);
 });
 
-Deno.test("trace clipboard: paste parses plain text and selects inserted trace objects", () => {
+test("trace clipboard: paste parses plain text and selects inserted trace objects", () => {
   const state = traceMap(`\
 ┌─────┐
 │  A  │
@@ -40,7 +41,7 @@ Deno.test("trace clipboard: paste parses plain text and selects inserted trace o
 └─────┘  └─────┘`);
 });
 
-Deno.test("trace clipboard: pasted box grid moves as one hierarchy", () => {
+test("trace clipboard: pasted box grid moves as one hierarchy", () => {
   const state = traceMap("");
   const grid = `\
 ┌─────────┬─────────┐
@@ -60,7 +61,7 @@ Deno.test("trace clipboard: pasted box grid moves as one hierarchy", () => {
   └─────────┴─────────┘`);
 });
 
-Deno.test("trace clipboard: marquee-selected box grid includes its cells", () => {
+test("trace clipboard: marquee-selected box grid includes its cells", () => {
   const grid = `\
 ┌─────────┬─────────┐
 │  Box A  │  Box B  │
@@ -74,7 +75,7 @@ Deno.test("trace clipboard: marquee-selected box grid includes its cells", () =>
   assertEquals(traceSelectionToText(state, state.traces), grid);
 });
 
-Deno.test("trace clipboard: line labels round-trip through plain text paste", () => {
+test("trace clipboard: line labels round-trip through plain text paste", () => {
   const state = traceMap(`A ──Hi──▶ B`);
   const line = findTrace(state, { type: "line", x: 2, y: 0, startDir: Dir.W });
   const copied = traceSelectionToText(state, [line]);
@@ -93,7 +94,7 @@ A ──Hi──▶ B
 ──Hi──▶`);
 });
 
-Deno.test("trace clipboard: selected termini render as spatial plain text", () => {
+test("trace clipboard: selected termini render as spatial plain text", () => {
   const state = traceMap(`\
 A ───▶ B
 

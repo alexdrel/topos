@@ -1,27 +1,19 @@
-const CLI = new URL("../cli.ts", import.meta.url).pathname;
-const decoder = new TextDecoder();
+import { execFile } from "node:child_process";
+import { fileURLToPath } from "node:url";
+
+const CLI = fileURLToPath(new URL("../cli.ts", import.meta.url));
+const LOADER = fileURLToPath(import.meta.resolve("@oxc-node/core/register"));
 
 export async function runCli(
   args: string[],
   options: { cwd?: string; stdin?: string } = {},
-) {
-  const command = new Deno.Command(Deno.execPath(), {
-    args: ["run", "--quiet", "--allow-read", "--allow-write", CLI, ...args],
-    cwd: options.cwd,
-    stdin: options.stdin === undefined ? "null" : "piped",
-    stdout: "piped",
-    stderr: "piped",
+): Promise<{ code: number | null; stdout: string; stderr: string }> {
+  return new Promise((resolve, reject) => {
+    const child = execFile(process.execPath, ["--import", LOADER, CLI, ...args], { cwd: options.cwd }, (error, stdout, stderr) => {
+      const code = error?.code ?? 0;
+      if (typeof code !== "number" || error?.killed || error?.signal) reject(error);
+      else resolve({ code, stdout, stderr });
+    });
+    child.stdin?.end(options.stdin);
   });
-  const child = command.spawn();
-  if (options.stdin !== undefined) {
-    const writer = child.stdin.getWriter();
-    await writer.write(new TextEncoder().encode(options.stdin));
-    await writer.close();
-  }
-  const output = await child.output();
-  return {
-    code: output.code,
-    stdout: decoder.decode(output.stdout),
-    stderr: decoder.decode(output.stderr),
-  };
 }

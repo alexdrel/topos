@@ -1,10 +1,12 @@
-import { assertEquals, assertThrows } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertThrows } from "../../../../src/test/assertions.ts";
 import { Dir } from "../../../../src/geo.ts";
 import { traceMap } from "../../../../src/trace/trace-map.ts";
 import { createBox, createLabel, createLine, createText, moveLinePoint, moveTraces, OPEN_TERMINUS_GLYPH, reverseLineTrace, setTerminusGlyph, setTerminusLocation, setTraceStyle } from "../../mutate.ts";
 import { findTrace, matchTraceMap } from "../../../../src/trace/test/trace-utils.ts";
 
-Deno.test("trace: move line trace", () => {
+test("trace: move line trace", () => {
   const state = traceMap(`\
 A ───▶ B`);
   const line = findTrace(state, { type: "line", x: 2, y: 0, startDir: Dir.W });
@@ -20,7 +22,7 @@ A      B
   ───▶`);
 });
 
-Deno.test("trace: translating an open line preserves its endpoint corner", () => {
+test("trace: translating an open line preserves its endpoint corner", () => {
   const state = traceMap(`\
 ┌───────────
 ●`);
@@ -34,7 +36,7 @@ Deno.test("trace: translating an open line preserves its endpoint corner", () =>
 ┌───────────`);
 });
 
-Deno.test("trace: move line endpoint regenerates orthogonal path", () => {
+test("trace: move line endpoint regenerates orthogonal path", () => {
   const state = traceMap(`\
 A ───▶ B`);
   const line = findTrace(state, { type: "line", x: 2, y: 0, startDir: Dir.W });
@@ -47,7 +49,7 @@ A ───┐ B
      ▼`);
 });
 
-Deno.test("trace: set box and line styles", () => {
+test("trace: set box and line styles", () => {
   const state = traceMap(`\
 ┌───┐
 │ A ├──▶ B
@@ -71,7 +73,7 @@ Deno.test("trace: set box and line styles", () => {
 ╚═══╝`);
 });
 
-Deno.test("trace: reverse line trace", () => {
+test("trace: reverse line trace", () => {
   const state = traceMap(`\
 A ───▶ B`);
   const line = findTrace(state, { type: "line", x: 2, y: 0, startDir: Dir.W });
@@ -82,7 +84,7 @@ A ───▶ B`);
 A ◀─── B`);
 });
 
-Deno.test("trace: create text, box, and line traces", () => {
+test("trace: create text, box, and line traces", () => {
   const state = traceMap("");
 
   createText(state, { x: 0, y: 0 }, "Hello");
@@ -102,7 +104,7 @@ Hello
             ▼`);
 });
 
-Deno.test("trace: create line from a simplified path", () => {
+test("trace: create line from a simplified path", () => {
   const state = traceMap("");
   const line = createLine(state, [{ x: 0, y: 0 }, { x: 4, y: 0 }, { x: 4, y: 2 }]);
   setTerminusGlyph(state, line.target!, "▼");
@@ -113,7 +115,7 @@ Deno.test("trace: create line from a simplified path", () => {
     ▼`);
 });
 
-Deno.test("trace: drag intermediate line turn slides adjacent segment", () => {
+test("trace: drag intermediate line turn slides adjacent segment", () => {
   const state = traceMap(`\
 A ───┐ B
      │
@@ -129,7 +131,7 @@ A ─┐   B
    ▼`);
 });
 
-Deno.test("trace: moving line endpoint parallel extends without new turns", () => {
+test("trace: moving line endpoint parallel extends without new turns", () => {
   const state = traceMap(`\
 A ───┐ B
      │
@@ -147,7 +149,7 @@ A ───┐ B
      ▼`);
 });
 
-Deno.test("trace: set start and end terminus glyphs", () => {
+test("trace: set start and end terminus glyphs", () => {
   const state = traceMap(`A ───▶ B`);
   const line = findTrace(state, { type: "line", x: 2, y: 0, startDir: Dir.W });
 
@@ -166,7 +168,7 @@ Deno.test("trace: set start and end terminus glyphs", () => {
   matchTraceMap(state, `A ◀──▶ B`);
 });
 
-Deno.test("trace: setting an arrowhead connects an open terminus", () => {
+test("trace: setting an arrowhead connects an open terminus", () => {
   const state = traceMap("╶──╴");
   const line = findTrace(state, { type: "line", x: 0, y: 0, startDir: Dir.None });
 
@@ -176,7 +178,7 @@ Deno.test("trace: setting an arrowhead connects an open terminus", () => {
   matchTraceMap(state, "◀──╴");
 });
 
-Deno.test("trace: terminus glyph variants toggle no connection", () => {
+test("trace: terminus glyph variants toggle no connection", () => {
   const state = traceMap("────");
   const line = findTrace(state, { type: "line", x: 0, y: 0, startDir: Dir.W });
 
@@ -187,7 +189,7 @@ Deno.test("trace: terminus glyph variants toggle no connection", () => {
   matchTraceMap(state, "────");
 });
 
-Deno.test("trace: line creation requires two distinct points", () => {
+test("trace: line creation requires two distinct points", () => {
   const state = traceMap("");
   assertThrows(() => createLine(state, []));
   assertThrows(() => createLine(state, [{ x: 0, y: 0 }]));

@@ -1,34 +1,32 @@
+import { test } from "node:test";
 // src/trace/test/perimeterAnt.test.ts
 import { traceMap } from "../trace-map.ts";
-import { assert, assertEquals, assertLess } from "@std/assert";
+import { ok as assert, deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertLess } from "../../test/assertions.ts";
 import { assertArrayMatch, matchTraceMap } from "./trace-utils.ts";
-import { flushPendingWrites, testTraceMap, testCompleted } from "../../test/test-utils.ts";
+import { testTraceMap } from "../../test/test-utils.ts";
 
-Deno.test.afterEach(flushPendingWrites);
-
-Deno.test("Ant: Single Unicode Box", (t) => {
+test("Ant: Single Unicode Box", () => {
   const diagram = `
 ┌─────┐
 │ One │
 └─────┘
 `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
 
   assertArrayMatch(traces, [
     { type: "box", x: 0, y: 1, w: 7, h: 3 },
     { type: "text", x: 2, y: 2, w: 3, text: "One" },
   ]);
-
-  testCompleted(t);
 });
 
-Deno.test("Ant: Two Adjacent Unicode Boxes", (t) => {
+test("Ant: Two Adjacent Unicode Boxes", () => {
   const diagram = `
 ┌─────┐┌─────┐
 │ One ││ Two │
 └─────┘└─────┘
 `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
 
   assertArrayMatch(traces, [
     { type: "box", x: 0, w: 7 },
@@ -36,11 +34,9 @@ Deno.test("Ant: Two Adjacent Unicode Boxes", (t) => {
     { type: "text", x: 2, text: "One" },
     { type: "text", x: 9, text: "Two" },
   ]);
-
-  testCompleted(t);
 });
 
-Deno.test("Ant: Stacked Boxes (Inner Turn Case)", (t) => {
+test("Ant: Stacked Boxes (Inner Turn Case)", () => {
   const diagram = `
    ┌────────────────┐    
    │ ┌──────────────┴─┐  
@@ -49,17 +45,15 @@ Deno.test("Ant: Stacked Boxes (Inner Turn Case)", (t) => {
      └─┤                │
        └────────────────┘
 `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
 
   assertArrayMatch(traces, [
     { type: "box", x: 3, y: 1, w: 22, h: 6 },
     { type: "text", x: 15, y: 4, text: "1" },
   ]);
-
-  testCompleted(t);
 });
 
-Deno.test("Ant: ASCII Box with Equals", (t) => {
+test("Ant: ASCII Box with Equals", () => {
   const diagram = `
 =========
 | Alpha |
@@ -69,7 +63,7 @@ Deno.test("Ant: ASCII Box with Equals", (t) => {
 | Beta  |
 |========
 `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
 
   assertArrayMatch(traces, [
     { type: "box", y: 1, w: 9 },
@@ -77,11 +71,9 @@ Deno.test("Ant: ASCII Box with Equals", (t) => {
     { type: "text", x: 2, text: "Alpha" },
     { type: "text", x: 2, text: "Beta" },
   ]);
-
-  testCompleted(t);
 });
 
-Deno.test("Ant: Deep nested boxes", (t) => {
+test("Ant: Deep nested boxes", () => {
   const diagram = `
 ┌───────────┐
 │ ┌───────┐ │
@@ -91,7 +83,7 @@ Deno.test("Ant: Deep nested boxes", (t) => {
 │ └───────┘ │
 └───────────┘
 `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
 
   assertArrayMatch(traces, [
     { type: "box", w: 13 },
@@ -99,23 +91,20 @@ Deno.test("Ant: Deep nested boxes", (t) => {
     { type: "box", w: 5 },
     { type: "text", x: 6, y: 4, text: "╸" },
   ]);
-
-  testCompleted(t);
 });
 
-Deno.test("Ant: Optimization - Too Many Left Turns", (t) => {
+test("Ant: Optimization - Too Many Left Turns", () => {
   const diagram = `
 ┌─┐
 └─┼─┐
   └─┘
 `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   const boxes = traces.filter((x) => x.type === "box");
   assert(boxes.length >= 1);
-  testCompleted(t);
 });
 
-Deno.test("Ant: Negative - Parallel Arrow on Border", (t) => {
+test("Ant: Negative - Parallel Arrow on Border", () => {
   // This should NOT be a valid box because the arrow points along the border
   const diagram = `
 ┌──────────────┐
@@ -128,32 +117,30 @@ Deno.test("Ant: Negative - Parallel Arrow on Border", (t) => {
 │  API Server  │
 └──────────────□
 `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   const boxes = traces.filter((x) => x.type === "box");
   assertEquals(boxes.length, 0, "Should not find a box with a parallel integrated arrow");
-  testCompleted(t);
 });
 
-Deno.test("Ant: Positive - Perpendicular Arrow on Border", (t) => {
+test("Ant: Positive - Perpendicular Arrow on Border", () => {
   // This SHOULD be a valid box because the arrow is perpendicular
   const diagram = `
 ┌──────v▽─────▽┐
 ▶  API Server  ⯇
 └▲───▲^─□──────┘
 `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   const boxes = traces.filter((x) => x.type === "box");
   assertEquals(boxes.length, 1, "Should find a box with a perpendicular integrated arrow");
-  testCompleted(t);
 });
 
-Deno.test("Ant: Small Unicode boxes with connections", (t) => {
+test("Ant: Small Unicode boxes with connections", () => {
   const diagram = `
     ┌───┐   ┌───┐
     │ C ├───┤ D │
     └───┘   └───┘
     `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
 
   assertArrayMatch(traces, [
     { type: "box" },
@@ -162,16 +149,15 @@ Deno.test("Ant: Small Unicode boxes with connections", (t) => {
     { type: "text", text: "C" },
     { type: "text", text: "D" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Ant: Small ASCII boxes with connections", (t) => {
+test("Ant: Small ASCII boxes with connections", () => {
   const diagram = `
     +-----+   +-----+
     | One +---+ Two |
     +-----+   +-----+
     `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
 
   assertArrayMatch(traces, [
     { type: "box" },
@@ -180,16 +166,15 @@ Deno.test("Ant: Small ASCII boxes with connections", (t) => {
     { type: "text", text: "One" },
     { type: "text", text: "Two" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Ant: Adjacent ASCII boxes", (t) => {
+test("Ant: Adjacent ASCII boxes", () => {
   const diagram = `
     +-----++-----+
     | One || Two |
     +-----++-----+
     `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
 
   assertArrayMatch(traces, [
     { type: "box" },
@@ -197,10 +182,9 @@ Deno.test("Ant: Adjacent ASCII boxes", (t) => {
     { type: "text", text: "One" },
     { type: "text", text: "Two" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Ant: Phantom ASCII boxes from text", () => {
+test("Ant: Phantom ASCII boxes from text", () => {
   const diagram = `\
 Some text
 ++
@@ -213,7 +197,7 @@ more text`;
   matchTraceMap(result, diagram);
 });
 
-Deno.test("Ant: Phantom ASCII boxes (1x1)", () => {
+test("Ant: Phantom ASCII boxes (1x1)", () => {
   const diagram = `\
 ++
 ++`;
@@ -224,7 +208,7 @@ Deno.test("Ant: Phantom ASCII boxes (1x1)", () => {
   matchTraceMap(result, diagram);
 });
 
-Deno.test("Ant: Stacked Boxes - No leftovers", (t) => {
+test("Ant: Stacked Boxes - No leftovers", () => {
   const diagram = `
    ┌────────────────┐    
    │ ┌──────────────┴─┐  
@@ -233,7 +217,7 @@ Deno.test("Ant: Stacked Boxes - No leftovers", (t) => {
      └─┤                │
        └────────────────┘
   `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   const { events } = traceMap(diagram, { record: true });
   const jumps = events?.filter(
     (e) => e.type === "jump" && e.antId.startsWith("box_"),
@@ -244,11 +228,9 @@ Deno.test("Ant: Stacked Boxes - No leftovers", (t) => {
     { type: "text", text: "1" },
   ]);
   assert(jumps?.length, "Expected box-ant jump while consuming stacked leftovers");
-
-  testCompleted(t);
 });
 
-Deno.test("Ant: Stacked Boxes - Stack Offsets", (t) => {
+test("Ant: Stacked Boxes - Stack Offsets", () => {
   const diagram = `
    ┌────────────────┐    
    │ ┌──────────────┴─┐  
@@ -264,7 +246,7 @@ Deno.test("Ant: Stacked Boxes - Stack Offsets", (t) => {
     └┤                │
      └────────────────┘
   `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
 
   // Verify Stack Metadata and no extra traces
   assertArrayMatch(traces, [
@@ -273,11 +255,9 @@ Deno.test("Ant: Stacked Boxes - Stack Offsets", (t) => {
     { type: "text", text: "1" },
     { type: "text", text: "2" },
   ]);
-
-  testCompleted(t);
 });
 
-Deno.test("Ant: Mono box in grid reproduction", (t) => {
+test("Ant: Mono box in grid reproduction", () => {
   const diagram = `
 ┏━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━ Ink ━━━━━━━━━━━━━━━━━━━━┓
 ┃                    │                                 ┃
@@ -299,7 +279,7 @@ Deno.test("Ant: Mono box in grid reproduction", (t) => {
               ║    SVG     ║          ║ MonoSketch ║    
               ╚════════════╝          ╚════════════╝    
 `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   const boxes = traces.filter((x) => x.type === "box");
   const texts = traces.filter((x) => x.type === "text");
 
@@ -320,11 +300,9 @@ Deno.test("Ant: Mono box in grid reproduction", (t) => {
   assertEquals(monoBox.type, "box");
 
   assertEquals(boxes.length, 7, `Expected 7 boxes, found ${boxes.length}`);
-
-  testCompleted(t);
 });
 
-Deno.test("Ant: Box vs Lines", (_t) => {
+test("Ant: Box vs Lines", (_t) => {
   const diagram = `
 ┌──────────────────┐       ┌──────────────────┐
 │                  │       │                  │

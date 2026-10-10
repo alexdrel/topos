@@ -510,10 +510,10 @@
     }
   },
   "scripts": {
-    "check": "deno check --config ./deno.json ./src/extension.ts ./src/webview/main.ts",
-    "compile": "deno task --cwd .. ext:compile",
-    "lint": "deno lint --config ./deno.json",
-    "watch": "deno task --cwd .. ext:watch"
+    "check": "tsc --project tsconfig.json",
+    "compile": "npm --prefix .. run ext:compile",
+    "lint": "oxlint --deny-warnings --config ../.oxlintrc.json src",
+    "watch": "npm --prefix .. run ext:watch"
   },
   "devDependencies": {}
 }

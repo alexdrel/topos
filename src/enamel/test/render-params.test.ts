@@ -1,4 +1,6 @@
-import { assertEquals, assertThrows } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertThrows } from "../../test/assertions.ts";
 import { renderParameters } from "../../render.ts";
 
 function options(
@@ -9,7 +11,7 @@ function options(
   return { parameters, override, transparent };
 }
 
-Deno.test("render parameters: external parameters extend or override diagram parameters", () => {
+test("render parameters: external parameters extend or override diagram parameters", () => {
   const authored = { ink: "yellow", paper: "pink" };
   const cases = [
     { theme: "light", override: false, ink: "yellow", paper: "pink" },
@@ -30,7 +32,7 @@ Deno.test("render parameters: external parameters extend or override diagram par
   }
 });
 
-Deno.test("render parameters: undefined values do not override authored parameters", () => {
+test("render parameters: undefined values do not override authored parameters", () => {
   const rendered = renderParameters(
     { ink: "yellow", paper: "pink", font: "serif" },
     options({ ink: "white", paper: "black", font: undefined }, true),
@@ -41,7 +43,7 @@ Deno.test("render parameters: undefined values do not override authored paramete
   assertEquals(rendered.font, "serif");
 });
 
-Deno.test("render parameters: priority replaces the scale and width axis", () => {
+test("render parameters: priority replaces the scale and width axis", () => {
   const diagram = renderParameters(
     { ink: "yellow", paper: "pink", width: "2400" },
     options({ scale: "2" }),
@@ -55,7 +57,7 @@ Deno.test("render parameters: priority replaces the scale and width axis", () =>
   assertEquals({ scale: exportOverride.scale, width: exportOverride.width }, { scale: "2", width: undefined });
 });
 
-Deno.test("render parameters: theme shorthand does not survive expansion", () => {
+test("render parameters: theme shorthand does not survive expansion", () => {
   const rendered = renderParameters({}, options({ theme: "dark" }));
 
   assertEquals(rendered.theme, undefined);
@@ -63,7 +65,7 @@ Deno.test("render parameters: theme shorthand does not survive expansion", () =>
   assertEquals(rendered.ink, "#ffffff");
 });
 
-Deno.test("render parameters: opaque background supplies missing paper in either parameter set", () => {
+test("render parameters: opaque background supplies missing paper in either parameter set", () => {
   const authored = renderParameters(
     { bg: "#202020" },
     options({ theme: "light" }),
@@ -77,7 +79,7 @@ Deno.test("render parameters: opaque background supplies missing paper in either
   assertEquals(external.paper, "navy");
 });
 
-Deno.test("render parameters: explicit paper wins over background and theme paper", () => {
+test("render parameters: explicit paper wins over background and theme paper", () => {
   const rendered = renderParameters(
     {},
     options({ theme: "dark", bg: "navy", paper: "beige" }),
@@ -86,7 +88,7 @@ Deno.test("render parameters: explicit paper wins over background and theme pape
   assertEquals(rendered.paper, "beige");
 });
 
-Deno.test("render parameters: light and dark background names use canonical paper colors", () => {
+test("render parameters: light and dark background names use canonical paper colors", () => {
   const light = renderParameters(
     { bg: "light" },
     { parameters: { theme: "dark" }, override: false },
@@ -100,7 +102,7 @@ Deno.test("render parameters: light and dark background names use canonical pape
   assertEquals({ bg: dark.bg, paper: dark.paper }, { bg: "#1a1a1a", paper: "#1a1a1a" });
 });
 
-Deno.test("render parameters: transparent background never supplies paper", () => {
+test("render parameters: transparent background never supplies paper", () => {
   const rendered = renderParameters(
     { bg: "transparent" },
     options({ theme: "dark" }),
@@ -109,7 +111,7 @@ Deno.test("render parameters: transparent background never supplies paper", () =
   assertEquals(rendered.paper, "#1a1a1a");
 });
 
-Deno.test("render parameters: transparent output retains concrete paper", () => {
+test("render parameters: transparent output retains concrete paper", () => {
   const rendered = renderParameters(
     {},
     options({ theme: "dark", bg: "navy" }, false, true),
@@ -119,7 +121,7 @@ Deno.test("render parameters: transparent output retains concrete paper", () => 
   assertEquals(rendered.paper, "navy");
 });
 
-Deno.test("render parameters: omitted transparency uses the merged background", () => {
+test("render parameters: omitted transparency uses the merged background", () => {
   const opaque = renderParameters(
     {},
     { parameters: { theme: "light", bg: "navy" }, override: false },
@@ -135,7 +137,7 @@ Deno.test("render parameters: omitted transparency uses the merged background", 
   assertEquals(transparent.paper, "#1a1a1a");
 });
 
-Deno.test("render parameters: opaque output preserves opaque background or uses paper", () => {
+test("render parameters: opaque output preserves opaque background or uses paper", () => {
   assertEquals(
     renderParameters({ bg: "#123456" }, options({ theme: "light" }, false, false)).bg,
     "#123456",
@@ -150,7 +152,7 @@ Deno.test("render parameters: opaque output preserves opaque background or uses 
   );
 });
 
-Deno.test("render parameters: concrete host parameters extend a neutral diagram", () => {
+test("render parameters: concrete host parameters extend a neutral diagram", () => {
   const rendered = renderParameters(
     { ink: "yellow" },
     options({ paper: "#002b36", ink: "#839496" }),
@@ -161,7 +163,7 @@ Deno.test("render parameters: concrete host parameters extend a neutral diagram"
   assertEquals(rendered.bg, "transparent");
 });
 
-Deno.test("render parameters: incomplete external parameters are rejected", () => {
+test("render parameters: incomplete external parameters are rejected", () => {
   assertThrows(
     () => renderParameters({}, options({})),
     Error,

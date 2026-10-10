@@ -1,10 +1,12 @@
-import { assertEquals, assertStringIncludes } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertStringIncludes } from "../../test/assertions.ts";
 import { parseTopos } from "../../topos.ts";
 import { buildSvgTree, renderToSVG } from "../svg.ts";
 import { tag, attrs, XmlEl } from "../../jsonml/jsonml.ts";
 import { matchChildEl } from "../../jsonml/assert.ts";
 
-Deno.test("svg: markdown bold and italic formatting in node labels", () => {
+test("svg: markdown bold and italic formatting in node labels", () => {
   const input = `\\
 ┌─────────────────────────┐
 │ A **bold** and *italic* │
@@ -34,7 +36,7 @@ Deno.test("svg: markdown bold and italic formatting in node labels", () => {
   assertEquals(italicTspan.slice(2)[0], "italic");
 });
 
-Deno.test("svg: markdown formatting overridden in legend rules", () => {
+test("svg: markdown formatting overridden in legend rules", () => {
   const input = `\\
 ┌────────────────────────────┐
 │    A                       │
@@ -61,7 +63,7 @@ A : "New **important** name"
   assertEquals(ch[2], " name");
 });
 
-Deno.test("svg: markdown links render as discoverable SVG anchors", () => {
+test("svg: markdown links render as discoverable SVG anchors", () => {
   const input = `\\
 Read [the docs](#docs)
 
@@ -78,7 +80,7 @@ Read [the docs](#docs)
   assertEquals(matchChildEl(link, "tspan", { class: "tpc-link-text" }).slice(2), ["the docs"]);
 });
 
-Deno.test("svg: unresolved Markdown link references render as ordinary text", () => {
+test("svg: unresolved Markdown link references render as ordinary text", () => {
   const svgTree = buildSvgTree(parseTopos("Read [the docs](#missing)"));
   const diagGrp = matchChildEl(svgTree, "g", { class: "tp-root" });
   const nodeGrp = matchChildEl(diagGrp, "g", { class: "tp-note" });
@@ -87,7 +89,7 @@ Deno.test("svg: unresolved Markdown link references render as ordinary text", ()
   assertEquals(textEl.slice(2), ["Read ", "the docs"]);
 });
 
-Deno.test("svg: entity href links the whole label without overriding inline links", () => {
+test("svg: entity href links the whole label without overriding inline links", () => {
   const svgTree = buildSvgTree(parseTopos(`\
 Whole label with [specific destination](https://example.com/specific)
 
@@ -105,7 +107,7 @@ Whole label with [specific destination](https://example.com/specific)
   ]);
 });
 
-Deno.test("svg: exact legend rule links a box label but not its geometry", () => {
+test("svg: exact legend rule links a box label but not its geometry", () => {
   const svgTree = buildSvgTree(parseTopos(`\
 ┌──────────┐
 │          │
@@ -126,7 +128,7 @@ docs: href="https://example.com"
   assertEquals(attrs(matchChildEl(nodeGrp, "rect", { class: "tpc-shape" })).href, undefined);
 });
 
-Deno.test("svg: paragraph formatting renders tspan with dx=7", () => {
+test("svg: paragraph formatting renders tspan with dx=7", () => {
   const input = `\\
 ( Paragraph 1 ¶ Paragraph 2 )
 `;
@@ -158,7 +160,7 @@ Deno.test("svg: paragraph formatting renders tspan with dx=7", () => {
   assertEquals(firstSeg.slice(2)[0], "Paragraph 2");
 });
 
-Deno.test("svg: leading paragraph formatting renders first line with dx", () => {
+test("svg: leading paragraph formatting renders first line with dx", () => {
   const input = `\\
 ( ¶ Paragraph 1 ¶ Paragraph 2 )
 `;
@@ -192,7 +194,7 @@ Deno.test("svg: leading paragraph formatting renders first line with dx", () => 
   assertEquals(firstSeg2.slice(2)[0], "Paragraph 2");
 });
 
-Deno.test("svg: bold/italic state persists across ⏎/¶ line breaks", () => {
+test("svg: bold/italic state persists across ⏎/¶ line breaks", () => {
   const input = `\\
 ┌──────────────────────────────────────────────┐
 │ A **bold ⏎ text** and *italic ¶ paragraph*   │
@@ -246,7 +248,7 @@ Deno.test("svg: bold/italic state persists across ⏎/¶ line breaks", () => {
   assertEquals(italic2.slice(2)[0], "paragraph");
 });
 
-Deno.test("svg: per-note font override", () => {
+test("svg: per-note font override", () => {
   const input = `\
 Note
 
@@ -260,7 +262,7 @@ Note : font="Courier New"
   assertEquals(attrs(noteGrp).style, "--tp-font: Courier New");
 });
 
-Deno.test("svg: per-entity font weight override", () => {
+test("svg: per-entity font weight override", () => {
   const input = `\
 ┌───┐       ┌───┐
 │ A ├─call──▶ B │
@@ -280,7 +282,7 @@ A : font-weight=600
   assertStringIncludes(renderToSVG(parseTopos(input)), "font-weight: var(--tp-font-weight, var(--tp-diagram-font-weight, 500))");
 });
 
-Deno.test("svg: code notes inherit the monospace Eidos class", () => {
+test("svg: code notes inherit the monospace Eidos class", () => {
   const input = `\
 | A  | B |
 
@@ -300,7 +302,7 @@ Deno.test("svg: code notes inherit the monospace Eidos class", () => {
   assertStringIncludes(svg, "| A  | B |");
 });
 
-Deno.test("svg: literal notes keep their authored text without a monospace class", () => {
+test("svg: literal notes keep their authored text without a monospace class", () => {
   const input = `\
 Text  keeps  spaces
 
@@ -318,7 +320,7 @@ Text  keeps  spaces
   assertStringIncludes(renderToSVG(ast), "Text  keeps  spaces");
 });
 
-Deno.test("svg: per-node-label font override", () => {
+test("svg: per-node-label font override", () => {
   const input = `\
 ┌─────────────────────────┐
 │ Box                     │
@@ -334,7 +336,7 @@ Box : font="Fira Code"
   assertEquals(attrs(nodeGrp).style, "--tp-font: Fira Code");
 });
 
-Deno.test("svg: edge label font override", () => {
+test("svg: edge label font override", () => {
   const input = `\
 ┌───┐       ┌───┐
 │ A ├─call──▶ B │
@@ -350,7 +352,7 @@ Deno.test("svg: edge label font override", () => {
   assertEquals(attrs(edge).style, "--tp-font: 'Fira Code', 'Roboto'");
 });
 
-Deno.test("svg: node font inheritance in nested layout", () => {
+test("svg: node font inheritance in nested layout", () => {
   const input = `\
 ┌─────────────────────────┐
 │ Parent                  │
@@ -375,7 +377,7 @@ Parent : font=Impact
   assertEquals(attrs(childTextEl).style, undefined);
 });
 
-Deno.test("svg: legend text defaults use diagram font variables", () => {
+test("svg: legend text defaults use diagram font variables", () => {
   const input = `\
 Note
 

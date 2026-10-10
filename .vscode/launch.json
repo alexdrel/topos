@@ -9,14 +9,15 @@
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
-      "runtimeExecutable": "deno",
+      "runtimeExecutable": "node",
       "runtimeArgs": [
-        "test",
-        "--inspect-wait=0.0.0.0:9229",
-        "--allow-all",
+        "--enable-source-maps",
+        "--import",
+        "@oxc-node/core/register",
+        "--test",
+        "--test-isolation=none",
         "${file}"
-      ],
-      "attachSimplePort": 9229
+      ]
     },
     {
       "request": "launch",
@@ -25,13 +26,12 @@
       "program": "${file}",
       "cwd": "${workspaceFolder}",
       "env": {},
-      "runtimeExecutable": "deno",
+      "runtimeExecutable": "node",
       "runtimeArgs": [
-        "run",
-        "--inspect-wait",
-        "--allow-all"
-      ],
-      "attachSimplePort": 9229
+        "--enable-source-maps",
+        "--import",
+        "@oxc-node/core/register"
+      ]
     },
     // Launch the Topos extension in a new Extension Development Host window.
     {

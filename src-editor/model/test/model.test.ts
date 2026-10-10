@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { Dir } from "../../../src/geo.ts";
 import { findTrace } from "../../../src/trace/test/trace-utils.ts";
 import { EditorModel } from "../model.ts";
@@ -10,7 +11,7 @@ function createModel(source: string): EditorModel {
   return new EditorModel(new ToposDocument(source));
 }
 
-Deno.test("trace model: commit reconciles labels", () => {
+test("trace model: commit reconciles labels", () => {
   const model = createModel(`\
 ┌─Top─┐
 │     │
@@ -27,7 +28,7 @@ Deno.test("trace model: commit reconciles labels", () => {
   assertEquals(label.type, "text");
 });
 
-Deno.test("trace model: keyboard nudge bends a selected terminus immediately", () => {
+test("trace model: keyboard nudge bends a selected terminus immediately", () => {
   const model = createModel("A ---> B");
   const line = findTrace(model.traceMap, { type: "line", x: 2, y: 0, startDir: Dir.W });
   model.setSelection([line.source!]);
@@ -37,7 +38,7 @@ Deno.test("trace model: keyboard nudge bends a selected terminus immediately", (
   assertEquals({ x: line.source!.x, y: line.source!.y }, { x: 2, y: 1 });
 });
 
-Deno.test("trace model: reverses selected lines", () => {
+test("trace model: reverses selected lines", () => {
   const model = createModel("A ───▶ B");
   const line = findTrace(model.traceMap, { type: "line", x: 2, y: 0, startDir: Dir.W });
   model.setSelection([line]);
@@ -48,7 +49,7 @@ Deno.test("trace model: reverses selected lines", () => {
   assertEquals(model.selection, [line]);
 });
 
-Deno.test("trace model: cycles selected box through three, two, and one layer", () => {
+test("trace model: cycles selected box through three, two, and one layer", () => {
   const source = `\
 ┌─────┐
 │  A  │
@@ -75,7 +76,7 @@ Deno.test("trace model: cycles selected box through three, two, and one layer", 
   assertEquals(box.stack, undefined);
 });
 
-Deno.test("trace model: boxes multiple selected traces", () => {
+test("trace model: boxes multiple selected traces", () => {
   const model = createModel("One     Two");
   const one = findTrace(model.traceMap, { type: "text", x: 0, y: 0 });
   const two = findTrace(model.traceMap, { type: "text", x: 8, y: 0 });
@@ -91,7 +92,7 @@ Deno.test("trace model: boxes multiple selected traces", () => {
   assertEquals(model.selection[0].type, "box");
 });
 
-Deno.test("trace model: boxing a selection ignores termini", () => {
+test("trace model: boxing a selection ignores termini", () => {
   const model = createModel("A ───▶ B");
   const line = findTrace(model.traceMap, { type: "line", x: 2, y: 0, startDir: Dir.W });
   model.setSelection([line.target!]);
@@ -101,7 +102,7 @@ Deno.test("trace model: boxing a selection ignores termini", () => {
   assertEquals(model.projection.text, "A ───▶ B");
 });
 
-Deno.test("trace model: toggles notes and inlines and cycles brackets", () => {
+test("trace model: toggles notes and inlines and cycles brackets", () => {
   const model = createModel("Note");
   const note = findTrace(model.traceMap, { type: "text", x: 0, y: 0 });
   model.setSelection([note]);
@@ -118,7 +119,7 @@ Deno.test("trace model: toggles notes and inlines and cycles brackets", () => {
   assertEquals({ type: note.type, bracket: note.bracket, x: note.x }, { type: "text", bracket: undefined, x: 0 });
 });
 
-Deno.test("trace model: cycles stack direction and horizontal spread", () => {
+test("trace model: cycles stack direction and horizontal spread", () => {
   const model = createModel(`\
 ┌─────┐
 │  A  ├┐
@@ -140,7 +141,7 @@ Deno.test("trace model: cycles stack direction and horizontal spread", () => {
   assertEquals(layouts, [[2, 1], [-1, 1], [-2, 1], [-1, -1], [-2, -1], [1, -1], [2, -1], [1, 1]]);
 });
 
-Deno.test("trace model: transient keyboard geometry emits one commit", () => {
+test("trace model: transient keyboard geometry emits one commit", () => {
   const model = createModel("A");
   const commits: boolean[] = [];
   model.subscribe((_model, event) => {
@@ -158,7 +159,7 @@ Deno.test("trace model: transient keyboard geometry emits one commit", () => {
   assertEquals(commits.filter(Boolean).length, 1);
 });
 
-Deno.test("trace model: transient keyboard geometry can revert without a checkpoint", () => {
+test("trace model: transient keyboard geometry can revert without a checkpoint", () => {
   const model = createModel("A");
   model.setSelection([findTrace(model.traceMap, { type: "text", x: 0, y: 0 })]);
 
@@ -170,7 +171,7 @@ Deno.test("trace model: transient keyboard geometry can revert without a checkpo
   assertEquals(model.selection.length, 1);
 });
 
-Deno.test("trace model: transient map updates preserve the committed undo selection", () => {
+test("trace model: transient map updates preserve the committed undo selection", () => {
   const source = "A   B";
   const model = createModel(source);
   model.setSelection([findTrace(model.traceMap, { type: "text", x: 0, y: 0 })]);
@@ -184,7 +185,7 @@ Deno.test("trace model: transient map updates preserve the committed undo select
   assertEquals({ text: model.selection[0].text, x: model.selection[0].x, y: model.selection[0].y }, { text: "A", x: 0, y: 0 });
 });
 
-Deno.test("trace model: nudge and resize share one keyboard edit", () => {
+test("trace model: nudge and resize share one keyboard edit", () => {
   const source = `\
 ┌───┐
 │ A │
@@ -200,7 +201,7 @@ Deno.test("trace model: nudge and resize share one keyboard edit", () => {
   assertEquals(model.projection.text === source, false);
 });
 
-Deno.test("trace model: resize continues past boxes already at minimum size", () => {
+test("trace model: resize continues past boxes already at minimum size", () => {
   const model = createModel(`\
 ┌┐  ┌─┐
 └┘  └─┘`);
@@ -211,7 +212,7 @@ Deno.test("trace model: resize continues past boxes already at minimum size", ()
   assertEquals(boxes.map((box) => box.w), [2, 2]);
 });
 
-Deno.test("trace model: resize ignores non-boxes in a mixed selection", () => {
+test("trace model: resize ignores non-boxes in a mixed selection", () => {
   const model = createModel(`\
 ┌─┐
 └─┘
@@ -227,7 +228,7 @@ A --> B`);
   assertEquals(line.w, lineWidth);
 });
 
-Deno.test("trace model: resizing selected cells moves a shared boundary once", () => {
+test("trace model: resizing selected cells moves a shared boundary once", () => {
   const model = createModel(`\
 ┌─────┬─────┐
 │  A  │  B  │
@@ -239,7 +240,7 @@ Deno.test("trace model: resizing selected cells moves a shared boundary once", (
   assertEquals(cells.map((cell) => ({ x: cell.x, w: cell.w })), [{ x: 0, w: 8 }, { x: 7, w: 7 }]);
 });
 
-Deno.test("trace model: styling a selected grid parent changes its outer frame", () => {
+test("trace model: styling a selected grid parent changes its outer frame", () => {
   const model = createModel(`\
 ┌─────┬─────┐
 │  A  │  B  │
@@ -254,7 +255,7 @@ Deno.test("trace model: styling a selected grid parent changes its outer frame",
 ┗━━━━━┷━━━━━┛`);
 });
 
-Deno.test("trace model: keyboard resize centers inline content", () => {
+test("trace model: keyboard resize centers inline content", () => {
   const model = createModel("[Spirit]");
   model.setSelection([findTrace(model.traceMap, { type: "inline", x: 0, y: 0 })]);
 
@@ -263,7 +264,7 @@ Deno.test("trace model: keyboard resize centers inline content", () => {
   assertEquals(model.resizeSelection(0, 1), false);
 });
 
-Deno.test("trace model: subscribers distinguish transient and committed changes", () => {
+test("trace model: subscribers distinguish transient and committed changes", () => {
   const model = createModel("A");
   const events: Array<boolean | undefined> = [];
   const unsubscribe = model.subscribe((_model, event) => events.push(event?.commit));
@@ -276,7 +277,7 @@ Deno.test("trace model: subscribers distinguish transient and committed changes"
   assertEquals(events, [undefined, false, true]);
 });
 
-Deno.test("trace model: labels can be created, edited, and removed through their owner", () => {
+test("trace model: labels can be created, edited, and removed through their owner", () => {
   const model = createModel(`\
 ┌───────┐
 │       │
@@ -294,7 +295,7 @@ Deno.test("trace model: labels can be created, edited, and removed through their
   assertEquals(box.rawLabels, []);
 });
 
-Deno.test("trace model: attached labels can be edited and removed directly", () => {
+test("trace model: attached labels can be edited and removed directly", () => {
   const model = createModel(`\
 ┌─Top─┐
 │     │
@@ -309,7 +310,7 @@ Deno.test("trace model: attached labels can be edited and removed directly", () 
   assertEquals(model.traceMap.traces.includes(label), false);
 });
 
-Deno.test("trace model: applyLabel edits standalone text", () => {
+test("trace model: applyLabel edits standalone text", () => {
   const model = createModel("A");
   model.setSelection([findTrace(model.traceMap, { type: "text", x: 0, y: 0 })]);
 
@@ -318,7 +319,7 @@ Deno.test("trace model: applyLabel edits standalone text", () => {
   assertEquals(model.projection.text, "B");
 });
 
-Deno.test("trace model: text editing reconciles inline node types on commit", () => {
+test("trace model: text editing reconciles inline node types on commit", () => {
   const model = createModel("Old");
   const trace = findTrace(model.traceMap, { type: "text", x: 0, y: 0 });
 
@@ -329,7 +330,7 @@ Deno.test("trace model: text editing reconciles inline node types on commit", ()
   assertEquals({ type: trace.type, bracket: trace.bracket }, { type: "text", bracket: undefined });
 });
 
-Deno.test("trace model: deleting a selected terminus clears its glyph but preserves the line", () => {
+test("trace model: deleting a selected terminus clears its glyph but preserves the line", () => {
   const model = createModel("A ---> B");
   const line = findTrace(model.traceMap, { type: "line", x: 2, y: 0, startDir: Dir.W });
   model.setSelection([line.target!]);
@@ -341,7 +342,7 @@ Deno.test("trace model: deleting a selected terminus clears its glyph but preser
   assertEquals(model.selection, []);
 });
 
-Deno.test("trace model: deleting an open terminus resets it to a normal wire", () => {
+test("trace model: deleting an open terminus resets it to a normal wire", () => {
   const model = createModel("╶──╴");
   const line = findTrace(model.traceMap, { type: "line", x: 0, y: 0, startDir: Dir.None });
   model.setSelection([line.source!]);
@@ -353,7 +354,7 @@ Deno.test("trace model: deleting an open terminus resets it to a normal wire", (
   assertEquals(model.projection.text, "───╴");
 });
 
-Deno.test("trace model: paste uses its anchor or places content after the selection", () => {
+test("trace model: paste uses its anchor or places content after the selection", () => {
   const anchored = createModel("");
   anchored.pasteAnchor = { x: 4, y: 2 };
   assertEquals(anchored.pasteText("A"), true);
@@ -367,14 +368,14 @@ Deno.test("trace model: paste uses its anchor or places content after the select
   assertEquals(relative.pasteText("   "), false);
 });
 
-Deno.test("trace model: applying source replaces the document", () => {
+test("trace model: applying source replaces the document", () => {
   const model = createModel("A");
 
   model.applySource("B");
   assertEquals(model.projection.text, "B");
 });
 
-Deno.test("trace model: syncing source changes preserves selection", () => {
+test("trace model: syncing source changes preserves selection", () => {
   const model = createModel("A");
   model.setSelection([findTrace(model.traceMap, { type: "text", x: 0, y: 0 })]);
 
@@ -388,7 +389,7 @@ Deno.test("trace model: syncing source changes preserves selection", () => {
   assertEquals(model.selection[0].text, "A");
 });
 
-Deno.test("trace model: syncing map source preserves legend selection", () => {
+test("trace model: syncing map source preserves legend selection", () => {
   const model = createModel("A\n:legend\n[A]: blue");
   model.selectAll();
 
@@ -401,7 +402,7 @@ Deno.test("trace model: syncing map source preserves legend selection", () => {
   assertEquals(model.legendSelected, false);
 });
 
-Deno.test("trace model: setting legend selection notifies subscribers", () => {
+test("trace model: setting legend selection notifies subscribers", () => {
   const model = createModel("A\n:legend\n[A]: blue");
   const events: Array<boolean | undefined> = [];
   model.subscribe((_model, event) => events.push(event?.commit));
@@ -412,7 +413,7 @@ Deno.test("trace model: setting legend selection notifies subscribers", () => {
   assertEquals(events, [undefined, false]);
 });
 
-Deno.test("trace model: document selection copies authored map content", () => {
+test("trace model: document selection copies authored map content", () => {
   const source = `\
 ┌───┐
 │ A │
@@ -424,7 +425,7 @@ Deno.test("trace model: document selection copies authored map content", () => {
   assertEquals(model.getClipboardText(), source);
 });
 
-Deno.test("trace model: select all includes the complete document", () => {
+test("trace model: select all includes the complete document", () => {
   const source = `\
 ┌───┐
 │ A │
@@ -440,7 +441,7 @@ Deno.test("trace model: select all includes the complete document", () => {
   assertEquals(model.getClipboardText(), source);
 });
 
-Deno.test("trace model: trace selection excludes offsets and legend", () => {
+test("trace model: trace selection excludes offsets and legend", () => {
   const document = new ToposDocument(`\
 
   ┌───┐
@@ -460,7 +461,7 @@ Deno.test("trace model: trace selection excludes offsets and legend", () => {
   assertEquals(model.getClipboardText(), `┌───┐\n│ A │\n└───┘`);
 });
 
-Deno.test("trace model: cutting document selection removes map and legend together", () => {
+test("trace model: cutting document selection removes map and legend together", () => {
   const source = `\
 ┌───┐
 │ A │
@@ -478,7 +479,7 @@ Deno.test("trace model: cutting document selection removes map and legend togeth
 
 });
 
-Deno.test("editor model: legend editing previews live and emits one commit", () => {
+test("editor model: legend editing previews live and emits one commit", () => {
   const source = `\
 A
 :legend
@@ -497,7 +498,7 @@ A
   assertEquals(events, [undefined, false, false, true]);
 });
 
-Deno.test("trace model: cutting all traces returns projected map content", () => {
+test("trace model: cutting all traces returns projected map content", () => {
   const model = createModel(`\
 ┌───┐
 │ A │
@@ -507,7 +508,7 @@ Deno.test("trace model: cutting all traces returns projected map content", () =>
   assertEquals(model.cutClipboardText(), `┌───┐\n│ A │\n└───┘`);
 });
 
-Deno.test("trace model: deleting a selected box grid removes its cells", () => {
+test("trace model: deleting a selected box grid removes its cells", () => {
   const model = createModel(`\
 ┌─────────┬─────────┐
 │  Box A  │  Box B  │
@@ -526,7 +527,7 @@ Deno.test("trace model: deleting a selected box grid removes its cells", () => {
   assertEquals(model.projection.text, "");
 });
 
-Deno.test("trace model: duplicate repeats the adjusted group displacement", () => {
+test("trace model: duplicate repeats the adjusted group displacement", () => {
   const model = createModel(`\
 ┌─┐  ┌──┐
 │A│  │ B│
@@ -542,7 +543,7 @@ Deno.test("trace model: duplicate repeats the adjusted group displacement", () =
   assertEquals(traceSelectionBounds(model.traceMap, model.selection), { x: 28, y: 4, w: 9, h: 3 });
 });
 
-Deno.test("trace model: duplicate places selection in cardinal directions", () => {
+test("trace model: duplicate places selection in cardinal directions", () => {
   const cases = [
     { delta: { x: -1, y: 0 }, expected: { x: -7, y: 0, w: 5, h: 3 } },
     { delta: { x: 1, y: 0 }, expected: { x: 7, y: 0, w: 5, h: 3 } },
@@ -561,7 +562,7 @@ Deno.test("trace model: duplicate places selection in cardinal directions", () =
   }
 });
 
-Deno.test("trace model: retrace rebuilds the model from its projected text", () => {
+test("trace model: retrace rebuilds the model from its projected text", () => {
   const model = createModel(`\
 ┌───┐
 │ A │
@@ -575,7 +576,7 @@ Deno.test("trace model: retrace rebuilds the model from its projected text", () 
   assertEquals(model.projection.text, `┌───┐\n│ A │\n└───┘`);
 });
 
-Deno.test("trace model: retrace collapses overlapping boxes to parser output", () => {
+test("trace model: retrace collapses overlapping boxes to parser output", () => {
   const model = createModel("");
   model.command((m) => {
     createBox(m.traceMap, { x: 0, y: 0, w: 7, h: 3 });

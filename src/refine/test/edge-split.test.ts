@@ -1,11 +1,10 @@
-import { assert } from "@std/assert";
-import { testParseDiagram, testCompleted, flushPendingWrites } from '../../test/test-utils.ts';
+import { parseDiagram } from "../refine.ts";
+import { test } from "node:test";
+import { ok as assert } from "node:assert/strict";
 
 import { matchChild, matchEdge } from "../../test/test-utils.ts";
 
-Deno.test.afterEach(flushPendingWrites);
-
-Deno.test("Edge split inherits source from implicit stem", (t) => {
+test("Edge split inherits source from implicit stem", () => {
   const diagram = `
 A ───┬──▶ B
      │
@@ -13,7 +12,7 @@ A ───┬──▶ B
      C
 `;
 
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const a = matchChild(root, { label: "A", nodeType: "note" }, 0, 3);
   const b = matchChild(root, { label: "B", nodeType: "note" }, 1, 3);
   const c = matchChild(root, { label: "C", nodeType: "note" }, 2, 3);
@@ -22,7 +21,6 @@ A ───┬──▶ B
   const branch = matchEdge(root, { direction: "uni", source: a, target: c }, 1, 2);
 
   assert(branch.source.stem === stem, "Expected implicit split branch source to reference its stem edge");
-  testCompleted(t);
 });
 
 const LABELED_TREE_ROTATIONS = [
@@ -65,8 +63,8 @@ const LABELED_TREE_ROTATIONS = [
 ] as const;
 
 for (const { name, diagram, stemTerminus } of LABELED_TREE_ROTATIONS) {
-  Deno.test(`Edge split resolves labeled-tree stems ${name}`, (t) => {
-    const root = testParseDiagram(t, diagram).root;
+  test(`Edge split resolves labeled-tree stems ${name}`, () => {
+    const root = parseDiagram(diagram).root;
     const a = matchChild(root, { label: "A" }, (child) => child.label === "A", 4);
     const b = matchChild(root, { label: "B" }, (child) => child.label === "B", 4);
     const c = matchChild(root, { label: "C" }, (child) => child.label === "C", 4);
@@ -84,11 +82,11 @@ for (const { name, diagram, stemTerminus } of LABELED_TREE_ROTATIONS) {
     assert(branchD[stemTerminus].node === a);
     assert(branchC[stemTerminus].stem === stem);
     assert(branchD[stemTerminus].stem === stem);
-    testCompleted(t);
+
   });
 }
 
-Deno.test("Edge split resolves ASCII stem", (t) => {
+test("Edge split resolves ASCII stem", () => {
   const diagram = `
 A ---+---> B
      |
@@ -96,7 +94,7 @@ A ---+---> B
      C
 `;
 
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const a = matchChild(root, { label: "A", nodeType: "note" }, 0, 3);
   const b = matchChild(root, { label: "B", nodeType: "note" }, 1, 3);
   const c = matchChild(root, { label: "C", nodeType: "note" }, 2, 3);
@@ -105,10 +103,9 @@ A ---+---> B
   const branch = matchEdge(root, { direction: "uni", source: a, target: c }, 1, 2);
 
   assert(branch.source.stem === stem, "Expected implicit split branch source to reference its stem edge");
-  testCompleted(t);
 });
 
-Deno.test("Edge split resolves double branching", (t) => {
+test("Edge split resolves double branching", () => {
   const diagram = `
 A ───┬──▶ B
      │
@@ -118,7 +115,7 @@ A ───┬──▶ B
         D
 `;
 
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const a = matchChild(root, { label: "A", nodeType: "note" }, 0, 4);
   const b = matchChild(root, { label: "B", nodeType: "note" }, 1, 4);
   const c = matchChild(root, { label: "C", nodeType: "note" }, 2, 4);
@@ -129,11 +126,9 @@ A ───┬──▶ B
   const branchToD = matchEdge(root, { direction: "uni", source: a, target: d }, (edge) => edge.target.node === d, 3);
   assert(branchToC.source.stem === stemToB);
   assert(branchToD.source.stem === branchToC);
-
-  testCompleted(t);
 });
 
-Deno.test("Edge split links explicit hub branches to their stem", (t) => {
+test("Edge split links explicit hub branches to their stem", () => {
   const diagram = `
 A ───●──▶ B
      │
@@ -141,7 +136,7 @@ A ───●──▶ B
      C
 `;
 
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const a = matchChild(root, { label: "A", nodeType: "note" }, 0, 4);
   const hub = matchChild(root, { nodeType: "hub" }, 1, 4);
   const b = matchChild(root, { label: "B", nodeType: "note" }, 2, 4);
@@ -150,11 +145,9 @@ A ───●──▶ B
   const _stem = matchEdge(root, { direction: "none", source: a, target: hub }, 0, 3);
   const _branchToB = matchEdge(root, { direction: "uni", source: hub, target: b }, 1, 3);
   const _branchToC = matchEdge(root, { direction: "uni", source: hub, target: c }, 2, 3);
-
-  testCompleted(t);
 });
 
-Deno.test("Edge split inside container retains stem", (t) => {
+test("Edge split inside container retains stem", () => {
   const diagram = `\
 ╭───────────────── Ink ─────────────────╮
 │            ┌───────●───────┬──────┐   │
@@ -166,7 +159,7 @@ Deno.test("Edge split inside container retains stem", (t) => {
 ╰───────────────────────────────────────╯
 `;
 
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const ink = matchChild(root, { label: "Ink", nodeType: "box" }, 0, 1);
   const _a = matchChild(ink, { label: "A", nodeType: "box" }, 1, 4);
   const b = matchChild(ink, { label: "B", nodeType: "box" }, 2, 4);
@@ -176,5 +169,4 @@ Deno.test("Edge split inside container retains stem", (t) => {
   const branch = matchEdge(ink, { direction: "uni", target: b }, (edge) => edge.target.node === b, 3);
 
   assert(branch.source.stem === stem, "Expected branch source inside container to reference its stem edge");
-  testCompleted(t);
 });

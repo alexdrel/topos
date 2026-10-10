@@ -1,13 +1,12 @@
+import { test } from "node:test";
 // src/trace/test/textTurtle.test.ts
-import { assertEquals } from "@std/assert";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { assertArrayMatch } from "./trace-utils.ts";
 import { reclassifyTextTrace } from "../text-turtle.ts";
 
-import { flushPendingWrites, testTraceMap, testCompleted } from "../../test/test-utils.ts";
+import { testTraceMap } from "../../test/test-utils.ts";
 
-Deno.test.afterEach(flushPendingWrites);
-
-Deno.test("Turtle: reclassifies bracketed text as inline", () => {
+test("Turtle: reclassifies bracketed text as inline", () => {
   assertEquals(reclassifyTextTrace("[Spirit]"), { type: "inline", bracket: "[]", text: "[Spirit]", x: 0, w: 8, h: 1 });
   assertEquals(reclassifyTextTrace("(Opportunity)"), { type: "inline", bracket: "()", text: "(Opportunity)", x: 0, w: 13, h: 1 });
   assertEquals(reclassifyTextTrace("<Curiosity>"), { type: "inline", bracket: "<>", text: "<Curiosity>", x: 0, w: 11, h: 1 });
@@ -15,66 +14,60 @@ Deno.test("Turtle: reclassifies bracketed text as inline", () => {
   assertEquals(reclassifyTextTrace("  [Spirit]   ", 4), { type: "inline", bracket: "[]", text: "[Spirit]", x: 6, w: 8, h: 1 });
 });
 
-Deno.test("Turtle: reclassifies and normalizes plain text", () => {
+test("Turtle: reclassifies and normalizes plain text", () => {
   assertEquals(reclassifyTextTrace("Spirit"), { type: "text", bracket: undefined, text: "Spirit", x: 0, w: 6, h: 1 });
   assertEquals(reclassifyTextTrace("  A\n\nBBB", 4), { type: "text", bracket: undefined, text: "  A\n\nBBB", x: 4, w: 3, h: 3 });
   assertEquals(reclassifyTextTrace("  A  \n\nBBB  \n  ", 4), { type: "text", bracket: undefined, text: "  A\n\nBBB\n", x: 4, w: 3, h: 4 });
   assertEquals(reclassifyTextTrace(""), { type: "text", bracket: undefined, text: "", x: 0, w: 0, h: 1 });
 });
 
-Deno.test("Turtle: Simple Text", (t) => {
+test("Turtle: Simple Text", () => {
   const diagram = "Hello World";
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   assertArrayMatch(traces, [
     { type: "text", x: 0, y: 0, w: 11, text: "Hello World" }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Preserve an unconnected arrow inside prose", (t) => {
-  const traces = testTraceMap(t, "input → parse");
+test("Turtle: Preserve an unconnected arrow inside prose", () => {
+  const traces = testTraceMap("input → parse");
   assertArrayMatch(traces, [
     { type: "text", x: 0, y: 0, text: "input → parse" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Preserve a structural glyph inside an inline node", (t) => {
-  const traces = testTraceMap(t, "[Unmatched │ Wire ]");
+test("Turtle: Preserve a structural glyph inside an inline node", () => {
+  const traces = testTraceMap("[Unmatched │ Wire ]");
   assertArrayMatch(traces, [
     { type: "inline", x: 0, y: 0, text: "[Unmatched │ Wire ]" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Preserve unclaimed structural glyphs within text", (t) => {
+test("Turtle: Preserve unclaimed structural glyphs within text", () => {
   const diagram = "Hello │ World";
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   assertArrayMatch(traces, [
     { type: "text", x: 0, y: 0, w: 13, text: "Hello │ World" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Preserve a compact mixed glyph run as one text", (t) => {
-  const traces = testTraceMap(t, "│X│");
+test("Turtle: Preserve a compact mixed glyph run as one text", () => {
+  const traces = testTraceMap("│X│");
   assertArrayMatch(traces, [
     { type: "text", x: 0, y: 0, w: 3, text: "│X│" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Pass through Dual-use Wires (ASCII)", (t) => {
+test("Turtle: Pass through Dual-use Wires (ASCII)", () => {
   const diagram = "1 + 2 = 3";
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   assertArrayMatch(traces, [
     { type: "text", x: 0, y: 0, w: 9, text: "1 + 2 = 3" }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Structural gap blocks hub-label association", (t) => {
-  const unicode = testTraceMap(t, `\
+test("Turtle: Structural gap blocks hub-label association", () => {
+  const unicode = testTraceMap(`\
 ┌───────────────┐
 │    # JWST    S├─● L2
 └───────────────┘`, ["terminus"]);
@@ -87,7 +80,7 @@ Deno.test("Turtle: Structural gap blocks hub-label association", (t) => {
     { type: "label", text: "L2" },
   ]);
 
-  const ascii = testTraceMap(t, `\
+  const ascii = testTraceMap(`\
 +---------------+
 |    # JWST    S+-● L2
 +---------------+`, ["terminus"]);
@@ -99,57 +92,52 @@ Deno.test("Turtle: Structural gap blocks hub-label association", (t) => {
     { type: "text", text: "S" },
     { type: "label", text: "L2" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Stop at Claimed Location", (t) => {
+test("Turtle: Stop at Claimed Location", () => {
   const diagram = `
 ┌───┐
 │ A │
 └───┘
 `;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   assertArrayMatch(traces, [
     { type: "box", x: 0, y: 1, w: 5, h: 3 },
     { type: "text", x: 2, y: 2, w: 1, text: "A" }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Max Space Run (Termination)", (t) => {
+test("Turtle: Max Space Run (Termination)", () => {
   const diagram = "One   Two";
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   assertArrayMatch(traces, [
     { type: "text", x: 0, y: 0, w: 3, text: "One" },
     { type: "text", x: 6, y: 0, w: 3, text: "Two" }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Trailing Spaces Backtracking", (t) => {
+test("Turtle: Trailing Spaces Backtracking", () => {
   const diagram = "Word  ";
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   assertArrayMatch(traces, [
     { type: "text", x: 0, y: 0, w: 4, text: "Word" }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Crossing Vertical Line", (t) => {
+test("Turtle: Crossing Vertical Line", () => {
   const diagram = `\
   │
 hello
   │
 `;
-  const traces = testTraceMap(t, diagram, ["terminus"]);
+  const traces = testTraceMap(diagram, ["terminus"]);
   assertArrayMatch(traces, [
     { type: "line", text: "│l│" },
     { type: "label", text: "hello" }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Connected Hubs with space (hubs as text)", (t) => {
+test("Turtle: Connected Hubs with space (hubs as text)", () => {
   const diagram = `\
   ┌─▶ ◎ Top
   │        
@@ -157,16 +145,15 @@ Deno.test("Turtle: Connected Hubs with space (hubs as text)", (t) => {
   │        
   ▼        
   ◇ Bottom`;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   assertArrayMatch(traces, [
     { type: "line" },
     { type: "hub", text: "◎", rawLabels: [{ text: "Top" }] },
     { type: "hub", text: "◇", rawLabels: [{ text: "Bottom" }] },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Connected Hubs line with space (hubs as text)", (t) => {
+test("Turtle: Connected Hubs line with space (hubs as text)", () => {
   const diagram = `\
   ┌── ◎ Top
   │        
@@ -174,15 +161,14 @@ Deno.test("Turtle: Connected Hubs line with space (hubs as text)", (t) => {
   │        
   ▼        
   ◇ Bottom`;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   assertArrayMatch(traces, [
     { type: "line" },
     { type: "hub", text: "◎", rawLabels: [{ text: "Top" }] },
     { type: "hub", text: "◇", rawLabels: [{ text: "Bottom" }] },
   ]);
-  testCompleted(t);
 });
-Deno.test("Turtle: Line through hubs (hubs as line, rawLabels only text)", (t) => {
+test("Turtle: Line through hubs (hubs as line, rawLabels only text)", () => {
   const diagram = `\
   ◎ Top   
   │       
@@ -190,32 +176,30 @@ Deno.test("Turtle: Line through hubs (hubs as line, rawLabels only text)", (t) =
   │       
   │       
   ◇ Bottom`;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   assertArrayMatch(traces, [
     { type: "line" },
     { type: "hub", text: "◎", rawLabels: [{ text: "Top" }] },
     { type: "hub", text: "◇", rawLabels: [{ text: "Bottom" }] },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Labeled Hub to the left", (t) => {
+test("Turtle: Labeled Hub to the left", () => {
   const diagram = `\
    Top ◎
        │
        │
        ▼
 Bottom ◇`;
-  const traces = testTraceMap(t, diagram);
+  const traces = testTraceMap(diagram);
   assertArrayMatch(traces, [
     { type: "line" },
     { type: "hub", text: "◎", rawLabels: [{ text: "Top" }] },
     { type: "hub", text: "◇", rawLabels: [{ text: "Bottom" }] },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Turtle: Crossing Arrows", (t) => {
+test("Turtle: Crossing Arrows", () => {
   const diagram = `
       ^
       |
@@ -223,8 +207,7 @@ Deno.test("Turtle: Crossing Arrows", (t) => {
       |
       V
     `;
-  const traces = testTraceMap(t, diagram, ["line", "terminus"]);
+  const traces = testTraceMap(diagram, ["line", "terminus"]);
   // no text should be found since all characters are part of lines
   assertArrayMatch(traces, []);
-  testCompleted(t);
 });

@@ -1,4 +1,6 @@
-import { assert, assertAlmostEquals, assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { ok as assert, deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertAlmostEquals } from "../../test/assertions.ts";
 import { parseTopos } from "../../topos.ts";
 import { buildSvgTree } from "../svg.ts";
 import { matchChildEl } from "../../jsonml/assert.ts";
@@ -23,7 +25,7 @@ function descendantsByTag(element: XmlEl, wantedTag: string): XmlEl[] {
  * Verifies block arrow geometry, bidirectional support, and pattern injection.
  */
 
-Deno.test("block arrow polygon: unidirectional", () => {
+test("block arrow polygon: unidirectional", () => {
   assertEquals(buildBlockArrowPolygon([{ x: 0, y: 0 }, { x: 100, y: 0 }], false), [
     { x: 0, y: 9 },
     { x: 78, y: 9 },
@@ -35,7 +37,7 @@ Deno.test("block arrow polygon: unidirectional", () => {
   ]);
 });
 
-Deno.test("block arrow polygon: bidirectional", () => {
+test("block arrow polygon: bidirectional", () => {
   assertEquals(buildBlockArrowPolygon([{ x: 0, y: 0 }, { x: 100, y: 0 }], true), [
     { x: 0, y: 0 },
     { x: 22, y: 16 },
@@ -50,7 +52,7 @@ Deno.test("block arrow polygon: bidirectional", () => {
   ]);
 });
 
-Deno.test("block arrows connect the flat tail without clearance", () => {
+test("block arrows connect the flat tail without clearance", () => {
   const input = `\
 ┌───┐             ┌───┐
 │ A ├────────────▶│ B │
@@ -70,11 +72,11 @@ Deno.test("block arrows connect the flat tail without clearance", () => {
   assertAlmostEquals(Math.max(...points.filter((_, index) => index % 2 === 0)), target.x - 2);
 });
 
-Deno.test("block arrow polygon: ignores coincident points", () => {
+test("block arrow polygon: ignores coincident points", () => {
   assertEquals(buildBlockArrowPolygon([{ x: 5, y: 5 }, { x: 5, y: 5 }], false), []);
 });
 
-Deno.test("block arrows: short spans fall back to a standard arrow", () => {
+test("block arrows: short spans fall back to a standard arrow", () => {
   const input = `\
 ┌─┐ ┌─┐
 │A├─▶B│
@@ -93,7 +95,7 @@ Deno.test("block arrows: short spans fall back to a standard arrow", () => {
   });
 });
 
-Deno.test("block chevrons: default density distributes static chevrons over the body", () => {
+test("block chevrons: default density distributes static chevrons over the body", () => {
   const input = `\
 ┌───┐             ┌───┐
 │ A │────────────▶│ B │
@@ -119,7 +121,7 @@ Deno.test("block chevrons: default density distributes static chevrons over the 
   }
 });
 
-Deno.test("block chevrons: animation follows and faces reverse travel", () => {
+test("block chevrons: animation follows and faces reverse travel", () => {
   const input = `\
 ┌───┐             ┌───┐
 │ A │────────────▶│ B │
@@ -143,7 +145,7 @@ Deno.test("block chevrons: animation follows and faces reverse travel", () => {
   assertEquals(new Set(chevrons.map((item) => attrs(matchChildEl(item, "animateMotion")).begin)).size, chevrons.length);
 });
 
-Deno.test("animation: bidirectional block chevrons and spark retain both arrowheads", () => {
+test("animation: bidirectional block chevrons and spark retain both arrowheads", () => {
   const input = `\
 ┌───┐             ┌───┐
 │ A │◀───────────▶│ B │
@@ -184,7 +186,7 @@ Deno.test("animation: bidirectional block chevrons and spark retain both arrowhe
   );
 });
 
-Deno.test("animation: particle balance distributes travel direction", () => {
+test("animation: particle balance distributes travel direction", () => {
   const input = `\
 ┌───┐             ┌───┐
 │ A │◀───────────▶│ B │
@@ -216,7 +218,7 @@ Deno.test("animation: particle balance distributes travel direction", () => {
   assertEquals(reverseCounts, [1, 3, 1]);
 });
 
-Deno.test("animation: balanced directions distribute independently along the path", () => {
+test("animation: balanced directions distribute independently along the path", () => {
   const input = `\
 ┌───┐             ┌───┐
 │ A │◀───────────▶│ B │
@@ -237,7 +239,7 @@ Deno.test("animation: balanced directions distribute independently along the pat
   assertEquals(positions[0] === positions[1], false);
 });
 
-Deno.test("block arrows: local pattern injection", () => {
+test("block arrows: local pattern injection", () => {
   const input = `\
 ┌───┐             ┌───┐
 │ A │────────────▶│ B │
@@ -258,7 +260,7 @@ Deno.test("block arrows: local pattern injection", () => {
   assertEquals(style.includes("fill: url(#tpc-pat-hatch-"), true, "Polygon should reference the local pattern");
 });
 
-Deno.test("block arrows: with label", () => {
+test("block arrows: with label", () => {
   const input = `\
 ┌───┐     ┌───┐
 │ A │────▶│ B │
@@ -277,7 +279,7 @@ Deno.test("block arrows: with label", () => {
   assertEquals(textContent(label).includes("Link"), true, "Label text should be present");
 });
 
-Deno.test("block arrows: support bends", () => {
+test("block arrows: support bends", () => {
   const input = `\
 ┌───┐   
 │ A │
@@ -309,7 +311,7 @@ Deno.test("block arrows: support bends", () => {
   assertAlmostEquals(Math.max(...xs), targetBounds.x - 2, 0.1);
 });
 
-Deno.test("animation: dashed animate composes on an edge without particles", () => {
+test("animation: dashed animate composes on an edge without particles", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A │──▶│ B │
@@ -325,7 +327,7 @@ Deno.test("animation: dashed animate composes on an edge without particles", () 
   assertEquals(String(attrs(edge).style).startsWith("--tp-animation-delay: -"), true);
 });
 
-Deno.test("animation: speed controls dashed and dotted flow", () => {
+test("animation: speed controls dashed and dotted flow", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A │──▶│ B │
@@ -348,7 +350,7 @@ Deno.test("animation: speed controls dashed and dotted flow", () => {
   assertEquals(String(attrs(fast).style).includes("--tp-animation-duration: 2.5s"), true);
 });
 
-Deno.test("animation: spark animate emits a deterministically phased path particle", () => {
+test("animation: spark animate emits a deterministically phased path particle", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A │──▶│ B │
@@ -374,7 +376,7 @@ Deno.test("animation: spark animate emits a deterministically phased path partic
   assertEquals(attrs(matchChildEl(secondParticle, "animateMotion")).begin, attrs(motion).begin);
 });
 
-Deno.test("animation: particle travel speed is independent of path length", () => {
+test("animation: particle travel speed is independent of path length", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A │──▶│ B │
@@ -404,7 +406,7 @@ Deno.test("animation: particle travel speed is independent of path length", () =
   assertAlmostEquals(speeds[0], speeds[1]);
 });
 
-Deno.test("animation: named particle random is position-independent while numeric random is identity-mixed", () => {
+test("animation: named particle random is position-independent while numeric random is identity-mixed", () => {
   const input = `\
 ┌───┐         ┌───┐
 │ A │────────▶│ B │
@@ -440,7 +442,7 @@ Deno.test("animation: named particle random is position-independent while numeri
   assertEquals(JSON.stringify(numeric[0]) === JSON.stringify(numeric[1]), false);
 });
 
-Deno.test("animation: chevron and packet particles use compendium symbols", () => {
+test("animation: chevron and packet particles use compendium symbols", () => {
   const input = `\
 ┌───┐             ┌───┐
 │ A │────────────▶│ B │
@@ -470,7 +472,7 @@ Deno.test("animation: chevron and packet particles use compendium symbols", () =
   assertEquals(attrs(packet).width, 30);
 });
 
-Deno.test("animation: filter variants are local and deterministically desynchronized", () => {
+test("animation: filter variants are local and deterministically desynchronized", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A │──▶│ B │
@@ -492,7 +494,7 @@ Deno.test("animation: filter variants are local and deterministically desynchron
   for (const animate of animations) assertEquals(attrs(animate).begin, delay);
 });
 
-Deno.test("animation: render parameter disables authored animation", () => {
+test("animation: render parameter disables authored animation", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A │──▶│ B │
@@ -525,7 +527,7 @@ Deno.test("animation: render parameter disables authored animation", () => {
   assertEquals(attrs(fenced).class, "tp-animation-disabled");
 });
 
-Deno.test("animation: static particles are distributed along the path", () => {
+test("animation: static particles are distributed along the path", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A │──▶│ B │
@@ -554,7 +556,7 @@ Deno.test("animation: static particles are distributed along the path", () => {
   assertEquals(positions[0] < positions[1] && positions[1] < positions[2], true);
 });
 
-Deno.test("animation: authored particle phase replaces automatic timing phase", () => {
+test("animation: authored particle phase replaces automatic timing phase", () => {
   const input = `\
 ┌───┐         ┌───┐
 │ A │────────▶│ B │
@@ -579,7 +581,7 @@ Deno.test("animation: authored particle phase replaces automatic timing phase", 
   assertAlmostEquals(Number.parseFloat(String(motions[0].begin)), -Number.parseFloat(String(motions[0].dur)) / 2, 0.01);
 });
 
-Deno.test("animation: static ping remains stationary and delegates its pulse to the compendium", () => {
+test("animation: static ping remains stationary and delegates its pulse to the compendium", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A │──▶│ B │
@@ -598,7 +600,7 @@ Deno.test("animation: static ping remains stationary and delegates its pulse to 
   assertEquals(attrs(particle).style, undefined);
 });
 
-Deno.test("animation: reverse, speed, count, and random spacing configure particles", () => {
+test("animation: reverse, speed, count, and random spacing configure particles", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A │──▶│ B │
@@ -626,7 +628,7 @@ Deno.test("animation: reverse, speed, count, and random spacing configure partic
   }
 });
 
-Deno.test("animation: box particles follow the rendered rectangle", () => {
+test("animation: box particles follow the rendered rectangle", () => {
   const input = `\
 ┌───────────┐
 │ Box       │
@@ -642,7 +644,7 @@ Box: spark animate
   assertEquals(String(attrs(matchChildEl(particle, "animateMotion")).path).endsWith("Z"), true);
 });
 
-Deno.test("animation: phase zero starts at a sharp box corner", () => {
+test("animation: phase zero starts at a sharp box corner", () => {
   const input = `\
 ┌───────────┐
 │ Box       │
@@ -660,7 +662,7 @@ Box: spark particle-phase=0
   assertEquals(String(attrs(motion).path).startsWith(`M ${attrs(shape).x},${attrs(shape).y} `), true);
 });
 
-Deno.test("animation: box particles follow rounded and polygon perimeters", () => {
+test("animation: box particles follow rounded and polygon perimeters", () => {
   const rounded = buildSvgTree(parseTopos(`\
 ┌───────────┐
 │ Pill      │
@@ -695,7 +697,7 @@ Trapez: trapez spark
   assertEquals(attrs(trapezMotion).path, `M ${String(attrs(trapezShape).points).replaceAll(" ", " L ")} Z`);
 });
 
-Deno.test("animation: particle density scales count with path length", () => {
+test("animation: particle density scales count with path length", () => {
   const input = `\
 ┌───────────┐
 │ Box       │
@@ -714,7 +716,7 @@ Box: spark particle-density=2
   assertEquals(particles.length > 1, true);
 });
 
-Deno.test("block arrows: shared filters", () => {
+test("block arrows: shared filters", () => {
   const input = `\
 ┌───┐             ┌───┐
 │ A │────────────▶│ B │
@@ -733,7 +735,7 @@ Deno.test("block arrows: shared filters", () => {
   assertEquals(attrs(polygon).filter, undefined);
 });
 
-Deno.test("edge styles: ray draws a straight line between node centers", () => {
+test("edge styles: ray draws a straight line between node centers", () => {
   const input = `\
 ┌───┐   
 │ A │
@@ -755,7 +757,7 @@ Deno.test("edge styles: ray draws a straight line between node centers", () => {
   assertEquals(commands.length, 2, "Ray edge should be a single straight segment (M ... L ...)");
 });
 
-Deno.test("edge styles: path preserves split stem junctions", () => {
+test("edge styles: path preserves split stem junctions", () => {
   const input = `\
 A ───┬──▶ B
      │
@@ -776,7 +778,7 @@ A ───┬──▶ B
   ]);
 });
 
-Deno.test("edge styles: taut draws a straight line between node anchors", () => {
+test("edge styles: taut draws a straight line between node anchors", () => {
   const input = `\
 ┌───┐   
 │ A │
@@ -802,7 +804,7 @@ Deno.test("edge styles: taut draws a straight line between node anchors", () => 
   assert(y >= targetBounds.y && y <= targetBounds.y + targetBounds.h);
 });
 
-Deno.test("edge styles: ray handles double branching from the resolved source", () => {
+test("edge styles: ray handles double branching from the resolved source", () => {
   const input = `\
 A ───┬──▶ B
      │

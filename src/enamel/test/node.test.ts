@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { parseTopos } from "../../topos.ts";
 
 import { buildSvgTree, compendiumAsset } from "../svg.ts";
@@ -8,7 +9,7 @@ import { attrs, type XmlEl } from "../../jsonml/jsonml.ts";
 /**
  * 1. Exhaustive nodeType & Label Verification
  */
-Deno.test("svg: exhaustive nodeType and label verification", () => {
+test("svg: exhaustive nodeType and label verification", () => {
   const input = `\
 ┌─────┐  ( Inline )
 │ Box │  Prose Text
@@ -34,7 +35,7 @@ Deno.test("svg: exhaustive nodeType and label verification", () => {
 /**
  * 2. Regions
  */
-Deno.test("svg: promoted regions render as regular node rectangles", () => {
+test("svg: promoted regions render as regular node rectangles", () => {
   const input = `\
 ## LANE1                                            ## LANE2
 
@@ -54,7 +55,7 @@ Deno.test("svg: promoted regions render as regular node rectangles", () => {
 /**
  * 3. Symbols & Semantic Types
  */
-Deno.test("svg: symbols and semantic types", () => {
+test("svg: symbols and semantic types", () => {
   const input = `\
 ┌─────┐
 │ DB  │
@@ -71,7 +72,7 @@ Deno.test("svg: symbols and semantic types", () => {
   matchChildEl(dbNode, "use", { class: "tpc-shape", href: "#tpc-sym-database" });
 });
 
-Deno.test("svg: corner geometry supports inline defaults and regular boxes", () => {
+test("svg: corner geometry supports inline defaults and regular boxes", () => {
   const inlineShape = (text: string, tag: string): XmlEl => {
     const root = matchChildEl(buildSvgTree(parseTopos(text)), "g", { class: "tp-root" });
     const inline = matchChildEl(root, "g", { class: "tp-node tp-inline" });
@@ -144,7 +145,7 @@ Deno.test("svg: corner geometry supports inline defaults and regular boxes", () 
 /**
  * 4. Deep Nesting
  */
-Deno.test("svg: deep nesting (3+ levels)", () => {
+test("svg: deep nesting (3+ levels)", () => {
   const input = `\
 ┌───────────────┐
 │ Level 1       │
@@ -168,7 +169,7 @@ Deno.test("svg: deep nesting (3+ levels)", () => {
 /**
  * 5. Coloring (Slots & Density)
  */
-Deno.test("svg: coloring (slots and density)", () => {
+test("svg: coloring (slots and density)", () => {
   const input = `\
 ┌─────┐
 │ A   │
@@ -184,7 +185,7 @@ Deno.test("svg: coloring (slots and density)", () => {
   matchChildEl(diagGrp, "g", { class: "tp-node tp-box tp-stroke-red tp-fill-blue tp-fill-soft tp-label-purple tp-label-strong" });
 });
 
-Deno.test("svg: local colors directly override node paint", () => {
+test("svg: local colors directly override node paint", () => {
   const input = `\
 ┌─────┐
 │ A   │
@@ -202,7 +203,7 @@ Deno.test("svg: local colors directly override node paint", () => {
   });
 });
 
-Deno.test("svg: notes support scoped label eidos classes", () => {
+test("svg: notes support scoped label eidos classes", () => {
   const input = `\
 Note
 
@@ -219,7 +220,7 @@ Note: red label=blue,strong
 /**
  * 6. Varied Semantic Symbols
  */
-Deno.test("svg: varied semantic symbols", () => {
+test("svg: varied semantic symbols", () => {
   const input = `\
 ┌───┐ ┌───┐
 │ A │ │ B │
@@ -240,7 +241,7 @@ Deno.test("svg: varied semantic symbols", () => {
   matchChildEl(u, "use", { href: "#tpc-sym-cloud" });
 });
 
-Deno.test("svg: rectangular symbol bodies fill their viewport", () => {
+test("svg: rectangular symbol bodies fill their viewport", () => {
   assertEquals(attrs(compendiumAsset("tpc-sym-file")!).viewBox, "4 4 92 92");
   assertEquals(attrs(compendiumAsset("tpc-sym-folder")!).viewBox, "4 20 92 80");
 });
@@ -248,7 +249,7 @@ Deno.test("svg: rectangular symbol bodies fill their viewport", () => {
 /**
  * 7. Root & Region Background Shapes
  */
-Deno.test("svg: root node has no background shape", () => {
+test("svg: root node has no background shape", () => {
   const input = `\
 ┌───┐
 │ A │
@@ -264,7 +265,7 @@ Deno.test("svg: root node has no background shape", () => {
 /**
  * 8. Region Geometry
  */
-Deno.test("svg: multiple promoted regions render quiet regular bodies", () => {
+test("svg: multiple promoted regions render quiet regular bodies", () => {
   const input = `\
 ## L1   ## L2   ## L3
  ┌───┐
@@ -283,7 +284,7 @@ Deno.test("svg: multiple promoted regions render quiet regular bodies", () => {
   matchChildEl(l2, "rect", { class: "tpc-shape" });
 });
 
-Deno.test("svg: ceiling rawLabels stay inside the box with a tight inset", () => {
+test("svg: ceiling rawLabels stay inside the box with a tight inset", () => {
   const input = `\
 ┌─Title──────┐
 │ Body       │
@@ -300,7 +301,7 @@ Deno.test("svg: ceiling rawLabels stay inside the box with a tight inset", () =>
   assertEquals(attrs(title).dy, undefined);
 });
 
-Deno.test("svg: explicit label placement overrides inferred placement", () => {
+test("svg: explicit label placement overrides inferred placement", () => {
   const input = `\
 ┌───┐
 │ A │
@@ -324,7 +325,7 @@ Deno.test("svg: explicit label placement overrides inferred placement", () => {
   assertEquals(attrs(label).dy, undefined);
 });
 
-Deno.test("svg: stroke-none disables shape strokes", () => {
+test("svg: stroke-none disables shape strokes", () => {
   const input = `\
 ┌─────┐
 │ A   │
@@ -340,7 +341,7 @@ Deno.test("svg: stroke-none disables shape strokes", () => {
   matchChildEl(box, "rect", { class: "tpc-shape" });
 });
 
-Deno.test("svg: none hides an entity or only its scoped label", () => {
+test("svg: none hides an entity or only its scoped label", () => {
   const input = `\
 ┌────────────┐ ┌──────────┐
 │ Hidden     │ │ No label │
@@ -363,7 +364,7 @@ Hidden note
   matchChildEl(diagGrp, "g", { class: "tp-node tp-note tp-label-none" });
 });
 
-Deno.test("svg: hub label alignment left and right", () => {
+test("svg: hub label alignment left and right", () => {
   const input = `\
   Top ●
 
@@ -381,7 +382,7 @@ Deno.test("svg: hub label alignment left and right", () => {
   assertEquals(attrs(label2).dx, undefined);
 });
 
-Deno.test("svg: hub and note label alignment overrides", () => {
+test("svg: hub and note label alignment overrides", () => {
   const input = `\
   Top ●
 

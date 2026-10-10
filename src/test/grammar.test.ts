@@ -1,10 +1,11 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { spec, Trait, weightFor } from "../grammar.ts";
 import { Dir } from "../geo.ts";
 
 // ─── spec() correctness ───────────────────────────────────────────────────────
 
-Deno.test("spec: single wire glyphs have correct masks", () => {
+test("spec: single wire glyphs have correct masks", () => {
   assertEquals(spec('─').mask, Dir.E | Dir.W);
   assertEquals(spec('│').mask, Dir.N | Dir.S);
   assertEquals(spec('┌').mask, Dir.BR);
@@ -18,7 +19,7 @@ Deno.test("spec: single wire glyphs have correct masks", () => {
   assertEquals(spec('┼').mask, Dir.All);
 });
 
-Deno.test("spec: bold wire glyphs have correct masks", () => {
+test("spec: bold wire glyphs have correct masks", () => {
   assertEquals(spec('━').mask, Dir.E | Dir.W);
   assertEquals(spec('┃').mask, Dir.N | Dir.S);
   assertEquals(spec('┏').mask, Dir.BR);
@@ -32,7 +33,7 @@ Deno.test("spec: bold wire glyphs have correct masks", () => {
   assertEquals(spec('╋').mask, Dir.All);
 });
 
-Deno.test("spec: double wire glyphs have correct masks", () => {
+test("spec: double wire glyphs have correct masks", () => {
   assertEquals(spec('═').mask, Dir.E | Dir.W);
   assertEquals(spec('║').mask, Dir.N | Dir.S);
   assertEquals(spec('╔').mask, Dir.BR);
@@ -46,7 +47,7 @@ Deno.test("spec: double wire glyphs have correct masks", () => {
   assertEquals(spec('╬').mask, Dir.All);
 });
 
-Deno.test("spec: corner sharpness only on corner masks", () => {
+test("spec: corner sharpness only on corner masks", () => {
   // Actual corners get PenCorner
   assertEquals(spec('┌').corner, 'sharp');
   assertEquals(spec('┐').corner, 'sharp');
@@ -63,13 +64,13 @@ Deno.test("spec: corner sharpness only on corner masks", () => {
   assertEquals(spec('│').corner, undefined); // vertical
 });
 
-Deno.test("spec: wire glyphs have Wire trait", () => {
+test("spec: wire glyphs have Wire trait", () => {
   for (const c of '─│┌┐└┘├┤┬┴┼━┃┏┓┗┛┣┫┳┻╋═║╔╗╚╝╠╣╦╩╬') {
     assertEquals(spec(c).trait & Trait.Wire, Trait.Wire, `Expected Wire trait on '${c}'`);
   }
 });
 
-Deno.test("spec: weight uses composite Dir keys", () => {
+test("spec: weight uses composite Dir keys", () => {
   // Uniform horizontal
   const hSpec = spec('─');
   assertEquals(weightFor(hSpec, Dir.E), 'single');
@@ -91,7 +92,7 @@ Deno.test("spec: weight uses composite Dir keys", () => {
 
 // ─── spec(): mixed-pen dirWeight ─────────────────────────────────────────────
 
-Deno.test("spec: mixed junctions have per-direction weights", () => {
+test("spec: mixed junctions have per-direction weights", () => {
   const specTee = spec('┯');  // bold H, single S
   assertEquals(weightFor(specTee, Dir.E), 'bold');
   assertEquals(weightFor(specTee, Dir.W), 'bold');
@@ -119,7 +120,7 @@ Deno.test("spec: mixed junctions have per-direction weights", () => {
   assertEquals(specTeeHeavyRight.mask, Dir.N | Dir.S | Dir.E);
 });
 
-Deno.test("spec: double/single mixed junctions have per-direction weights", () => {
+test("spec: double/single mixed junctions have per-direction weights", () => {
   const specCrossH = spec('╤');  // double H, single S
   assertEquals(weightFor(specCrossH, Dir.E), 'double');
   assertEquals(weightFor(specCrossH, Dir.S), 'single');

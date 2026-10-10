@@ -1,4 +1,6 @@
-import { assertEquals, assertAlmostEquals, assertNotEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals, notDeepStrictEqual as assertNotEquals } from "node:assert/strict";
+import { assertAlmostEquals } from "../../test/assertions.ts";
 import { parseTopos } from "../../topos.ts";
 import { buildSvgTree } from "../svg.ts";
 import { CHAR_HEIGHT, CHAR_WIDTH, nodeToRectPx, rectToPx } from "../geometry.ts";
@@ -38,7 +40,7 @@ function assertTspansAligned(noteEl: ReturnType<typeof matchChildEl>) {
 
 // ─── Box Label Alignment ────────────────────────────────────────────────────────
 
-Deno.test("alignment: box label centered when near center", () => {
+test("alignment: box label centered when near center", () => {
   const input = `\
 ┌────────────┐
 │   Label    │
@@ -49,7 +51,7 @@ Deno.test("alignment: box label centered when near center", () => {
   assertEquals(attrs(label)["text-anchor"], "middle");
 });
 
-Deno.test("alignment: box label prefers center when exact authored centering is impossible", () => {
+test("alignment: box label prefers center when exact authored centering is impossible", () => {
   const input = `\
 ┌───────────────────┐
 │ Deep Space Network│
@@ -60,7 +62,7 @@ Deno.test("alignment: box label prefers center when exact authored centering is 
   assertEquals(attrs(label)["text-anchor"], "middle");
 });
 
-Deno.test("alignment: box ceiling label nearer the left edge stays left-aligned", () => {
+test("alignment: box ceiling label nearer the left edge stays left-aligned", () => {
   const input = `\
 ┏━Ground Segment━━━━┓
 ┃                   ┃
@@ -71,7 +73,7 @@ Deno.test("alignment: box ceiling label nearer the left edge stays left-aligned"
   assertEquals(attrs(label)["text-anchor"], "start");
 });
 
-Deno.test("alignment: box label left-aligned when at left edge", () => {
+test("alignment: box label left-aligned when at left edge", () => {
   const input = `\
 ┌──────────────────┐
 │ Label            │
@@ -85,7 +87,7 @@ Deno.test("alignment: box label left-aligned when at left edge", () => {
   assertEquals(attrs(label).dx, undefined);
 });
 
-Deno.test("alignment: box label right-aligned when at right edge", () => {
+test("alignment: box label right-aligned when at right edge", () => {
   const input = `\
 ┌──────────────────┐
 │            Label │
@@ -100,7 +102,7 @@ Deno.test("alignment: box label right-aligned when at right edge", () => {
   assertEquals(attrs(label).dx, undefined);
 });
 
-Deno.test("alignment: box ceiling label has hanging baseline", () => {
+test("alignment: box ceiling label has hanging baseline", () => {
   const input = `\
 ┌─Title─────────────┐
 │                   │
@@ -117,7 +119,7 @@ Deno.test("alignment: box ceiling label has hanging baseline", () => {
 
 // ─── Box Multi-line Label ───────────────────────────────────────────────────────
 
-Deno.test("alignment: multi-line box label keeps centered tspans", () => {
+test("alignment: multi-line box label keeps centered tspans", () => {
   const input = `\
 ┌───────────────────────────────────┐
 │                                   │
@@ -141,7 +143,7 @@ Deno.test("alignment: multi-line box label keeps centered tspans", () => {
 
 // ─── Note Alignment (auto-detect from map position) ─────────────────────────────
 
-Deno.test("alignment: note left-aligned when placed at left of parent", () => {
+test("alignment: note left-aligned when placed at left of parent", () => {
   const input = `\
 ┌─Box───────────────────┐
 │ Note text             │
@@ -152,7 +154,7 @@ Deno.test("alignment: note left-aligned when placed at left of parent", () => {
   assertEquals(attrs(note)["text-anchor"], "start");
 });
 
-Deno.test("alignment: note centered when placed at center of parent", () => {
+test("alignment: note centered when placed at center of parent", () => {
   const input = `\
 ┌─Box───────────────────┐
 │       Note text       │
@@ -163,7 +165,7 @@ Deno.test("alignment: note centered when placed at center of parent", () => {
   assertEquals(attrs(note)["text-anchor"], "middle");
 });
 
-Deno.test("alignment: long root note flush with the left edge stays left-aligned", () => {
+test("alignment: long root note flush with the left edge stays left-aligned", () => {
   const input = `\
 Fenced text selects code mode automatically:
 
@@ -175,7 +177,7 @@ Fenced text selects code mode automatically:
   assertEquals(attrs(note)["text-anchor"], "start");
 });
 
-Deno.test("alignment: linked notes preserve their authored positions", () => {
+test("alignment: linked notes preserve their authored positions", () => {
   const input = `\
        +--------+
        |        |
@@ -197,7 +199,7 @@ Deno.test("alignment: linked notes preserve their authored positions", () => {
   }
 });
 
-Deno.test("alignment: linked multiline notes preserve their first authored row", () => {
+test("alignment: linked multiline notes preserve their first authored row", () => {
   const input = `\
 Alpha line
 Beta  line ---> B`;
@@ -218,7 +220,7 @@ Beta  line ---> B`;
 
 // ─── Multi-line Note ────────────────────────────────────────────────────────────
 
-Deno.test("alignment: multi-line note has left-aligned tspans by default", () => {
+test("alignment: multi-line note has left-aligned tspans by default", () => {
   const input = `\
 ┌─Box───────────────────┐
 │  Opportunity          │
@@ -241,7 +243,7 @@ Deno.test("alignment: multi-line note has left-aligned tspans by default", () =>
   }
 });
 
-Deno.test("alignment: multi-line note centered via legend (e.g. compendium #sub: center) centers block as a whole with left-aligned tspans", () => {
+test("alignment: multi-line note centered via legend (e.g. compendium #sub: center) centers block as a whole with left-aligned tspans", () => {
   const input = `\
    #sub This file catalogs core Enamel visual schemas using inline map
    sigils and regions. Extracted from compendium.svg visual layout.
@@ -266,7 +268,7 @@ Deno.test("alignment: multi-line note centered via legend (e.g. compendium #sub:
   }
 });
 
-Deno.test("alignment: multi-line note with align-center centers each tspan individually", () => {
+test("alignment: multi-line note with align-center centers each tspan individually", () => {
   const input = `\
    #sub This file catalogs core Enamel visual schemas using inline map
    sigils and regions. Extracted from compendium.svg visual layout.
@@ -291,7 +293,7 @@ Deno.test("alignment: multi-line note with align-center centers each tspan indiv
   }
 });
 
-Deno.test("alignment: literal text modes preserve their authored row inside a box", () => {
+test("alignment: literal text modes preserve their authored row inside a box", () => {
   for (const mode of ["text", "code"]) {
     const input = `\
 ┌─Box───────────────────┐
@@ -317,7 +319,7 @@ Box > (*)  : ${mode}
   }
 });
 
-Deno.test("alignment: explicit vertical placement overrides authored preservation", () => {
+test("alignment: explicit vertical placement overrides authored preservation", () => {
   const input = `\
 ┌─Box───────────────────┐
 │   Text                │
@@ -339,7 +341,7 @@ Box > (*) : text top=3
 
 // ─── Inline Node ────────────────────────────────────────────────────────────────
 
-Deno.test("alignment: inline node is always centered", () => {
+test("alignment: inline node is always centered", () => {
   const input = `\
 ┌───────────────────────┐
 │   [ Opportunity  ]    │
@@ -360,7 +362,7 @@ Deno.test("alignment: inline node is always centered", () => {
 
 // ─── Hub Label ──────────────────────────────────────────────────────────────────
 
-Deno.test("alignment: hub label left and right of hub", () => {
+test("alignment: hub label left and right of hub", () => {
   const input = `\
   Left ●
 
@@ -382,7 +384,7 @@ Deno.test("alignment: hub label left and right of hub", () => {
 
 // ─── Region Label ───────────────────────────────────────────────────────────────
 
-Deno.test("alignment: region label defaults to left and top", () => {
+test("alignment: region label defaults to left and top", () => {
   const input = `\
 ## Region Title
 
@@ -403,7 +405,7 @@ Deno.test("alignment: region label defaults to left and top", () => {
 
 // ─── Explicit Eidos Overrides ───────────────────────────────────────────────────
 
-Deno.test("alignment: scoped label placement overrides root placement", () => {
+test("alignment: scoped label placement overrides root placement", () => {
   const input = `\
 ┌───────┐
 │  A    │
@@ -422,7 +424,7 @@ Deno.test("alignment: scoped label placement overrides root placement", () => {
   assertEquals(attrs(label).dx, undefined);
 });
 
-Deno.test("alignment: explicit label=left on hub overrides auto-detect", () => {
+test("alignment: explicit label=left on hub overrides auto-detect", () => {
   const input = `\
   Top ●
 
@@ -440,7 +442,7 @@ Top: label=left
 
 // ─── Symmetrical Vertical Snapping Tests ────────────────────────────────────────
 
-Deno.test("alignment: box label snaps to top line when near top", () => {
+test("alignment: box label snaps to top line when near top", () => {
   const input = `\
 ┌───────────┐
 │ Label     │
@@ -456,7 +458,7 @@ Deno.test("alignment: box label snaps to top line when near top", () => {
   assertEquals(attrs(label).dy, undefined);
 });
 
-Deno.test("alignment: box label snaps to middle when near middle", () => {
+test("alignment: box label snaps to middle when near middle", () => {
   const input = `\
 ┌───────────┐
 │           │
@@ -473,7 +475,7 @@ Deno.test("alignment: box label snaps to middle when near middle", () => {
   assertEquals(attrs(label).dy, undefined);
 });
 
-Deno.test("alignment: box label prefers middle when exact authored centering is impossible", () => {
+test("alignment: box label prefers middle when exact authored centering is impossible", () => {
   const input = `\
 ┌───────┐
 │       │
@@ -487,7 +489,7 @@ Deno.test("alignment: box label prefers middle when exact authored centering is 
   assertEquals(attrs(label).y, pxBox.y + pxBox.h / 2 - 7);
 });
 
-Deno.test("alignment: box label snaps to bottom when near bottom", () => {
+test("alignment: box label snaps to bottom when near bottom", () => {
   const input = `\
 ┌───────────┐
 │           │
@@ -505,7 +507,7 @@ Deno.test("alignment: box label snaps to bottom when near bottom", () => {
   assertEquals(attrs(label).dy, undefined);
 });
 
-Deno.test("alignment: box label on bottom border edge renders inside the box at bottom", () => {
+test("alignment: box label on bottom border edge renders inside the box at bottom", () => {
   const input = `\
 ┌────────────┐
 │            │
@@ -523,7 +525,7 @@ Deno.test("alignment: box label on bottom border edge renders inside the box at 
   assertEquals(attrs(label).dy, undefined);
 });
 
-Deno.test("alignment: perimeter labels survive obstructing child boxes", () => {
+test("alignment: perimeter labels survive obstructing child boxes", () => {
   const ceilingInput = `\
 ┌─Title─────────────┐
 │                   │
@@ -550,7 +552,7 @@ Deno.test("alignment: perimeter labels survive obstructing child boxes", () => {
   assertEquals(attrs(bottomLabel).y, pxBottomBox.y + pxBottomBox.h - 20);
 });
 
-Deno.test("alignment: left and right perimeter labels survive grid cells", () => {
+test("alignment: left and right perimeter labels survive grid cells", () => {
   const leftInput = `\
 ┏━Title━━━━┳━━━━━━━━━┓
 ┃ A        ┃ B       ┃
@@ -568,7 +570,7 @@ Deno.test("alignment: left and right perimeter labels survive grid cells", () =>
   assertEquals(attrs(rightLabel)["text-anchor"], "end");
 });
 
-Deno.test("alignment: edge notes survive a child box on the same row", () => {
+test("alignment: edge notes survive a child box on the same row", () => {
   const input = `\
 ┌───────────────────────────────────────────────┐
 │                    ┌─────┐                    │
@@ -580,7 +582,7 @@ Deno.test("alignment: edge notes survive a child box on the same row", () => {
   assertEquals(attrs(getNoteInBox(svgTree, 0, 1))["text-anchor"], "end");
 });
 
-Deno.test("alignment: box label snaps to center and middle when centered both horizontally and vertically (e.g. Australia)", () => {
+test("alignment: box label snaps to center and middle when centered both horizontally and vertically (e.g. Australia)", () => {
   const input = `\
 ┌───────────┐
 │ Australia │
@@ -601,7 +603,7 @@ Deno.test("alignment: box label snaps to center and middle when centered both ho
   assertEquals(res.text.dy, undefined);
 });
 
-Deno.test("alignment: grid-cell labels use the rendered cell center", () => {
+test("alignment: grid-cell labels use the rendered cell center", () => {
   const input = `\
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃     Deep Space Network      ┃
@@ -627,7 +629,7 @@ Deno.test("alignment: grid-cell labels use the rendered cell center", () => {
   }
 });
 
-Deno.test("alignment: box label snaps to explicit fractional vertical slots", () => {
+test("alignment: box label snaps to explicit fractional vertical slots", () => {
   const input = `\
 ┌─Box───────┐
 │           │
@@ -656,7 +658,7 @@ Deno.test("alignment: box label snaps to explicit fractional vertical slots", ()
 // Each test corresponds to one box from examples/cases/text-alignment.topos.
 
 // Top-level title (#t): "Long title text" on the ceiling row of the diagram
-Deno.test("text-alignment.topos: top title (#t) has ceiling/hanging baseline", () => {
+test("text-alignment.topos: top title (#t) has ceiling/hanging baseline", () => {
   const input = `\
            # t
 
@@ -680,7 +682,7 @@ b: "   Long note text that wraps with ⏎ carret. Usage line paragraph symbol.¶
 });
 
 // Box l: box with "Long label text" in the ceiling row → ceiling/left-aligned label
-Deno.test("text-alignment.topos: box l has left-aligned ceiling label", () => {
+test("text-alignment.topos: box l has left-aligned ceiling label", () => {
   const input = `\
 ┌l──────────────────────┐
 │                       │
@@ -699,7 +701,7 @@ l: "Long label text"
 
 // Box b: multi-line note (with ¶ paragraph break) placed at left of the box
 // Expected: note block is left-aligned, tspans use "start" anchor
-Deno.test("text-alignment.topos: box b multi-line note at left has start-anchored tspans", () => {
+test("text-alignment.topos: box b multi-line note at left has start-anchored tspans", () => {
   const input = `\
 ┌─Box───────────────────┐
 │ b                     │
@@ -726,7 +728,7 @@ b: "   Long note text that wraps with ⏎ carret. Usage line paragraph symbol.¶
 // Center-ceiling label + center-middle note: both l and b are centered in the box.
 // l is in the ceiling row at center → hanging baseline, middle anchor.
 // b is in the middle row at center → middle baseline, middle anchor.
-Deno.test("text-alignment.topos: center-ceiling label and center-middle note align correctly", () => {
+test("text-alignment.topos: center-ceiling label and center-middle note align correctly", () => {
   const input = `\
 ┌───────────l───────────┐
 │                       │
@@ -758,7 +760,7 @@ b: "   Long note text that wraps with ⏎ carret. Usage line paragraph symbol.¶
 });
 
 // R1: note text at left edge → snaps block to left, tspans left-aligned
-Deno.test("text-alignment.topos: R1 left-aligned note snaps block to start anchor", () => {
+test("text-alignment.topos: R1 left-aligned note snaps block to start anchor", () => {
   const input = `\
 ┌─R1────────────────────┐
 │  Opportunity          │
@@ -780,7 +782,7 @@ Deno.test("text-alignment.topos: R1 left-aligned note snaps block to start ancho
 });
 
 // R1 variant: a note's top-level x axis controls block position while keeping tspans left-aligned.
-Deno.test("text-alignment.topos: R1 with x=center has centered block and start-anchored tspans", () => {
+test("text-alignment.topos: R1 with x=center has centered block and start-anchored tspans", () => {
   const input = `\
 ┌─R1────────────────────┐
 │  Opportunity          │
@@ -806,7 +808,7 @@ Deno.test("text-alignment.topos: R1 with x=center has centered block and start-a
 });
 
 // Line alignment is independent from the text block's placement.
-Deno.test("text-alignment.topos: R1 note respects explicit line alignment", () => {
+test("text-alignment.topos: R1 note respects explicit line alignment", () => {
   const input = `\
 ┌─R1────────────────────┐
 │  Opportunity          │
@@ -832,7 +834,7 @@ Deno.test("text-alignment.topos: R1 note respects explicit line alignment", () =
 });
 
 // R1 variant: right aligns the note block while keeping tspans start-anchored.
-Deno.test("text-alignment.topos: R1 with x=right has end-anchored block and start-anchored tspans", () => {
+test("text-alignment.topos: R1 with x=right has end-anchored block and start-anchored tspans", () => {
   const input = `\
 ┌─R1────────────────────┐
 │  Opportunity          │
@@ -859,7 +861,7 @@ Deno.test("text-alignment.topos: R1 with x=right has end-anchored block and star
 
 // R2: note lines placed center-left → block snaps to center, but tspans should remain left-aligned
 // (the default for notes: lineAnchor=start even when block is centered)
-Deno.test("text-alignment.topos: R2 center-positioned note has start-anchored tspans by default", () => {
+test("text-alignment.topos: R2 center-positioned note has start-anchored tspans by default", () => {
   const input = `\
 ┌─R2────────────────────┐
 │     Opportunity       │
@@ -883,7 +885,7 @@ Deno.test("text-alignment.topos: R2 center-positioned note has start-anchored ts
 });
 
 // R3: note lines placed at right edge → block is right-aligned, tspans still start-anchored
-Deno.test("text-alignment.topos: R3 right-positioned note has end block anchor and start tspans", () => {
+test("text-alignment.topos: R3 right-positioned note has end block anchor and start tspans", () => {
   const input = `\
 ┌─R3────────────────────┐
 │          Opportunity  │
@@ -907,7 +909,7 @@ Deno.test("text-alignment.topos: R3 right-positioned note has end block anchor a
 });
 
 // R4: lines at varying horizontal positions (each line is a separate note that snaps independently)
-Deno.test("text-alignment.topos: R4 staggered note lines each snap independently", () => {
+test("text-alignment.topos: R4 staggered note lines each snap independently", () => {
   const input = `\
 ┌─R4────────────────────┐
 │     Opportunity       │
@@ -939,7 +941,7 @@ Deno.test("text-alignment.topos: R4 staggered note lines each snap independently
 });
 
 // R5: inline nodes in a box → all rawLabels centered
-Deno.test("text-alignment.topos: R5 inline nodes all have middle text-anchor", () => {
+test("text-alignment.topos: R5 inline nodes all have middle text-anchor", () => {
   const input = `\
 ┌─R5────────────────────┐
 │   [ Opportunity  ]    │
@@ -961,7 +963,7 @@ Deno.test("text-alignment.topos: R5 inline nodes all have middle text-anchor", (
 
 // ─── Unit Tests for calculateTextAlignment ───────────────────────────────────
 
-Deno.test("alignment unit: calculateTextAlignment resolves R1, R2, R3 correctly", () => {
+test("alignment unit: calculateTextAlignment resolves R1, R2, R3 correctly", () => {
   const input = `\
 ┌─R1────────────────────┐
 │  Opportunity          │
@@ -1020,7 +1022,7 @@ Deno.test("alignment unit: calculateTextAlignment resolves R1, R2, R3 correctly"
   assertAlmostEquals(res3.tspan?.x ?? 0, expectedRight3 - width3);
 });
 
-Deno.test("alignment unit: note at 2/3 horizontal position does not snap to left but uses free ratio", () => {
+test("alignment unit: note at 2/3 horizontal position does not snap to left but uses free ratio", () => {
   const input = `\
 ┌─Box───────────────────┐
 │                       │
@@ -1040,7 +1042,7 @@ Deno.test("alignment unit: note at 2/3 horizontal position does not snap to left
   assertEquals(res.text.x, expectedX);
 });
 
-Deno.test("alignment unit: note near right edge with long text snaps to right alignment to avoid overflow", () => {
+test("alignment unit: note near right edge with long text snaps to right alignment to avoid overflow", () => {
   const input = `\
 ┌─Box───────────────────┐
 │                       │
@@ -1062,7 +1064,7 @@ b: "Short label that fits"
   assertEquals(res.text.x, pxBox.x + pxBox.w - 10);
 });
 
-Deno.test("alignment unit: box label near right edge with long text snaps to right alignment to avoid overflow", () => {
+test("alignment unit: box label near right edge with long text snaps to right alignment to avoid overflow", () => {
   const input = `\
 ┌────────────────────l──┐
 │                       │
@@ -1084,7 +1086,7 @@ l: "Short label that fits"
   assertEquals(res.text.dx, undefined);
 });
 
-Deno.test("alignment unit: calculateTextAlignment resolves explicit legend overrides", () => {
+test("alignment unit: calculateTextAlignment resolves explicit legend overrides", () => {
   const input = `\
 ┌─Box───────┐
 │           │
@@ -1103,7 +1105,7 @@ Deno.test("alignment unit: calculateTextAlignment resolves explicit legend overr
   assertEquals(res.text.y, pxBox.y + 0.6 * pxBox.h - 7);
 });
 
-Deno.test("alignment unit: calculateTextAlignment resolves explicit integer overrides as grid offsets", () => {
+test("alignment unit: calculateTextAlignment resolves explicit integer overrides as grid offsets", () => {
   const input = `\
 ┌─Box───────┐
 │           │
@@ -1130,7 +1132,7 @@ Deno.test("alignment unit: calculateTextAlignment resolves explicit integer over
   assertEquals(res.text.dy, undefined);
 });
 
-Deno.test("alignment unit: calculateTextAlignment resolves explicit center and middle overrides as middle-aligned offsets", () => {
+test("alignment unit: calculateTextAlignment resolves explicit center and middle overrides as middle-aligned offsets", () => {
   const input = `\
 ┌─Box───────┐
 │           │
@@ -1157,7 +1159,7 @@ Deno.test("alignment unit: calculateTextAlignment resolves explicit center and m
   assertEquals(res.text.dy, undefined);
 });
 
-Deno.test("alignment unit: left and top map coordinates bypass nested note heuristics", () => {
+test("alignment unit: left and top map coordinates bypass nested note heuristics", () => {
   const diagram = `\
 ┌─Box───────────────────┐
 │   Note                │
@@ -1185,7 +1187,7 @@ Note: "A replacement ⏎ note"`;
   assertEquals(mapAlignment.tspan?.dy, "1.2em");
 });
 
-Deno.test("alignment unit: center and middle map coordinates bypass nested note heuristics", () => {
+test("alignment unit: center and middle map coordinates bypass nested note heuristics", () => {
   const diagram = `\
 ┌─Box───────────────────┐
 │   Note                │
@@ -1215,7 +1217,7 @@ Note: "A replacement ⏎ note"`;
   assertEquals(mapAlignment.tspan?.dy, "1.2em");
 });
 
-Deno.test("alignment unit: right map coordinate preserves the authored text edge", () => {
+test("alignment unit: right map coordinate preserves the authored text edge", () => {
   const diagram = `\
 ┌─Box───────────────────┐
 │   Note                │
@@ -1233,7 +1235,7 @@ Note: "A replacement ⏎ note" right=map`;
   assertEquals(alignment.text.x, (note.x + note.w) * CHAR_WIDTH);
 });
 
-Deno.test("alignment unit: leading controls multiline spacing", () => {
+test("alignment unit: leading controls multiline spacing", () => {
   const input = `\
 ┌─Box───────────────────┐
 │   Note                │
@@ -1252,7 +1254,7 @@ Note: "First ⏎ Second" leading=2 middle=50%
   assertEquals(result.text.y, rectToPx(box).y + rectToPx(box).h / 2 - 31);
 });
 
-Deno.test("alignment unit: multi-line box label tspan re-anchors each line at the same x (centered)", () => {
+test("alignment unit: multi-line box label tspan re-anchors each line at the same x (centered)", () => {
   const input = `\
 ┌───────────────────────────────────┐
 │                                   │

@@ -1,9 +1,11 @@
-import { assertEquals, assertExists, assertObjectMatch } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals, partialDeepStrictEqual as assertObjectMatch } from "node:assert/strict";
+import { assertExists } from "../../test/assertions.ts";
 import { Dir } from "../../geo.ts";
 import { parseTopos } from "../../topos.ts";
 import { matchChild, matchEdge } from "../../test/test-utils.ts";
 
-Deno.test("legend annotate: inline sigils participate in normal rule matching", () => {
+test("legend annotate: inline sigils participate in normal rule matching", () => {
   const input = `\
 +========================+
 | System .core#sys@svc   |
@@ -22,7 +24,7 @@ Deno.test("legend annotate: inline sigils participate in normal rule matching", 
   assertObjectMatch(box.eidos!, { color: "red", effect: "glow", weight: "double" });
 });
 
-Deno.test("legend annotate: quoted selector matches a multi-word edge label", () => {
+test("legend annotate: quoted selector matches a multi-word edge label", () => {
   const diagram = parseTopos(`\
 A ── Link label ──▶ B
 
@@ -34,7 +36,7 @@ A ── Link label ──▶ B
   assertEquals(edge.eidos?.color, "red");
 });
 
-Deno.test("legend annotate: formatted text hides boundary sigils without changing entity text", () => {
+test("legend annotate: formatted text hides boundary sigils without changing entity text", () => {
   const diagram = parseTopos(`\
 # Title
 
@@ -50,7 +52,7 @@ Deno.test("legend annotate: formatted text hides boundary sigils without changin
   assertObjectMatch(note.eidos!, { color: "red", textHorizontal: "center" });
 });
 
-Deno.test("legend annotate: fences automatically use code text mode", () => {
+test("legend annotate: fences automatically use code text mode", () => {
   const diagram = parseTopos(`\
 ~~~~
 A  *literal*
@@ -66,7 +68,7 @@ A  *literal*
   ]);
 });
 
-Deno.test("legend annotate: code text mode can be applied to unfenced text", () => {
+test("legend annotate: code text mode can be applied to unfenced text", () => {
   const diagram = parseTopos(`\
 | Form | Meaning |
 | A    | Alpha   |
@@ -83,7 +85,7 @@ Deno.test("legend annotate: code text mode can be applied to unfenced text", () 
   ]);
 });
 
-Deno.test("legend annotate: explicit text mode preserves fence delimiters", () => {
+test("legend annotate: explicit text mode preserves fence delimiters", () => {
   const diagram = parseTopos(`\
 \`\`\`
 A *formatted*
@@ -99,7 +101,7 @@ B \`inline\`
   assertEquals(note.segmentedText?.map((line) => line.map((segment) => segment.text).join("")), ["```", "A *formatted*", "B `inline`", "```"]);
 });
 
-Deno.test("legend annotate: text mode affects notes while labels remain prose", () => {
+test("legend annotate: text mode affects notes while labels remain prose", () => {
   const diagram = parseTopos(`\
 ┌───────────────┐       ┌───┐
 │ A *literal*   ├───────▶ B │
@@ -124,7 +126,7 @@ Loose *literal*
   assertEquals(edge.segmentedText?.[0]?.map((segment) => segment.text).join(""), "call literal");
 });
 
-Deno.test("legend annotate: inline brackets set shape defaults and match exact selectors", () => {
+test("legend annotate: inline brackets set shape defaults and match exact selectors", () => {
   const diagram = parseTopos(`\
 :map
 [A]   (A)   <A>   {A}
@@ -148,7 +150,7 @@ Deno.test("legend annotate: inline brackets set shape defaults and match exact s
   assertEquals(braces.eidos, { corner: "parallelogram", color: "orange" });
 });
 
-Deno.test("legend annotate: stack rules remain declarative", () => {
+test("legend annotate: stack rules remain declarative", () => {
   const diagram = parseTopos(`\
 ┌───┐  ┌───┐  ┌───┐
 │ A │  │ B │  │ C │
@@ -168,7 +170,7 @@ Deno.test("legend annotate: stack rules remain declarative", () => {
   assertEquals(c.properties?.stack, "5,1,-1");
 });
 
-Deno.test("legend annotate: stack=0 does not mutate traced geometry", () => {
+test("legend annotate: stack=0 does not mutate traced geometry", () => {
   const diagram = parseTopos(`\
    ┌────────────────┐
    │ ┌──────────────┴─┐
@@ -186,7 +188,7 @@ Deno.test("legend annotate: stack=0 does not mutate traced geometry", () => {
   assertEquals(node.properties?.stack, "0");
 });
 
-Deno.test("legend annotate: flat remains a declarative layering eidos", () => {
+test("legend annotate: flat remains a declarative layering eidos", () => {
   const diagram = parseTopos(`\
 ┌───┐
 │ A │
@@ -202,7 +204,7 @@ Deno.test("legend annotate: flat remains a declarative layering eidos", () => {
   assertEquals(node.eidos?.layering, "flat");
 });
 
-Deno.test("legend annotate: descendant rules include contained edges", () => {
+test("legend annotate: descendant rules include contained edges", () => {
   const input = `\
 :map
 ┌────────────┐
@@ -225,7 +227,7 @@ Parent >> * : red
   assertObjectMatch(edge.eidos!, { color: "red", head: { marker: "angle" } });
 });
 
-Deno.test("legend annotate: edge tree parent follows containment, not source parent", () => {
+test("legend annotate: edge tree parent follows containment, not source parent", () => {
   const diagram = parseTopos(`\
 :map
 ┌────────────┐      [B]
@@ -247,7 +249,7 @@ Parent > * : red
   assertEquals(edge.eidos?.color, undefined);
 });
 
-Deno.test("legend annotate: edge relations and edge wildcards target existing edges", () => {
+test("legend annotate: edge relations and edge wildcards target existing edges", () => {
   const directedInput = `\
 :map
 [A] -> [B]
@@ -286,7 +288,7 @@ B  ┘
   assertObjectMatch(anyDirection.eidos!, { intensity: "soft", head: { marker: "angle" } });
 });
 
-Deno.test("legend annotate: '-' matches uni, bi, and none regardless of endpoint order", () => {
+test("legend annotate: '-' matches uni, bi, and none regardless of endpoint order", () => {
   const directedDiagram = parseTopos(`\
 :map
 [A] -> [B]
@@ -320,7 +322,7 @@ Deno.test("legend annotate: '-' matches uni, bi, and none regardless of endpoint
   assertObjectMatch(undirected.eidos!, { intensity: "soft" });
 });
 
-Deno.test("legend annotate: '<->' matches bidirectional edges regardless of endpoint order", () => {
+test("legend annotate: '<->' matches bidirectional edges regardless of endpoint order", () => {
   const diagram = parseTopos(`\
 :map
 [A] <-> [B]
@@ -333,7 +335,7 @@ Deno.test("legend annotate: '<->' matches bidirectional edges regardless of endp
   assertObjectMatch(edge.eidos!, { color: "blue", head: { marker: "angle" }, tail: { marker: "angle" } });
 });
 
-Deno.test("legend annotate: hub-like wildcard can target parser-created hubs", () => {
+test("legend annotate: hub-like wildcard can target parser-created hubs", () => {
   const input = `\
 :map
 A ───●──▶ B
@@ -348,7 +350,7 @@ A ───●──▶ B
   assertObjectMatch(hub.eidos!, { color: "blue", marker: "dot" });
 });
 
-Deno.test("legend annotate: target hubs by glyph and marker name in tree selector", () => {
+test("legend annotate: target hubs by glyph and marker name in tree selector", () => {
   const input = `\
 :map
 ╭───────────────╮
@@ -369,7 +371,7 @@ Deno.test("legend annotate: target hubs by glyph and marker name in tree selecto
   assertObjectMatch(hub.eidos!, { color: "orange", marker: "diamond" });
 });
 
-Deno.test("legend annotate: target hubs by glyph and glyph-name", () => {
+test("legend annotate: target hubs by glyph and glyph-name", () => {
   const input = `\
 :map
 A ───●───▶ B
@@ -396,7 +398,7 @@ E ───◎───▶ F
   assertObjectMatch(hubCircleDot.eidos!, { color: "green" });
 });
 
-Deno.test("legend annotate: wildcard matches loose edges without source or target", () => {
+test("legend annotate: wildcard matches loose edges without source or target", () => {
   const input = `\
 :map
 ──▶
@@ -417,7 +419,7 @@ Deno.test("legend annotate: wildcard matches loose edges without source or targe
   assertObjectMatch(looseEdge.eidos!, { edgeRoute: "ray", head: { marker: "triangle" } });
 });
 
-Deno.test("legend annotate: unbound selector matches only missing edge endpoints", () => {
+test("legend annotate: unbound selector matches only missing edge endpoints", () => {
   const input = `\
 [A] ──▶
 ──▶ [B]
@@ -443,7 +445,7 @@ _ -> [B] : blue
   assertEquals(bound.eidos?.color, undefined);
 });
 
-Deno.test("legend annotate: visual axes are last-wins while classes accumulate", () => {
+test("legend annotate: visual axes are last-wins while classes accumulate", () => {
   const input = `\
 :map
 [A]
@@ -463,7 +465,7 @@ Deno.test("legend annotate: visual axes are last-wins while classes accumulate",
   });
 });
 
-Deno.test("legend annotate: reset exempts an entity from broad Eidos styling", () => {
+test("legend annotate: reset exempts an entity from broad Eidos styling", () => {
   const diagram = parseTopos(`\
 :map
 [A] [B]
@@ -484,7 +486,7 @@ Deno.test("legend annotate: reset exempts an entity from broad Eidos styling", (
   });
 });
 
-Deno.test("legend annotate: palette declarations accompany regular rules", () => {
+test("legend annotate: palette declarations accompany regular rules", () => {
   const diagram = parseTopos(`\
 :map
 [A .red] [B]
@@ -501,7 +503,7 @@ B: fill=blue,soft
   assertEquals(diagram.nodes[1].eidos, { fill: { color: "blue", intensity: "soft" } });
 });
 
-Deno.test("legend annotate: dot-syntax in inline sigils resolves to eidos or class fallback", () => {
+test("legend annotate: dot-syntax in inline sigils resolves to eidos or class fallback", () => {
   const diagram = parseTopos(`\
 :map
 [A .red.dashed.fill-blue.external.fill-myclass]
@@ -515,7 +517,7 @@ Deno.test("legend annotate: dot-syntax in inline sigils resolves to eidos or cla
   });
 });
 
-Deno.test("legend annotate: wildcard matching", () => {
+test("legend annotate: wildcard matching", () => {
   const diagram = parseTopos(`\
 :map
 ┌───────────────────────────┐
@@ -544,7 +546,7 @@ Deno.test("legend annotate: wildcard matching", () => {
   assertObjectMatch(box2.eidos!, { color: "red" });
 });
 
-Deno.test("legend annotate: parent caret prefix matching", () => {
+test("legend annotate: parent caret prefix matching", () => {
   const diagram = parseTopos(`\
 :map
 ┌───────────────────────────┐
@@ -564,7 +566,7 @@ Deno.test("legend annotate: parent caret prefix matching", () => {
   assertObjectMatch(box.eidos!, { color: "red" });
 });
 
-Deno.test("legend annotate: stacked parent caret prefix matching (grandparent)", () => {
+test("legend annotate: stacked parent caret prefix matching (grandparent)", () => {
   const diagram = parseTopos(`\
 :map
 ┌─────────────────────────────┐
@@ -589,7 +591,7 @@ Deno.test("legend annotate: stacked parent caret prefix matching (grandparent)",
   assertObjectMatch(outer.eidos!, { color: "blue" });
 });
 
-Deno.test("legend annotate: parent of node points to target", () => {
+test("legend annotate: parent of node points to target", () => {
   const diagram = parseTopos(`\
 :map
 ┌────────────┐     ┌───┐
@@ -605,7 +607,7 @@ Deno.test("legend annotate: parent of node points to target", () => {
   assertObjectMatch(edge.eidos!, { color: "red" });
 });
 
-Deno.test("legend annotate: spaceless edge rules apply styles", () => {
+test("legend annotate: spaceless edge rules apply styles", () => {
   const diagram = parseTopos(`\
 :map
 [A] -> [B]
@@ -618,7 +620,7 @@ Deno.test("legend annotate: spaceless edge rules apply styles", () => {
   assertObjectMatch(edge.eidos!, { color: "blue" });
 });
 
-Deno.test("legend annotate: '<-' matches existing uni edges in reverse direction", () => {
+test("legend annotate: '<-' matches existing uni edges in reverse direction", () => {
   const diagram = parseTopos(`\
 :map
 [A] -> [B]
@@ -631,7 +633,7 @@ Deno.test("legend annotate: '<-' matches existing uni edges in reverse direction
   assertObjectMatch(edge.eidos!, { color: "blue" });
 });
 
-Deno.test("legend annotate: '~>' creates abstract edge when none exists", () => {
+test("legend annotate: '~>' creates abstract edge when none exists", () => {
   const diagram = parseTopos(`\
 :map
 [A]    [B]
@@ -645,7 +647,7 @@ Deno.test("legend annotate: '~>' creates abstract edge when none exists", () => 
   assertObjectMatch(edge.eidos!, { color: "blue", head: { marker: "arrow" } });
 });
 
-Deno.test("legend annotate: abstract edge needs no empty annotation", () => {
+test("legend annotate: abstract edge needs no empty annotation", () => {
   const diagram = parseTopos(`\
 :map
 [A]    [B]
@@ -660,7 +662,7 @@ Deno.test("legend annotate: abstract edge needs no empty annotation", () => {
 
 
 
-Deno.test("legend annotate: '<~' creates abstract edge oriented right-to-left", () => {
+test("legend annotate: '<~' creates abstract edge oriented right-to-left", () => {
   const diagram = parseTopos(`\
 :map
 [A]    [B]
@@ -674,7 +676,7 @@ Deno.test("legend annotate: '<~' creates abstract edge oriented right-to-left", 
   assertObjectMatch(edge.eidos!, { color: "red" });
 });
 
-Deno.test("legend annotate: '<~>' creates bidirectional abstract edge", () => {
+test("legend annotate: '<~>' creates bidirectional abstract edge", () => {
   const diagram = parseTopos(`\
 :map
 [A]    [B]
@@ -688,7 +690,7 @@ Deno.test("legend annotate: '<~>' creates bidirectional abstract edge", () => {
   assertObjectMatch(edge.eidos!, { color: "purple" });
 });
 
-Deno.test("legend annotate: '~>' with class selectors creates multiple abstract edges", () => {
+test("legend annotate: '~>' with class selectors creates multiple abstract edges", () => {
   const diagram = parseTopos(`\
 :map
 [A]    [B]    [C]
@@ -709,7 +711,7 @@ Deno.test("legend annotate: '~>' with class selectors creates multiple abstract 
   }
 });
 
-Deno.test("legend annotate: border hub edge matching uses parent box", () => {
+test("legend annotate: border hub edge matching uses parent box", () => {
   const diagram = parseTopos(`\
 :map
 ╔════════╗
@@ -732,7 +734,7 @@ DD -> AA : blue
   assertObjectMatch(edge.eidos!, { color: "blue" });
 });
 
-Deno.test("legend annotate: internal hub edge matching does not use parent box", () => {
+test("legend annotate: internal hub edge matching does not use parent box", () => {
   const diagram = parseTopos(`\
 :map
 ┌──────────────────┐
@@ -753,7 +755,7 @@ DD -> * : blue
   assertEquals(edge.eidos?.color, undefined);
 });
 
-Deno.test("legend annotate: grid cell edge matching delegates to parent grid box", () => {
+test("legend annotate: grid cell edge matching delegates to parent grid box", () => {
   const diagram = parseTopos(`\
 :map
 ┌─M───┬─────┬─────┐
@@ -789,7 +791,7 @@ C -> C : blue
   assertObjectMatch(edgeCC.eidos!, { color: "blue" });
 });
 
-Deno.test("legend annotate: region-line annotations survive promotion", () => {
+test("legend annotate: region-line annotations survive promotion", () => {
   const input = `\
 :map
 ## EARTH                                          ## MARS
@@ -806,7 +808,7 @@ EARTH : "Earth" blue`;
   assertObjectMatch(earth.eidos!, { color: "blue" });
 });
 
-Deno.test("legend annotate: ordinary child rules see the promoted hierarchy", () => {
+test("legend annotate: ordinary child rules see the promoted hierarchy", () => {
   const input = `\
 :map
 ## EARTH                                          ## MARS
@@ -824,7 +826,7 @@ MARS > * : red`;
   assertObjectMatch(orbiter.eidos!, { color: "red" });
 });
 
-Deno.test("legend annotate: {*} targets all regions", () => {
+test("legend annotate: {*} targets all regions", () => {
   const input = `\
 :map
 ## EARTH                                          ## MARS
@@ -844,7 +846,7 @@ Deno.test("legend annotate: {*} targets all regions", () => {
   assertObjectMatch(mars.eidos!, { color: "red" });
 });
 
-Deno.test("legend annotate: {LABEL} targets specific region", () => {
+test("legend annotate: {LABEL} targets specific region", () => {
   const input = `\
 :map
 ## EARTH                                          ## MARS
@@ -864,7 +866,7 @@ Deno.test("legend annotate: {LABEL} targets specific region", () => {
   assertEquals(mars.eidos?.color, undefined);
 });
 
-Deno.test("legend annotate: parent selector targets nested edges", () => {
+test("legend annotate: parent selector targets nested edges", () => {
   const input = `\
 :map
 # Title
@@ -880,12 +882,13 @@ REG > *-* : blue`;
   const diagram = parseTopos(input);
   const reg = matchChild(diagram.root, { label: "REG", nodeType: "region" }, 0, 1);
   const edge = reg.edges[0];
-  assertEquals(edge !== undefined, true, "Edge should be reparented to REG region");
-  assertEquals(edge?.parent, reg, "Edge parent should be the REG region node");
-  assertObjectMatch(edge?.eidos!, { color: "blue" }, "Edge should be styled blue by REG > *-*");
+  assertExists(edge, "Edge should be reparented to REG region");
+  assertEquals(edge.parent, reg, "Edge parent should be the REG region node");
+  assertExists(edge.eidos, "Edge should have visual annotations");
+  assertObjectMatch(edge.eidos, { color: "blue" }, "Edge should be styled blue by REG > *-*");
 });
 
-Deno.test("legend annotate: stem branches inherit their refined source", () => {
+test("legend annotate: stem branches inherit their refined source", () => {
   const diagram = parseTopos(`\
 A
 ├── C
@@ -903,14 +906,14 @@ A - *: red
   }
 });
 
-Deno.test("legend annotate: open termini become Eidos markers", () => {
+test("legend annotate: open termini become Eidos markers", () => {
   const diagram = parseTopos("╶──╴");
   const edge = matchEdge(diagram.root, { direction: "none" });
 
   assertObjectMatch(edge.eidos!, { tail: { marker: "end-cap" }, head: { marker: "end-cap" } });
 });
 
-Deno.test("legend annotate: connected T-stops do not become end-cap markers", () => {
+test("legend annotate: connected T-stops do not become end-cap markers", () => {
   const diagram = parseTopos(`\
 ┌───┐   ┌───┐
 │ C ├───┤ D │

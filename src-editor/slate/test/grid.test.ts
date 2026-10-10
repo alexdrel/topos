@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { Dir, type Loc, simplifyPath } from "../../../src/geo.ts";
 import { findTrace } from "../../../src/trace/test/trace-utils.ts";
 import type { TraceBox } from "../../../src/trace/types.ts";
@@ -36,7 +37,7 @@ function hit(traces: TraceBox[], cell: Loc, point = cell): TraceBox | null {
   return hitTestTraces(traces, cell, point);
 }
 
-Deno.test("slate grid: converts between client, cell, and pixel coordinates", () => {
+test("slate grid: converts between client, cell, and pixel coordinates", () => {
   assertEquals(cellFromEvent(mouse(135, 250), element, metrics, { x: 1, y: -1 }), { x: 2, y: 3 });
   assertEquals(pointerFromEvent(mouse(135, 250), element, metrics, { x: 1, y: -1 }), {
     cell: { x: 2, y: 3 },
@@ -47,7 +48,7 @@ Deno.test("slate grid: converts between client, cell, and pixel coordinates", ()
   assertEquals(pxRectFromCell({ x: 2, y: 3, w: 4, h: 2 }, metrics, { x: 1, y: -1 }), { x: 30, y: 40, w: 40, h: 40 });
 });
 
-Deno.test("slate grid: pointer side disambiguates shared grid-cell borders", () => {
+test("slate grid: pointer side disambiguates shared grid-cell borders", () => {
   const map = traceMap(`\
 ┌─────┬─────┐
 │     │     │
@@ -72,7 +73,7 @@ Deno.test("slate grid: pointer side disambiguates shared grid-cell borders", () 
   assertEquals(hit(map.traces, { x: 1, y: 1 }, { x: 0.9, y: 1 }), topLeft);
 });
 
-Deno.test("slate grid: empty space has a half-cell forgiving box-border hit", () => {
+test("slate grid: empty space has a half-cell forgiving box-border hit", () => {
   const map = traceMap(`\
 ┌─────┐
 │     │
@@ -85,7 +86,7 @@ Deno.test("slate grid: empty space has a half-cell forgiving box-border hit", ()
   assertEquals(hit(map.traces, { x: 1, y: 2 }), null);
 });
 
-Deno.test("slate grid: computes selection center in projected pixels", () => {
+test("slate grid: computes selection center in projected pixels", () => {
   const box = findTrace(traceMap(`\
 ┌───┐
 │   │
@@ -95,7 +96,7 @@ Deno.test("slate grid: computes selection center in projected pixels", () => {
   assertEquals(selectionCenterPx([], metrics, { x: 0, y: 0 }), null);
 });
 
-Deno.test("slate grid: reshapes from cardinal handles across their anchors", () => {
+test("slate grid: reshapes from cardinal handles across their anchors", () => {
   const origin = { x: 10, y: 10, w: 5, h: 3 };
 
   assertEquals(reshapeFromHandle("w", { x: 8, y: 10 }, origin), { x: 8, y: 10, w: 7, h: 3 });
@@ -105,7 +106,7 @@ Deno.test("slate grid: reshapes from cardinal handles across their anchors", () 
   assertEquals(reshapeFromHandle("nw", { x: 16, y: 14 }, origin), { x: 14, y: 12, w: 3, h: 3 });
 });
 
-Deno.test("slate grid: locates every resize handle in world coordinates", () => {
+test("slate grid: locates every resize handle in world coordinates", () => {
   const box = { x: 2, y: 3, w: 4, h: 2 };
 
   assertEquals(RESIZE_HANDLES.map((handle) => [handle, resizeHandleWorld(box, handle)]), [
@@ -120,7 +121,7 @@ Deno.test("slate grid: locates every resize handle in world coordinates", () => 
   ]);
 });
 
-Deno.test("slate grid: hit-tests padded resize handles", () => {
+test("slate grid: hit-tests padded resize handles", () => {
   const box = { x: 0, y: 0, w: 4, h: 2 };
 
   const hit = (event: MouseEvent, config = selectionConfig()) => hitTestResizeHandle(box, event, selectionContext(config));
@@ -132,7 +133,7 @@ Deno.test("slate grid: hit-tests padded resize handles", () => {
   assertEquals(hit(mouse(180, 280)), null);
 });
 
-Deno.test("slate grid: line-handle hits identify vertices and termini", () => {
+test("slate grid: line-handle hits identify vertices and termini", () => {
   const map = traceMap(`\
 A ───┐
      │
@@ -151,7 +152,7 @@ A ───┐
   assertEquals(hitTestLineHandle(line, mouse(190, 290), selectionContext()), null);
 });
 
-Deno.test("slate grid: trace hits respect shape and overlap priority", () => {
+test("slate grid: trace hits respect shape and overlap priority", () => {
   const map = traceMap(`\
 ┌───┐
 │ A │
@@ -183,7 +184,7 @@ Deno.test("slate grid: trace hits respect shape and overlap priority", () => {
   assertEquals(hit([text, line.target!], { x: text.x, y: text.y }), line.target);
 });
 
-Deno.test("slate grid: hitTestTraces hits stacked box horizontal lines for dy > 0 and dy < 0", () => {
+test("slate grid: hitTestTraces hits stacked box horizontal lines for dy > 0 and dy < 0", () => {
   // 1st: Down-Right stacked box (dy > 0)
   // Visible lines: y = 0, 3, 4, 5 (y=1, 2 are obscured inside)
   const boxDown: TraceBox = {

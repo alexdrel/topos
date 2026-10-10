@@ -1,4 +1,4 @@
-import { borders, boundingRect, compareByArea, contains, naturalOrder, simplifyPath } from "../geo.ts";
+import { borders, boundingRect, compareByArea, contains, Dir, naturalOrder, simplifyPath } from "../geo.ts";
 import { TextGrid } from "../trace/text-grid.ts";
 import { isBordered, TraceBox } from "../trace/types.ts";
 import { MapAST, MapEdge, MapLabel, MapNode, NodeType } from "./types.ts";
@@ -125,8 +125,8 @@ function traceToEdge(trace: TraceBox): MapEdge {
     polyline: [...path],
     style: trace.style,
     direction: "none", // to be determined later in resolveEdges
-    source: { dir: trace.source?.dir!, glyph: trace.source?.text ?? "" },
-    target: { dir: trace.target?.dir!, glyph: trace.target?.text ?? "" },
+    source: { dir: trace.source?.dir ?? Dir.None, glyph: trace.source?.text ?? "" },
+    target: { dir: trace.target?.dir ?? Dir.None, glyph: trace.target?.text ?? "" },
     nodes: [],
   };
 

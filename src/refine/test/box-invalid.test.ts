@@ -1,66 +1,65 @@
-import { assertEquals } from "@std/assert";
-import { testParseDiagram, testCompleted, flushPendingWrites } from "../../test/test-utils.ts";
+import { parseDiagram } from "../refine.ts";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 
-Deno.test.afterEach(flushPendingWrites);
-
-function assertBoxCount(t: Deno.TestContext, diagram: string, expectedBoxes: number): void {
-  const result = testParseDiagram(t, diagram);
+function assertBoxCount(diagram: string, expectedBoxes: number): void {
+  const result = parseDiagram(diagram);
   assertEquals(result.root.children.filter((node) => node.nodeType === "box").length, expectedBoxes);
-  testCompleted(t);
+
 }
 
-Deno.test("Non-Box: Broken Rounded Bottom Corner", (t) => {
+test("Non-Box: Broken Rounded Bottom Corner", () => {
   const diagram = `\
 ╭────╮
 │ A  │
  ╰───╯
 `;
-  assertBoxCount(t, diagram, 0);
+  assertBoxCount(diagram, 0);
 });
 
-Deno.test("Non-Box: Broken Double Bottom Corner", (t) => {
+test("Non-Box: Broken Double Bottom Corner", () => {
   const diagram = `\
 ╔════╗
 ║ B  ║
  ╚═══╝
 `;
-  assertBoxCount(t, diagram, 0);
+  assertBoxCount(diagram, 0);
 });
 
-Deno.test("Non-Box: Only Horizontal Lines", (t) => {
+test("Non-Box: Only Horizontal Lines", () => {
   const diagram = `\
 ---------
 ---------
 `;
-  assertBoxCount(t, diagram, 0);
+  assertBoxCount(diagram, 0);
 });
 
-Deno.test("Non-Box: Only Vertical Lines", (t) => {
+test("Non-Box: Only Vertical Lines", () => {
   const diagram = `\
 ||
 ||
 `;
-  assertBoxCount(t, diagram, 0);
+  assertBoxCount(diagram, 0);
 });
 
-Deno.test("Non-Box: Broken Corner", (t) => {
+test("Non-Box: Broken Corner", () => {
   const diagram = `\
 +----+
 | A  |
  ----+
 `;
-  assertBoxCount(t, diagram, 0);
+  assertBoxCount(diagram, 0);
 });
 
-Deno.test("Non-Box: Missing Bottom Edge", (t) => {
+test("Non-Box: Missing Bottom Edge", () => {
   const diagram = `\
 +----+
 | A  |
 `;
-  assertBoxCount(t, diagram, 0);
+  assertBoxCount(diagram, 0);
 });
 
-Deno.test("Non-Box: Broken Top Edge", (t) => {
+test("Non-Box: Broken Top Edge", () => {
   const diagram = `\
 ┌─    X     │───┐
 └───────────────┘
@@ -69,14 +68,14 @@ Deno.test("Non-Box: Broken Top Edge", (t) => {
 ┌─│   X     │───┐
 └───────────────┘
 `;
-  assertBoxCount(t, diagram, 0);
+  assertBoxCount(diagram, 0);
 });
 
-Deno.test("Mixed Boxes, One Invalid", (t) => {
+test("Mixed Boxes, One Invalid", () => {
   const diagram = `\
 ┌─────┐  +----+
 │ OK  │  | No |
 └─────┘  +--- +
 `;
-  assertBoxCount(t, diagram, 1);
+  assertBoxCount(diagram, 1);
 });

@@ -225,16 +225,17 @@ The repository tree locates the core, visual editor, command-line package, exten
 
 ### Common development commands
 
-Topos is developed in TypeScript with [Deno](https://deno.com/) as its primary runtime and toolchain. Deno manages dependencies and drives checking, testing, generation, and bundling. From the repository root:
+Topos uses Node.js 26 or later for development checks and tests, with TypeScript 7, Oxlint, and dprint. Tests run through Node's test runner with `oxc-node` to support TypeScript enums and constructor parameter properties. The command-line package and VS Code extension build with esbuild; asset generation runs under Node, and Vite serves the browser development surfaces. From the repository root:
 
 ```sh
-deno task serve
-deno task test
-deno task ext:check
-deno task ext:compile
+npm ci
+npm test
+npm run fmt:check
+npm run serve
+npm run build
 ```
 
-`serve` runs the browser development surfaces, including the web editor. Run `deno task` to see the additional generation, packaging, watch, and coverage commands.
+`npm run check` checks the core, browser editor, tests, and VS Code extension; `npm run check:ext` checks the extension separately. `npm run package:build` builds the command-line package. Tests run directly from source without a build: `npm run test:unit` runs tests, and `npm run coverage` writes an HTML coverage report to `coverage/index.html`. `npm run serve` serves the web editor at `/` and the Slate harness at `/www/slate.html`. Run `npm run` to see the additional generation, packaging, and watch commands.
 
 Pull requests are welcome on [GitHub](https://github.com/alexdrel/topos). See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution terms, project boundaries, and generated-file guidance.
 

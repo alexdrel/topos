@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { traceMap } from "../../../src/trace/trace-map.ts";
 import { findTrace } from "../../../src/trace/test/trace-utils.ts";
 import {
@@ -8,7 +9,7 @@ import {
   smallestContainingBox,
 } from "../selection.ts";
 
-Deno.test("trace selection: nested boxes remain independently selected", () => {
+test("trace selection: nested boxes remain independently selected", () => {
   const map = traceMap(`\
 ┌─────────┐
 │ ┌─────┐ │
@@ -20,7 +21,7 @@ Deno.test("trace selection: nested boxes remain independently selected", () => {
   assertEquals(normalizeTraceSelection(boxes), boxes);
 });
 
-Deno.test("trace selection: contents target is the smallest selected container", () => {
+test("trace selection: contents target is the smallest selected container", () => {
   const map = traceMap(`\
 ┌─────────┐
 │ ┌─────┐ │
@@ -33,7 +34,7 @@ Deno.test("trace selection: contents target is the smallest selected container",
   assertEquals(smallestContainingBox([outer, inner], { x: 5, y: 2 }), inner);
 });
 
-Deno.test("trace selection: grid cells are contents containers but not movement areas", () => {
+test("trace selection: grid cells are contents containers but not movement areas", () => {
   const map = traceMap(`\
 ┌─────┬─────┐
 │  A  │  B  │
@@ -44,7 +45,7 @@ Deno.test("trace selection: grid cells are contents containers but not movement 
   assertEquals(isSelectionArea([cell], { x: 3, y: 1 }), false);
 });
 
-Deno.test("trace selection: toggles contents of selected sibling grid cells together", () => {
+test("trace selection: toggles contents of selected sibling grid cells together", () => {
   const map = traceMap(`\
 ┌─────┬─────┐
 │  A  │  B  │

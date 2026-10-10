@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import type { ToposRenderResult, ViewerAppearance } from "./render.ts";
 import { trackStatusBar, updateStatusBar } from "./status-bar.ts";
 import { escapeHtml } from "./util.ts";
-import viewerTemplate from "./viewer.html" with { type: "text" };
+import viewerTemplate from "./viewer.html?raw";
 
 const viewers = new Set<ViewerWebview>();
 const THEMES: ViewerAppearance["theme"][] = ["host", "light", "dark"];

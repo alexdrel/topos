@@ -1,7 +1,8 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { parseUnitRatio } from "../value.ts";
 
-Deno.test("legend value: parse unit ratio from common legend forms", () => {
+test("legend value: parse unit ratio from common legend forms", () => {
   assertEquals(parseUnitRatio("0.45"), { type: "absolute", value: 0.45 });
   assertEquals(parseUnitRatio(".45"), { type: "absolute", value: 0.45 });
   assertEquals(parseUnitRatio("45"), { type: "absolute", value: 45 });

@@ -74,12 +74,12 @@ If private launcher creation fails, activation exposes the packaged `bin/` direc
 Run extension tasks from the repository root:
 
 ```sh
-deno task ext:lint
-deno task ext:check
-deno task ext:compile
-deno task test
+npm run lint
+npm run check:ext
+npm run ext:compile
+npm test
 ```
 
-`ext:compile` rebuilds all four bundles in `vscode-topos/out/`. The `docs/` and `media/` symlinks keep extension-local paths aligned with the canonical project files; the VSIX `files` allowlist packages only the documents required at runtime and leaves README media in the repository. Reload the Extension Development Host after rebuilding extension-host code; webview code also requires a reload unless it is running under the watch task.
+`npm run build` (also available as `ext:compile`) uses esbuild to rebuild all four extension bundles and the npm package bundles; `npm run ext:watch` watches their source files using the same build configuration. The `docs/` and `media/` symlinks keep extension-local paths aligned with the canonical project files; the VSIX `files` allowlist packages only the documents required at runtime and leaves README media in the repository. Reload the Extension Development Host after rebuilding extension-host code; webview code also requires a reload unless it is running under the watch task.
 
 The VSIX is controlled by the `files` allowlist in `vscode-topos/package.json`. Inspect the packaged file list before release so source files, tests, and stale generated artifacts do not enter the extension.

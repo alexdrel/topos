@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { afterEach, beforeEach, test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import type { Loc } from "../../../src/geo.ts";
 import type { EditorModel } from "../model.ts";
 import { createInteractionController, type Interaction, type InteractionHost, type PointerInput } from "../interact.ts";
@@ -13,6 +14,24 @@ const input: PointerInput = {
   alt: false,
   hasMoved: false,
 };
+
+const browserEventKeys = ["addEventListener", "removeEventListener", "dispatchEvent"] as const;
+const browserEventDescriptors = browserEventKeys.map((key) => Object.getOwnPropertyDescriptor(globalThis, key));
+
+beforeEach(() => {
+  const events = new EventTarget();
+  for (const key of browserEventKeys) {
+    Object.defineProperty(globalThis, key, { configurable: true, value: events[key].bind(events) });
+  }
+});
+
+afterEach(() => {
+  browserEventKeys.forEach((key, index) => {
+    const descriptor = browserEventDescriptors[index];
+    if (descriptor) Object.defineProperty(globalThis, key, descriptor);
+    else Reflect.deleteProperty(globalThis, key);
+  });
+});
 
 function setup() {
   let commits = 0;
@@ -81,7 +100,7 @@ function mouseEvent(type: string, init: Partial<MouseEvent> = {}): MouseEvent {
   }) as MouseEvent;
 }
 
-Deno.test("interaction: mouse-up finishes and commits an interaction", () => {
+test("interaction: mouse-up finishes and commits an interaction", () => {
   const { controller, commits } = setup();
   const interaction: Interaction = {
     onUp(_input, model) {
@@ -96,7 +115,7 @@ Deno.test("interaction: mouse-up finishes and commits an interaction", () => {
   assertEquals(controller.current(), null);
 });
 
-Deno.test("interaction: an on-up mutation is not committed twice", () => {
+test("interaction: an on-up mutation is not committed twice", () => {
   const { controller, commits } = setup();
   const interaction: Interaction = {
     onMove(_input, model) {
@@ -114,7 +133,7 @@ Deno.test("interaction: an on-up mutation is not committed twice", () => {
   assertEquals(commits(), 1);
 });
 
-Deno.test("interaction: cancel rolls back eligible interactions and clears controller state", () => {
+test("interaction: cancel rolls back eligible interactions and clears controller state", () => {
   const { controller, reverts, renders, cursorUpdates } = setup();
   controller.set({});
 
@@ -126,7 +145,7 @@ Deno.test("interaction: cancel rolls back eligible interactions and clears contr
   assertEquals(cursorUpdates(), 2);
 });
 
-Deno.test("interaction: dispatch ignores absent handlers and stationary moves", () => {
+test("interaction: dispatch ignores absent handlers and stationary moves", () => {
   const { controller } = setup();
   let moves = 0;
 
@@ -141,7 +160,7 @@ Deno.test("interaction: dispatch ignores absent handlers and stationary moves", 
   assertEquals(controller.hasMoved(), false);
 });
 
-Deno.test("interaction: move requests rendering and mouse-up returns selection", () => {
+test("interaction: move requests rendering and mouse-up returns selection", () => {
   const { controller, selections, renders } = setup();
   controller.set({
     onMove() {
@@ -159,7 +178,7 @@ Deno.test("interaction: move requests rendering and mouse-up returns selection",
   assertEquals(renders(), 3);
 });
 
-Deno.test("interaction: mouse gesture produces pointer deltas and ends on global mouse-up", () => {
+test("interaction: mouse gesture produces pointer deltas and ends on global mouse-up", () => {
   const { controller } = setup();
   const seen: PointerInput[] = [];
   controller.set({
@@ -189,7 +208,7 @@ Deno.test("interaction: mouse gesture produces pointer deltas and ends on global
   assertEquals(controller.pointerCoords(), { x: 110, y: 216 });
 });
 
-Deno.test("interaction: pointer coordinates keep their projection frame during a drag", () => {
+test("interaction: pointer coordinates keep their projection frame during a drag", () => {
   const { controller } = setup();
   const cells: Loc[] = [];
   controller.set({
@@ -208,7 +227,7 @@ Deno.test("interaction: pointer coordinates keep their projection frame during a
   assertEquals(cells, [{ x: 8, y: 14 }, { x: 9, y: 15 }]);
 });
 
-Deno.test("interaction: mouse start rejects secondary buttons and initializes a supplied interaction", () => {
+test("interaction: mouse start rejects secondary buttons and initializes a supplied interaction", () => {
   const { controller } = setup();
   assertEquals(controller.onMouseDown(mouseEvent("mousedown", { button: 1 })), false);
 
@@ -225,7 +244,7 @@ Deno.test("interaction: mouse start rejects secondary buttons and initializes a 
   controller.cancel();
 });
 
-Deno.test("interaction: active interactions accept mouse-down unless explicitly rejected", () => {
+test("interaction: active interactions accept mouse-down unless explicitly rejected", () => {
   const { controller } = setup();
   controller.set({});
   assertEquals(controller.onMouseDown(mouseEvent("mousedown")), true);
@@ -235,7 +254,7 @@ Deno.test("interaction: active interactions accept mouse-down unless explicitly 
   assertEquals(controller.onMouseDown(mouseEvent("mousedown")), false);
 });
 
-Deno.test("interaction: inactive mouse-down seeds a subsequently installed drag", () => {
+test("interaction: inactive mouse-down seeds a subsequently installed drag", () => {
   const { controller } = setup();
   let startCell: Loc | undefined;
   const down = mouseEvent("mousedown", { clientX: 107, clientY: 209 });

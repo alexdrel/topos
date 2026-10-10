@@ -574,7 +574,7 @@ Most diagrams need no additional rendering instructions. When a destination has 
 The same presentation can therefore be expressed close to the source or at a particular destination:
 
 - Document header: `:map theme=dark width=800`
-- Markdown fence: `` ```topos theme=dark width=800 ! `` (`!` requests override)
+- Markdown fence: ` ```topos theme=dark width=800 ! ` (`!` requests override)
 - Markdown image: `![Diagram](./diagram.topos#theme=dark&width=800)`
 - CLI: `topos diagram.topos theme=dark width=800`
 
@@ -644,7 +644,7 @@ Labels and prose notes support a small Markdown-like formatting language.
 | `¶`                           | Paragraph break                                                     |
 | `␠`, `⍽`                      | Visible em space or nonbreaking space                               |
 | `\*`, `\_`, …                 | Literal formatting character                                        |
-| `` ``` … ``` ``               | Fenced code note                                                    |
+| ` ``` … ``` `                 | Fenced code note                                                    |
 
 The `text` and `code` note modes preserve this punctuation literally; `code` also preserves physical lines and spaces and uses a monospace font by default. Fenced notes use `code` automatically. Labels always use prose formatting.
 

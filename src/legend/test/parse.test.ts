@@ -1,9 +1,10 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { parseLegend, parseLegendBlock } from "../parse.ts";
 
 const ANY = { kind: "any" } as const;
 
-Deno.test("legend parse: selectors and comments", () => {
+test("legend parse: selectors and comments", () => {
   const rules = parseLegendBlock(`
 // A comment
 MARS > * : soft
@@ -19,7 +20,7 @@ MARS > * : soft
   }
 });
 
-Deno.test("legend parse: quotes group exact multi-word selectors", () => {
+test("legend parse: quotes group exact multi-word selectors", () => {
   const rules = parseLegendBlock(`
 "Link label" : red
 "API Gateway" -> "Deep Space Network" : dashed
@@ -33,13 +34,13 @@ Deno.test("legend parse: quotes group exact multi-word selectors", () => {
   });
 });
 
-Deno.test("legend parse: selector and annotation tokenizers protect colons in values", () => {
+test("legend parse: selector and annotation tokenizers protect colons in values", () => {
   const [rule] = parseLegendBlock('[:map] : "Section: map"');
   assertEquals(rule.selectors, [{ kind: "label", value: ":map", bracket: "[]" }]);
   assertEquals(rule.annotation.text, "Section: map");
 });
 
-Deno.test("legend parse: wildcard kinds and edge wildcards", () => {
+test("legend parse: wildcard kinds and edge wildcards", () => {
   const rules = parseLegendBlock(`
 [*] : rounded
 (*) : ghost
@@ -76,7 +77,7 @@ Deno.test("legend parse: wildcard kinds and edge wildcards", () => {
   }
 });
 
-Deno.test("legend parse: unbound endpoints and unambiguous wildcard edges", () => {
+test("legend parse: unbound endpoints and unambiguous wildcard edges", () => {
   const rules = parseLegendBlock(`
 _ : ghost
 *-B : blue
@@ -104,7 +105,7 @@ A-B : red
   assertEquals(rules[6].selectors[0], { op: "<->", left: ANY, right: ANY });
 });
 
-Deno.test("legend parse: relation selectors", () => {
+test("legend parse: relation selectors", () => {
   const rules = parseLegendBlock(`
 [Parent] >> *--* : dashed
 [A] -> [B] : blue
@@ -145,7 +146,7 @@ Deno.test("legend parse: relation selectors", () => {
   }
 });
 
-Deno.test("legend parse: malformed lines are ignored and later lines still parse", () => {
+test("legend parse: malformed lines are ignored and later lines still parse", () => {
   const rules = parseLegendBlock(`
 [A] : blue
 [A] [B] : .bad
@@ -160,7 +161,7 @@ region *
   assertEquals(rules[1].annotation.eidos, { color: "red" });
 });
 
-Deno.test("legend parse: visual scopes and label placement", () => {
+test("legend parse: visual scopes and label placement", () => {
   const rules = parseLegendBlock(`
 [A] : red soft fill=blue,solid stroke=red,strong label=purple label=left,ceiling
 [B] : left=25% top=75%
@@ -178,12 +179,12 @@ Deno.test("legend parse: visual scopes and label placement", () => {
   assertEquals(rules[2].annotation.eidos, { label: { textHorizontal: "left", textVertical: "middle", textAlign: "align-center" } });
 });
 
-Deno.test("legend parse: scoped values allow whitespace after equals", () => {
+test("legend parse: scoped values allow whitespace after equals", () => {
   const [rule] = parseLegendBlock("[A]: label = solid, red");
   assertEquals(rule.annotation.eidos, { label: { intensity: "solid", color: "red" } });
 });
 
-Deno.test("legend parse: empty property assignment does nothing", () => {
+test("legend parse: empty property assignment does nothing", () => {
   const rules = parseLegendBlock(`
 [A]: fill-color=
 [B]: fill-color="   "
@@ -194,7 +195,7 @@ Deno.test("legend parse: empty property assignment does nothing", () => {
   assertEquals(rules[2].annotation.properties, { "fill-color": ",red" });
 });
 
-Deno.test("legend parse: repeated assignment whitespace returns values to root scope", () => {
+test("legend parse: repeated assignment whitespace returns values to root scope", () => {
   const rules = parseLegendBlock(`
 [A]: fill=    animate
 [B]: label= solid,  red
@@ -203,7 +204,7 @@ Deno.test("legend parse: repeated assignment whitespace returns values to root s
   assertEquals(rules[1].annotation.eidos, { label: { intensity: "solid" }, color: "red" });
 });
 
-Deno.test("legend parse: palette declarations override built-in colors", () => {
+test("legend parse: palette declarations override built-in colors", () => {
   assertEquals(parseLegend(`\
 /blue: #0057b8
 /purple: color-mix(in oklch, #c00 80%, black)
@@ -216,7 +217,7 @@ A: red`).palette, {
   });
 });
 
-Deno.test("legend parse: stack assignment preserves its numeric tuple", () => {
+test("legend parse: stack assignment preserves its numeric tuple", () => {
   const rules = parseLegendBlock(`
 [A] : stack=3
 [B] : stack=4,-2
@@ -234,7 +235,7 @@ Deno.test("legend parse: stack assignment preserves its numeric tuple", () => {
   assertEquals(rules[4].annotation.properties, { stack: "3,,-1" });
 });
 
-Deno.test("legend parse: unknown words in annotation become classes", () => {
+test("legend parse: unknown words in annotation become classes", () => {
   const rules = parseLegendBlock(`
 [A] : blue foo @type
 `);
@@ -245,12 +246,12 @@ Deno.test("legend parse: unknown words in annotation become classes", () => {
   assertEquals(rules[0].annotation.classes, ["foo"]);
 });
 
-Deno.test("legend parse: unknown properties are ignored", () => {
+test("legend parse: unknown properties are ignored", () => {
   const [rule] = parseLegendBlock("[A]: invented=value");
   assertEquals(rule.annotation.properties, undefined);
 });
 
-Deno.test("legend parse: animation and particle eidos", () => {
+test("legend parse: animation and particle eidos", () => {
   const rules = parseLegendBlock(`
 *: block chevron animate
 [*]: packet
@@ -259,7 +260,7 @@ Deno.test("legend parse: animation and particle eidos", () => {
   assertEquals(rules[1].annotation.eidos, { particle: "packet" });
 });
 
-Deno.test("legend parse: wildcard selectors", () => {
+test("legend parse: wildcard selectors", () => {
   const rules = parseLegendBlock(`
 %long para% : blue
 [API%] : red
@@ -269,7 +270,7 @@ Deno.test("legend parse: wildcard selectors", () => {
   assertEquals(rules[1].selectors[0], { kind: "startswith", value: "API", bracket: "[]" });
 });
 
-Deno.test("legend parse: caret parent operators", () => {
+test("legend parse: caret parent operators", () => {
   const rules = parseLegendBlock(`
 ^#n1 : red
 ^^%long para% : blue
@@ -288,7 +289,7 @@ Deno.test("legend parse: caret parent operators", () => {
   });
 });
 
-Deno.test("legend parse: spaceless edge operators and dashed words", () => {
+test("legend parse: spaceless edge operators and dashed words", () => {
   const rules = parseLegendBlock(`
 BB->AA : blue
 BB--AA : green
@@ -316,7 +317,7 @@ class-name : red
   assertEquals(rule3, { kind: "label", value: "class-name" });
 });
 
-Deno.test("legend parse: unary caret ^ and synthesis operators priority", () => {
+test("legend parse: unary caret ^ and synthesis operators priority", () => {
   const rules = parseLegendBlock(`
 ^%para% ~> ^%wraps% : blue
 `);
@@ -336,7 +337,7 @@ Deno.test("legend parse: unary caret ^ and synthesis operators priority", () => 
   }
 });
 
-Deno.test("legend parse: annotation is optional", () => {
+test("legend parse: annotation is optional", () => {
   const rules = parseLegendBlock(`
 A
 A -> B
@@ -346,7 +347,7 @@ A ~> B
   for (const rule of rules) assertEquals(rule.annotation, {});
 });
 
-Deno.test("legend parse: quoted URLs preserve comment-like slashes", () => {
+test("legend parse: quoted URLs preserve comment-like slashes", () => {
   const [rule] = parseLegendBlock('#docs: href="https://example.com/very/long/path" // documentation');
   assertEquals(rule.annotation.properties, { href: "https://example.com/very/long/path" });
 });

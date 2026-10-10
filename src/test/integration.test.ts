@@ -1,6 +1,9 @@
-// deno-fmt-ignore-file
+import { mkdirSync, writeFileSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import { test } from "node:test";
+// dprint-ignore-file
 
-import { assertEquals } from "@std/assert";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { parseTopos, splitToposFile } from "../topos.ts";
 
 import { renderToSVG } from "../enamel/svg.ts";
@@ -9,7 +12,7 @@ import { projectTracesToGrid } from "../ink/ink.ts";
 import { MapNode } from "../refine/types.ts";
 import { parseDiagram } from "../refine/refine.ts";
 
-const SHOWCASE = await Deno.readTextFile(new URL("../../examples/museum/showcase.topos", import.meta.url));
+const SHOWCASE = await readFile(new URL("../../examples/museum/showcase.topos", import.meta.url), "utf8");
 
 function collectNodes(root: MapNode): MapNode[] {
   const all: MapNode[] = [];
@@ -18,7 +21,7 @@ function collectNodes(root: MapNode): MapNode[] {
   return all;
 }
 
-Deno.test("Showcase: box inventory", () => {
+test("Showcase: box inventory", () => {
   const { map } = splitToposFile(SHOWCASE);
   const { root } = parseDiagram(map.content.join("\n"));
   const all = collectNodes(root);
@@ -41,7 +44,7 @@ Deno.test("Showcase: box inventory", () => {
   }
 });
 
-Deno.test("Showcase: border styles detected", () => {
+test("Showcase: border styles detected", () => {
   const { map } = splitToposFile(SHOWCASE);
   const { root } = parseDiagram(map.content.join("\n"));
   const boxes = collectNodes(root).filter(n => n.nodeType === "box");
@@ -62,14 +65,15 @@ Deno.test("Showcase: border styles detected", () => {
   }
 });
 
-Deno.test("Showcase: renders clean SVG (full file)", () => {
+test("Showcase: renders clean SVG (full file)", () => {
   const annotated = parseTopos(SHOWCASE);
   const svg = renderToSVG(annotated);
   assertEquals(svg.startsWith("<?xml"), true);
-  Deno.writeTextFileSync("tmp/showcase-clean.svg", svg);
+  mkdirSync("tmp", { recursive: true });
+  writeFileSync("tmp/showcase-clean.svg", svg);
 });
 
-Deno.test("Showcase: ink round-trip", () => {
+test("Showcase: ink round-trip", () => {
   const { map } = splitToposFile(SHOWCASE);
   const mapSource = map.content.join("\n");
   const diagram = parseDiagram(mapSource);

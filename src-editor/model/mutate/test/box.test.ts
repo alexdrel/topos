@@ -1,9 +1,11 @@
-import { assertEquals, assertThrows } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertThrows } from "../../../../src/test/assertions.ts";
 import { traceMap } from "../../../../src/trace/trace-map.ts";
 import { createBox, moveTraces, reshapeBoxTrace, resizeBoxTrace } from "../../mutate.ts";
 import { findTrace, matchTraceMap } from "../../../../src/trace/test/trace-utils.ts";
 
-Deno.test("trace: resize box trace regenerates visible perimeter", () => {
+test("trace: resize box trace regenerates visible perimeter", () => {
   const state = traceMap(`\
 ┌───┐
 │ A │
@@ -19,14 +21,14 @@ Deno.test("trace: resize box trace regenerates visible perimeter", () => {
 └─────┘`);
 });
 
-Deno.test("trace: box creation rejects dimensions below 2x2", () => {
+test("trace: box creation rejects dimensions below 2x2", () => {
   const state = traceMap("");
   assertThrows(() => createBox(state, { x: 0, y: 0, w: 1, h: 2 }));
   assertThrows(() => createBox(state, { x: 0, y: 0, w: 2, h: 1 }));
   assertEquals(state.traces, []);
 });
 
-Deno.test("trace: box resizing locks to 2x2 minimum", () => {
+test("trace: box resizing locks to 2x2 minimum", () => {
   const state = traceMap("");
   const box = createBox(state, { x: 0, y: 0, w: 2, h: 2 });
 
@@ -45,7 +47,7 @@ Deno.test("trace: box resizing locks to 2x2 minimum", () => {
   assertEquals(box.w, 2);
 });
 
-Deno.test("trace: grid cells cannot move independently", () => {
+test("trace: grid cells cannot move independently", () => {
   const state = traceMap(`\
 ┌───┬───┐
 │ A │ B │
@@ -60,7 +62,7 @@ Deno.test("trace: grid cells cannot move independently", () => {
 └───┴───┘`);
 });
 
-Deno.test("trace: parent resize keeps shared cell boundaries attached", () => {
+test("trace: parent resize keeps shared cell boundaries attached", () => {
   const state = traceMap(`\
 ┏━━━━━━━━━┓
 ┃    A    ┃
@@ -80,7 +82,7 @@ Deno.test("trace: parent resize keeps shared cell boundaries attached", () => {
 ┗━━━━━━━━━━━┛`);
 });
 
-Deno.test("trace: cell resize cascades through shared boundary segments but not point junctions", () => {
+test("trace: cell resize cascades through shared boundary segments but not point junctions", () => {
   const state = traceMap(`\
 ┌─────┬─────┐
 │  A  │  B  │
@@ -103,7 +105,7 @@ Deno.test("trace: cell resize cascades through shared boundary segments but not 
 └─────┴─────┘`);
 });
 
-Deno.test("trace: reshapeBoxTrace ignores updates under 2x2 but updates successfully for >= 2x2", () => {
+test("trace: reshapeBoxTrace ignores updates under 2x2 but updates successfully for >= 2x2", () => {
   const state = traceMap("");
   const box = createBox(state, { x: 0, y: 0, w: 3, h: 3 });
 

@@ -1,13 +1,15 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { DOMParser } from "@xmldom/xmldom";
 import { domToJsonMl } from "./dom.ts";
 import { serialize, textContent } from "./jsonml.ts";
 
-function parseElement(xml: string): Node {
-  return new DOMParser().parseFromString(xml, "application/xml").documentElement;
+function parseElement(xml: string) {
+  const root = new DOMParser().parseFromString(xml, "application/xml").documentElement!;
+  return root;
 }
 
-Deno.test("domToJsonMl converts only the supplied subtree", () => {
+test("domToJsonMl converts only the supplied subtree", () => {
   const document = new DOMParser().parseFromString("<root><before/><defs id=\"library\"><item>text</item></defs><after/></root>", "application/xml");
   const defs = document.getElementsByTagName("defs").item(0);
   if (!defs) throw new Error("Missing test defs");
@@ -15,7 +17,7 @@ Deno.test("domToJsonMl converts only the supplied subtree", () => {
   assertEquals(domToJsonMl(defs), ["defs", { id: "library" }, ["item", {}, "text"]]);
 });
 
-Deno.test("domToJsonMl preserves comment and CDATA payloads", () => {
+test("domToJsonMl preserves comment and CDATA payloads", () => {
   const commentText = "\n  first line\n  second line\n";
   const cdataText = "\n  a > b {\n    color: red;\n  }\n";
   const source = `<root><!--${commentText}--><![CDATA[${cdataText}]]></root>`;
@@ -31,7 +33,7 @@ Deno.test("domToJsonMl preserves comment and CDATA payloads", () => {
   assertEquals(payloads, [commentText, cdataText]);
 });
 
-Deno.test("domToJsonMl ignores indentation and retains blank separators", () => {
+test("domToJsonMl ignores indentation and retains blank separators", () => {
   const jsonml = domToJsonMl(parseElement("<root>\n  <one/>\n\n  <two/>\n</root>"));
   assertEquals(jsonml, ["root", {}, ["one", {}], "\n", ["two", {}]]);
 });

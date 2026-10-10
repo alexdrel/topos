@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "vscode", "vite/client"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["out"]
+}

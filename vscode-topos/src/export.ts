@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { parseHeaderTail, parseTopos, renderToSVG } from "#topos-core";
 import type { ActiveToposSource } from "./source.ts";
 import { errorMessage } from "./util.ts";
-import exportPreviewTemplate from "./export-preview.html" with { type: "text" };
+import exportPreviewTemplate from "./export-preview.html?raw";
 
 type ExportFormat = "svg" | "png";
 type ExportTheme = "light" | "dark";

@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { Dir } from "../../../src/geo.ts";
 import { findTrace } from "../../../src/trace/test/trace-utils.ts";
 import { traceMap } from "../../../src/trace/trace-map.ts";
@@ -7,7 +8,7 @@ import { findEl } from "../../../src/jsonml/assert.ts";
 import { buildQuickInspectorNode, hasQuickInspectorContent, hasQuickInspectorContinuity } from "../quick-inspector.ts";
 import { OPEN_TERMINUS_GLYPH, setTerminusGlyph } from "../../model/mutate.ts";
 
-Deno.test("quick inspector: only selections with available controls have content", () => {
+test("quick inspector: only selections with available controls have content", () => {
   const map = traceMap(`\
 ┌─Box─┐
 │     │
@@ -23,7 +24,7 @@ Note`);
   assertEquals(hasQuickInspectorContent([note]), false);
 });
 
-Deno.test("quick inspector: continuity follows a line and either of its termini", () => {
+test("quick inspector: continuity follows a line and either of its termini", () => {
   const map = traceMap(`A ───▶ B     C ───▶ D`);
   const first = findTrace(map, { type: "line", x: 2, y: 0, startDir: Dir.W });
   const second = findTrace(map, { type: "line", x: 15, y: 0, startDir: Dir.W });
@@ -34,7 +35,7 @@ Deno.test("quick inspector: continuity follows a line and either of its termini"
   assertEquals(hasQuickInspectorContinuity([first], [second]), false);
 });
 
-Deno.test("quick inspector: style controls reflect active and unavailable choices", () => {
+test("quick inspector: style controls reflect active and unavailable choices", () => {
   const unicode = findTrace(traceMap(`\
 ┌───┐
 │   │
@@ -56,7 +57,7 @@ Deno.test("quick inspector: style controls reflect active and unavailable choice
   assertEquals(attrs(mixedUnicode).class, "qi-btn mixed");
 });
 
-Deno.test("quick inspector: hub controls mark the selected glyph", () => {
+test("quick inspector: hub controls mark the selected glyph", () => {
   const hub = findTrace(traceMap("●"), { type: "hub", x: 0, y: 0 });
   const node = buildQuickInspectorNode([hub]);
   const active = findEl(node, "button", { "data-action": "hub", "data-glyph": "●" })!;
@@ -64,7 +65,7 @@ Deno.test("quick inspector: hub controls mark the selected glyph", () => {
   assertEquals(attrs(active).class, "qi-btn active");
 });
 
-Deno.test("quick inspector: terminus controls mark the selected arrow", () => {
+test("quick inspector: terminus controls mark the selected arrow", () => {
   const line = findTrace(traceMap("A ───▶ B"), { type: "line", x: 2, y: 0, startDir: Dir.W });
   const node = buildQuickInspectorNode([line.target!]);
   const active = findEl(node, "button", { "data-action": "terminus", "data-glyph": line.target!.text })!;
@@ -72,7 +73,7 @@ Deno.test("quick inspector: terminus controls mark the selected arrow", () => {
   assertEquals(attrs(active).class, "qi-btn active");
 });
 
-Deno.test("quick inspector: open terminus derives variants from its path", () => {
+test("quick inspector: open terminus derives variants from its path", () => {
   const line = findTrace(traceMap("╶──╴"), { type: "line", x: 0, y: 0, startDir: Dir.None });
   const node = buildQuickInspectorNode([line.target!]);
   const arrow = findEl(node, "button", { "data-action": "terminus", "data-glyph": "▶" });
@@ -82,7 +83,7 @@ Deno.test("quick inspector: open terminus derives variants from its path", () =>
   assertEquals(attrs(open).class, "qi-btn active");
 });
 
-Deno.test("quick inspector: adaptive terminus starts with the plain terminus selected", () => {
+test("quick inspector: adaptive terminus starts with the plain terminus selected", () => {
   const map = traceMap("A ───▶ B");
   const line = findTrace(map, { type: "line", x: 2, y: 0, startDir: Dir.W });
   setTerminusGlyph(map, line.target!, "");
@@ -96,7 +97,7 @@ Deno.test("quick inspector: adaptive terminus starts with the plain terminus sel
   assertEquals(attrs(open).class, "qi-btn");
 });
 
-Deno.test("quick inspector: parsed box T-stops are plain termini, not half-wires", () => {
+test("quick inspector: parsed box T-stops are plain termini, not half-wires", () => {
   const map = traceMap(`\
 ┌───┐   ┌───┐
 │ C ├───┤ D │
@@ -114,7 +115,7 @@ Deno.test("quick inspector: parsed box T-stops are plain termini, not half-wires
   }
 });
 
-Deno.test("quick inspector: unsupported selections build an empty inspector", () => {
+test("quick inspector: unsupported selections build an empty inspector", () => {
   const note = findTrace(traceMap("Note"), { type: "text", x: 0, y: 0 });
 
   assertEquals(children(buildQuickInspectorNode([note])), []);

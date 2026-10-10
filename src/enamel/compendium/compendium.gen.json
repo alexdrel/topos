@@ -3,8 +3,8 @@
     "═══════════════════════════════════════════════════════════════\n",
     "     compendium.svg  —  Topos / Enamel element library\n",
     "     Definitions: style · filters · patterns · markers · symbols\n",
-    "     Gallery: edit compendium.topos, then run deno task gen:compendium\n",
-    "     Definitions: edit this defs block, then run deno task gen:defs\n",
+    "     Gallery: edit compendium.topos, then run npm run gen:compendium\n",
+    "     Definitions: edit this defs block, then run npm run gen:defs\n",
     "     ═══════════════════════════════════════════════════════════════"
   ],"\n",
   ["style",{"id":"tp-palette"},

@@ -1,10 +1,9 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import type { ServerResponse } from "node:http";
 import { basename, join, relative, resolve } from "node:path";
-import deno from "@deno/vite-plugin";
 import { defineConfig, type Plugin } from "vite";
 
-const TOPOS_WATCH_IGNORED = ["**/examples/failed-tests/**", "**/src/enamel/compendium/compendium.topos"];
+const TOPOS_WATCH_IGNORED = ["**/src/enamel/compendium/compendium.topos"];
 
 function toposPlugin(): Plugin {
   const root = resolve(process.cwd());
@@ -209,8 +208,9 @@ function wwwPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [deno(), toposPlugin(), wwwPlugin()],
+  plugins: [toposPlugin(), wwwPlugin()],
   server: {
+    host: "::",
     watch: {
       ignored: TOPOS_WATCH_IGNORED,
     },

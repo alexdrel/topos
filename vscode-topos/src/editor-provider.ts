@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { SLATE_CONTEXT_COMMANDS, type SlateContextCommand } from "../../src-editor/slate/context-command.ts";
 import type { AppearanceConfig, HostToWebviewMessage, SlateSessionState, WebviewToHostMessage } from "./webview/messages.ts";
 import { trackStatusBar, updateStatusBar } from "./status-bar.ts";
-import editorTemplate from "./editor.html" with { type: "text" };
+import editorTemplate from "./editor.html?raw";
 import { notifyToposDocumentActivated } from "./source.ts";
 import { clamp, sameUri } from "./util.ts";
 

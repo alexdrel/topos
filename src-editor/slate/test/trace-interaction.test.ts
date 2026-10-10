@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { Dir, type Loc } from "../../../src/geo.ts";
 import { findTrace, matchTraceMap } from "../../../src/trace/test/trace-utils.ts";
 import type { TraceBox } from "../../../src/trace/types.ts";
@@ -25,7 +26,7 @@ function pointerInput(x: number, y: number): PointerInput {
   };
 }
 
-Deno.test("trace interaction: clicking a selected line endpoint selects its terminus", () => {
+test("trace interaction: clicking a selected line endpoint selects its terminus", () => {
   const model = createModel(`A ───▶ B`);
   const line = findTrace(model.traceMap, { type: "line", x: 2, y: 0, startDir: Dir.W });
   const target = line.target!;
@@ -45,7 +46,7 @@ Deno.test("trace interaction: clicking a selected line endpoint selects its term
   assertEquals(result, [target]);
 });
 
-Deno.test("trace interaction: box and terminus selection constrains endpoint movement to its line", () => {
+test("trace interaction: box and terminus selection constrains endpoint movement to its line", () => {
   const model = createModel(`\
 ┌───┐
 │ A ├──▶ B
@@ -80,7 +81,7 @@ Deno.test("trace interaction: box and terminus selection constrains endpoint mov
   assertEquals({ x: source.x, y: source.y }, { x: 4, y: 1 });
 });
 
-Deno.test("selection move area includes a selected box interior", () => {
+test("selection move area includes a selected box interior", () => {
   const model = createModel(`\
 ┌───┐
 │   │
@@ -90,7 +91,7 @@ Deno.test("selection move area includes a selected box interior", () => {
   assertEquals(isSelectionArea([box], { x: 2, y: 1 }), true);
 });
 
-Deno.test("selection move area excludes gaps between selected boxes", () => {
+test("selection move area excludes gaps between selected boxes", () => {
   const model = createModel(`\
 ┌─┐   ┌─┐
 │ │   │ │
@@ -101,7 +102,7 @@ Deno.test("selection move area excludes gaps between selected boxes", () => {
   assertEquals(isSelectionArea([left, right], { x: 4, y: 1 }), false);
 });
 
-Deno.test("selection move area excludes empty space inside a selected line's bounds", () => {
+test("selection move area excludes empty space inside a selected line's bounds", () => {
   const model = createModel(`\
 A ┐
   │
@@ -111,7 +112,7 @@ A ┐
   assertEquals(isSelectionArea([line], { x: 3, y: 1 }), false);
 });
 
-Deno.test("move started from forgiving selection area preserves selection without a drag", () => {
+test("move started from forgiving selection area preserves selection without a drag", () => {
   const model = createModel("A ─── B");
   const line = findTrace(model.traceMap, { type: "line", x: 2, y: 0, startDir: Dir.W });
   model.setSelection([line, line.source!]);
@@ -123,7 +124,7 @@ Deno.test("move started from forgiving selection area preserves selection withou
   assertEquals(model.selection, selectionBeforeClick);
 });
 
-Deno.test("trace interaction: a box style selected in QI becomes the creation default", () => {
+test("trace interaction: a box style selected in QI becomes the creation default", () => {
   const model = createModel(`\
 ┌───┐
 │ A │
@@ -144,7 +145,7 @@ Deno.test("trace interaction: a box style selected in QI becomes the creation de
 ╚════════╝`);
 });
 
-Deno.test("trace interaction: line style and arrowhead selected in QI become creation defaults", () => {
+test("trace interaction: line style and arrowhead selected in QI become creation defaults", () => {
   const model = createModel("A ---> B");
   const line = findTrace(model.traceMap, { type: "line", x: 2, y: 0, startDir: Dir.W });
   model.setSelection([line]);
@@ -160,7 +161,7 @@ A ===> B
 =====>`);
 });
 
-Deno.test("trace interaction: Alt-drag line creation selects the head terminus", () => {
+test("trace interaction: Alt-drag line creation selects the head terminus", () => {
   const model = createModel("");
   const interaction = interactions.createLineInteraction(true);
   const move = pointerInput(6, 0);
@@ -179,7 +180,7 @@ Deno.test("trace interaction: Alt-drag line creation selects the head terminus",
   assertEquals(head?.parent?.target, head);
 });
 
-Deno.test("trace interaction: a hub glyph selected in QI becomes the creation default", () => {
+test("trace interaction: a hub glyph selected in QI becomes the creation default", () => {
   const model = createModel("●");
   const hub = findTrace(model.traceMap, { type: "hub", x: 0, y: 0 });
   model.setSelection([hub]);
@@ -190,7 +191,7 @@ Deno.test("trace interaction: a hub glyph selected in QI becomes the creation de
   matchTraceMap(model.traceMap, "◎  ◎");
 });
 
-Deno.test("trace interaction: hub tool follows a drag", () => {
+test("trace interaction: hub tool follows a drag", () => {
   const model = createModel("");
   const interaction = interactions.createHubInteraction();
   const drag = pointerInput(4, 2);
@@ -205,7 +206,7 @@ Deno.test("trace interaction: hub tool follows a drag", () => {
   assertEquals({ type: hub?.type, x: hub?.x, y: hub?.y }, { type: "hub", x: 4, y: 2 });
 });
 
-Deno.test("trace interaction: box tool maintains an always-valid draft", () => {
+test("trace interaction: box tool maintains an always-valid draft", () => {
   const model = createModel("");
   const create = interactions.createBoxInteraction();
   model.beginMapEdit();
@@ -230,7 +231,7 @@ Deno.test("trace interaction: box tool maintains an always-valid draft", () => {
   assertEquals({ w: box?.w, h: box?.h }, { w: 6, h: 4 });
 });
 
-Deno.test("trace interaction: structure drag switches among valid hubs, lines, and boxes", () => {
+test("trace interaction: structure drag switches among valid hubs, lines, and boxes", () => {
   const model = createModel("");
   const create = interactions.createStructureInteraction(() => []);
   const move = (input: PointerInput) => (create.onMove!(input, model) as TraceBox[])[0];
@@ -273,7 +274,7 @@ Deno.test("trace interaction: structure drag switches among valid hubs, lines, a
   assertEquals(draft.path?.length, 4);
 });
 
-Deno.test("trace interaction: dragging an inline handle rewrites centered padding", () => {
+test("trace interaction: dragging an inline handle rewrites centered padding", () => {
   const model = createModel("[Spirit]");
   const inline = findTrace(model.traceMap, { type: "inline", x: 0, y: 0 });
   const resize = interactions.resizeTraceInteraction(inline, "e");
@@ -286,7 +287,7 @@ Deno.test("trace interaction: dragging an inline handle rewrites centered paddin
   assertEquals(model.projection.text, "[    Spirit    ]");
 });
 
-Deno.test("trace interaction: dragging a grid row handle resizes all selected cells", () => {
+test("trace interaction: dragging a grid row handle resizes all selected cells", () => {
   const model = createModel(`\
 ┌─────┬─────┐
 │     │     │
@@ -312,7 +313,7 @@ Deno.test("trace interaction: dragging a grid row handle resizes all selected ce
 └─────┴─────┘`);
 });
 
-Deno.test("trace interaction: text tool starts editing without creating a draft", () => {
+test("trace interaction: text tool starts editing without creating a draft", () => {
   const model = createModel("");
   let editCell: Loc | undefined;
 
@@ -325,7 +326,7 @@ Deno.test("trace interaction: text tool starts editing without creating a draft"
   assertEquals(model.traceMap.traces, []);
 });
 
-Deno.test("trace interaction: glyph tool creates selected text on mouse-up", () => {
+test("trace interaction: glyph tool creates selected text on mouse-up", () => {
   const model = createModel("");
 
   const [glyph] = interactions.createGlyphInteraction("●").onUp!(pointerInput(3, 2), model) ?? [];
@@ -338,7 +339,7 @@ Deno.test("trace interaction: glyph tool creates selected text on mouse-up", () 
   });
 });
 
-Deno.test("trace interaction: gesture click creates a hub while tool click creates a line", () => {
+test("trace interaction: gesture click creates a hub while tool click creates a line", () => {
   const hubModel = createModel("");
   const hubClick = pointerInput(2, 1);
   const [hub] = interactions.createLineInteraction(true).onUp!(hubClick, hubModel) ?? [];
@@ -350,7 +351,7 @@ Deno.test("trace interaction: gesture click creates a hub while tool click creat
   assertEquals(line?.type, "line");
 });
 
-Deno.test("trace interaction: moving a trace commits once and clicking selects the hit trace", () => {
+test("trace interaction: moving a trace commits once and clicking selects the hit trace", () => {
   const model = createModel("A");
   const text = findTrace(model.traceMap, { type: "text", x: 0, y: 0 });
   const interaction = interactions.moveTraceInteraction([text], text);
@@ -368,7 +369,7 @@ Deno.test("trace interaction: moving a trace commits once and clicking selects t
   assertEquals(interactions.moveTraceInteraction([text], text).onUp!(pointerInput(2, 1), model), [text]);
 });
 
-Deno.test("trace interaction: partial selection can expand the map left and up", () => {
+test("trace interaction: partial selection can expand the map left and up", () => {
   const model = createModel("A    B");
   const left = findTrace(model.traceMap, { type: "text", x: 0, y: 0 });
   model.setSelection([left]);
@@ -381,7 +382,7 @@ Deno.test("trace interaction: partial selection can expand the map left and up",
   assertEquals({ x: left.x, y: left.y }, { x: -4, y: -3 });
 });
 
-Deno.test("trace interaction: moving beyond a tear follows both drag axes", () => {
+test("trace interaction: moving beyond a tear follows both drag axes", () => {
   const vertical = createModel(`\
 A
 
@@ -457,7 +458,7 @@ D     B`);
   assertEquals(offsetText.x, -4);
 });
 
-Deno.test("trace interaction: marquee renders, selects, adds, subtracts, and handles plain clicks", () => {
+test("trace interaction: marquee renders, selects, adds, subtracts, and handles plain clicks", () => {
   const model = createModel("A   B");
   const left = findTrace(model.traceMap, { type: "text", x: 0, y: 0 });
   const right = findTrace(model.traceMap, { type: "text", x: 4, y: 0 });
@@ -498,7 +499,7 @@ Deno.test("trace interaction: marquee renders, selects, adds, subtracts, and han
   assertEquals(clicked, undefined);
 });
 
-Deno.test("trace interaction: moving line vertices commits endpoint and turn edits", () => {
+test("trace interaction: moving line vertices commits endpoint and turn edits", () => {
   const model = createModel(`\
 A ───┐
      │

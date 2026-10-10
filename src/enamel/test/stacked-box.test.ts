@@ -1,4 +1,6 @@
-import { assertAlmostEquals, assertEquals, assertObjectMatch } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals, partialDeepStrictEqual as assertObjectMatch } from "node:assert/strict";
+import { assertAlmostEquals } from "../../test/assertions.ts";
 import { parseTopos } from "../../topos.ts";
 import { buildSvgTree } from "../svg.ts";
 import { CHAR_HEIGHT, CHAR_WIDTH, nodeRenderedBoundsPx } from "../geometry.ts";
@@ -11,7 +13,7 @@ import { resolveStack } from "../stacked-box.ts";
  * Verifies local asset injection, inner-contracted double outlines, and pattern propagation.
  */
 
-Deno.test("stacked: local pattern injection and unique IDs", () => {
+test("stacked: local pattern injection and unique IDs", () => {
   const input = `\
 ┌───┐
 │ H │
@@ -40,7 +42,7 @@ Deno.test("stacked: local pattern injection and unique IDs", () => {
   );
 });
 
-Deno.test("stacked: inner-scaling for .double", () => {
+test("stacked: inner-scaling for .double", () => {
   const input = `\
 ┌───┐
 │ D │
@@ -68,7 +70,7 @@ Deno.test("stacked: inner-scaling for .double", () => {
   });
 });
 
-Deno.test("stacked: particles decorate only the face layer", () => {
+test("stacked: particles decorate only the face layer", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ D │   │ S │
@@ -91,7 +93,7 @@ Deno.test("stacked: particles decorate only the face layer", () => {
   assertEquals(particleCount("tp-stack"), 1);
 });
 
-Deno.test("stacked: isolated fill for .double", () => {
+test("stacked: isolated fill for .double", () => {
   const input = `\
 ┌───┐
 │ D │
@@ -117,7 +119,7 @@ Deno.test("stacked: isolated fill for .double", () => {
   assertEquals(innerStyle.includes("fill: url(#tpc-pat-hatch-"), true, "Inner layer should receive the pattern fill");
 });
 
-Deno.test("stacked: symbol pattern propagation via --tp-local-fill", () => {
+test("stacked: symbol pattern propagation via --tp-local-fill", () => {
   const input = `\
 ┌───┐
 │ F │
@@ -139,7 +141,7 @@ Deno.test("stacked: symbol pattern propagation via --tp-local-fill", () => {
   assertEquals(style.includes("--tp-local-fill: url(#tpc-pat-hatch-"), true);
 });
 
-Deno.test("stacked: shared filters for .double layers", () => {
+test("stacked: shared filters for .double layers", () => {
   const input = `\
 ┌───┐
 │ C │
@@ -161,7 +163,7 @@ Deno.test("stacked: shared filters for .double layers", () => {
   assertEquals(attrs(inner).filter, undefined);
 });
 
-Deno.test("stacked: traced stack centers its label in the rendered face", () => {
+test("stacked: traced stack centers its label in the rendered face", () => {
   const input = `\
    ┌────────────────┐    
    │ ┌──────────────┴─┐  
@@ -189,7 +191,7 @@ Deno.test("stacked: traced stack centers its label in the rendered face", () => 
   assertEquals(attrs(label)["dominant-baseline"], "hanging");
 });
 
-Deno.test("stacked: annotating a plain box does not move its centered label", () => {
+test("stacked: annotating a plain box does not move its centered label", () => {
   const ast = parseTopos(`\
 ┌───────┐  ┌───────┐
 │       │  │       │
@@ -210,7 +212,7 @@ Deno.test("stacked: annotating a plain box does not move its centered label", ()
   assertEquals(attrs(labelB).y, attrs(labelA).y);
 });
 
-Deno.test("stacked: edges meet the rendered face perimeter", () => {
+test("stacked: edges meet the rendered face perimeter", () => {
   const ast = parseTopos(`\
 ┌───────┐      ┌───────┐
 │       │      │       │
@@ -237,7 +239,7 @@ Deno.test("stacked: edges meet the rendered face perimeter", () => {
   assertAlmostEquals(Number(coordinates.at(-1)!.split(",")[0]), targetBounds.x - 2, 0.02);
 });
 
-Deno.test("stacked: Enamel resolves numeric stack properties", () => {
+test("stacked: Enamel resolves numeric stack properties", () => {
   const ast = parseTopos(`\
 ┌───┐
 │ A │
@@ -252,7 +254,7 @@ Deno.test("stacked: Enamel resolves numeric stack properties", () => {
   assertEquals(node.stack, undefined);
 });
 
-Deno.test("stacked: stack=0 suppresses traced stack geometry", () => {
+test("stacked: stack=0 suppresses traced stack geometry", () => {
   const ast = parseTopos(`\
    ┌────────────────┐
    │ ┌──────────────┴─┐
@@ -270,7 +272,7 @@ Deno.test("stacked: stack=0 suppresses traced stack geometry", () => {
   assertEquals(resolveStack(node), undefined);
 });
 
-Deno.test("stacked: semantic symbols replication", () => {
+test("stacked: semantic symbols replication", () => {
   const input = `\
    ┌────────────────┐
    │ ┌──────────────┴─┐

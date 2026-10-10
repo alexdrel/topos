@@ -1,7 +1,12 @@
-import { assertEquals, assertStringIncludes } from "@std/assert";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertStringIncludes } from "../../src/test/assertions.ts";
 import { runCli } from "./cli-runner.ts";
 
-Deno.test("Inspect: annotated JSON replaces SVG on stdout", async () => {
+test("Inspect: annotated JSON replaces SVG on stdout", async () => {
   const result = await runCli(["-", "--inspect"], { stdin: "[inspect]" });
 
   assertEquals(result.code, 0);
@@ -22,10 +27,10 @@ Deno.test("Inspect: annotated JSON replaces SVG on stdout", async () => {
   assertEquals(result.stdout.includes("<?xml"), false);
 });
 
-Deno.test("Inspect: annotated JSON preserves SVG file output", async () => {
-  const directory = await Deno.makeTempDir();
+test("Inspect: annotated JSON preserves SVG file output", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "topos-test-"));
   const input = `${directory}/source.topos`;
-  await Deno.writeTextFile(input, "[inspect]");
+  await writeFile(input, "[inspect]");
 
   try {
     const result = await runCli([input, "--inspect"], { cwd: directory });
@@ -36,15 +41,15 @@ Deno.test("Inspect: annotated JSON preserves SVG file output", async () => {
       "inspect",
     );
     assertStringIncludes(
-      await Deno.readTextFile(`${directory}/source.svg`),
+      await readFile(`${directory}/source.svg`, "utf8"),
       "<svg",
     );
   } finally {
-    await Deno.remove(directory, { recursive: true });
+    await rm(directory, { recursive: true });
   }
 });
 
-Deno.test("Inspect: default Eidos is omitted while annotations remain", async () => {
+test("Inspect: default Eidos is omitted while annotations remain", async () => {
   const result = await runCli(["-", "--inspect"], {
     stdin: "## AREA\n\n:legend\n{AREA}: red",
   });
@@ -57,7 +62,7 @@ Deno.test("Inspect: default Eidos is omitted while annotations remain", async ()
   assertEquals(region.eidos, { color: "red" });
 });
 
-Deno.test("Inspect: edge endpoints reference canonical tree nodes", async () => {
+test("Inspect: edge endpoints reference canonical tree nodes", async () => {
   const result = await runCli(["-", "--inspect"], {
     stdin: "[A]──>[B]",
   });
@@ -84,7 +89,7 @@ Deno.test("Inspect: edge endpoints reference canonical tree nodes", async () => 
   assertEquals(root.edges[0].polyline, "3,0 5,0");
 });
 
-Deno.test("Inspect: split edges reference their canonical stem", async () => {
+test("Inspect: split edges reference their canonical stem", async () => {
   const result = await runCli(["-", "--inspect"], {
     stdin: "[A]──┬──>[B]\n     └──>[C]",
   });
@@ -96,7 +101,7 @@ Deno.test("Inspect: split edges reference their canonical stem", async () => {
   assertEquals(result.stdout.includes('"isPort": false'), false);
 });
 
-Deno.test("Inspect: formatted prose keeps only meaningful segments", async () => {
+test("Inspect: formatted prose keeps only meaningful segments", async () => {
   const result = await runCli(["-", "--inspect"], {
     stdin: `\
 ┌──────────────────┐

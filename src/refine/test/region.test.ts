@@ -1,17 +1,17 @@
-import { assertEquals } from "@std/assert";
-import { testParseDiagram, testCompleted, flushPendingWrites, matchChild } from "../../test/test-utils.ts";
+import { parseDiagram } from "../refine.ts";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { matchChild } from "../../test/test-utils.ts";
 import { parseTopos } from "../../topos.ts";
 
-Deno.test.afterEach(flushPendingWrites);
-
-Deno.test("Region: outer borders grow beyond content without shifting it", (t) => {
+test("Region: outer borders grow beyond content without shifting it", () => {
   const map = `\
 ## R
 ┌───┐
 │ A │
 └───┘`;
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
   const region = matchChild(diagram.root, { label: "R", nodeType: "region" }, 0, 1);
   const box = matchChild(region, { label: "A", nodeType: "box" }, 0, 1);
 
@@ -20,10 +20,9 @@ Deno.test("Region: outer borders grow beyond content without shifting it", (t) =
   assertEquals(region.x + region.w, box.x + box.w + 1);
   assertEquals(diagram.root.x, -1);
   assertEquals(diagram.root.x + diagram.root.w, region.x + region.w);
-  testCompleted(t);
 });
 
-Deno.test("Region: outer left margin is independent of content spacing", (t) => {
+test("Region: outer left margin is independent of content spacing", () => {
   for (
     const map of [
       `\
@@ -36,16 +35,15 @@ Deno.test("Region: outer left margin is independent of content spacing", (t) => 
 [ A ]       [ B ]       [ C ]`,
     ]
   ) {
-    const diagram = testParseDiagram(t, map);
+    const diagram = parseDiagram(map);
     const region = matchChild(diagram.root, { label: "R1", nodeType: "region" }, 0, 1);
     const boxA = region.children.find((node) => node.label === "A" && node.nodeType === "inline")!;
 
     assertEquals(boxA.x - region.x, 1);
   }
-  testCompleted(t);
 });
 
-Deno.test("Region: explicit zero viewport padding does not preserve source indentation", () => {
+test("Region: explicit zero viewport padding does not preserve source indentation", () => {
   const diagram = parseTopos(`\
 :map
   ## R1
@@ -59,7 +57,7 @@ Deno.test("Region: explicit zero viewport padding does not preserve source inden
   assertEquals(boxA.x - region.x, 1);
 });
 
-Deno.test("Region: authored space between its label and content is preserved", () => {
+test("Region: authored space between its label and content is preserved", () => {
   const diagram = parseTopos(`\
 ## R1
 
@@ -71,7 +69,7 @@ Deno.test("Region: authored space between its label and content is preserved", (
   assertEquals(boxA.x - region.x, 3);
 });
 
-Deno.test("Region: explicit selectors promote root notes into regions", (t) => {
+test("Region: explicit selectors promote root notes into regions", () => {
   const map = `\
 ## EARTH                                          ## MARS
 
@@ -79,7 +77,7 @@ Deno.test("Region: explicit selectors promote root notes into regions", (t) => {
    │ Mission Control │---------------------------->│ Mars Orbiter │
    └─────────────────┘                             └──────────────┘`;
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
   const earth = matchChild(diagram.root, { label: "EARTH", nodeType: "region" }, 0, 2);
   const mars = matchChild(diagram.root, { label: "MARS", nodeType: "region" }, 1, 2);
   const mission = matchChild(
@@ -92,10 +90,9 @@ Deno.test("Region: explicit selectors promote root notes into regions", (t) => {
 
   assertEquals(earth.h > mission.y + mission.h - earth.y, true);
   assertEquals(mars.h > orbiter.y + orbiter.h - mars.y, true);
-  testCompleted(t);
 });
 
-Deno.test("Region: 2x2 layouts assign lower-row content to lower regions", (t) => {
+test("Region: 2x2 layouts assign lower-row content to lower regions", () => {
   const map = `\
 ## EARTH ORBIT                                     ## MARS ORBIT
 
@@ -124,17 +121,16 @@ Deno.test("Region: 2x2 layouts assign lower-row content to lower regions", (t) =
   │  └────────┘  └────────┘  │
   └──────────────────────────┘`;
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
   const earth = matchChild(diagram.root, { label: "EARTH", nodeType: "region" }, 2, 4);
   const mars = matchChild(diagram.root, { label: "MARS", nodeType: "region" }, 3, 4);
 
   matchChild(earth, { label: "Mission Control", nodeType: "box" }, 0, 2);
   matchChild(earth, { label: "OBSERVATORIES", nodeType: "box" }, 1, 2);
   matchChild(mars, { label: "ROVERS", nodeType: "box" }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Region: 2x2 layouts with skewed labels 1", (t) => {
+test("Region: 2x2 layouts with skewed labels 1", () => {
   const map = `\
 ## EARTH ORBIT                                     ## MARS ORBIT
             ┌────────┐                          ┌──────────────────┐
@@ -164,7 +160,7 @@ Deno.test("Region: 2x2 layouts with skewed labels 1", (t) => {
     └──────────────────────────┘
 `;
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
   const _earthOrbit = matchChild(diagram.root, { label: "EARTH ORBIT", nodeType: "region" }, 0, 4);
   const _marsOrbit = matchChild(diagram.root, { label: "MARS ORBIT", nodeType: "region" }, 1, 4);
   const earth = matchChild(diagram.root, { label: "EARTH", nodeType: "region" }, 2, 4);
@@ -173,10 +169,9 @@ Deno.test("Region: 2x2 layouts with skewed labels 1", (t) => {
   matchChild(earth, { label: "OBSERVATORIES", nodeType: "box" }, 0, 2);
   matchChild(earth, { label: "Mission Control", nodeType: "box" }, 1, 2);
   matchChild(mars, { label: "ROVERS", nodeType: "box" }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Region: 2x2 layouts with skewed labels 2", (t) => {
+test("Region: 2x2 layouts with skewed labels 2", () => {
   const map = `\
 ## EARTH ORBIT                                     ## MARS ORBIT
             ┌────────┐                          ┌──────────────────┐
@@ -206,7 +201,7 @@ Deno.test("Region: 2x2 layouts with skewed labels 2", (t) => {
     └──────────────────────────┘
 `;
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
   const _earthOrbit = matchChild(diagram.root, { label: "EARTH ORBIT", nodeType: "region" }, 0, 4);
   const _marsOrbit = matchChild(diagram.root, { label: "MARS ORBIT", nodeType: "region" }, 1, 4);
   const earth = matchChild(diagram.root, { label: "EARTH", nodeType: "region" }, 2, 4);
@@ -215,10 +210,9 @@ Deno.test("Region: 2x2 layouts with skewed labels 2", (t) => {
   matchChild(earth, { label: "OBSERVATORIES", nodeType: "box" }, 0, 2);
   matchChild(earth, { label: "Mission Control", nodeType: "box" }, 1, 2);
   matchChild(mars, { label: "ROVERS", nodeType: "box" }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Region: pure column layouts resolve correctly", (t) => {
+test("Region: pure column layouts resolve correctly", () => {
   const map = `\
           ## EARTH                                       ## MARS
 
@@ -236,16 +230,15 @@ Deno.test("Region: pure column layouts resolve correctly", (t) => {
                                                              │              │
                                                              └──────────────┘`;
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
   const earth = matchChild(diagram.root, { label: "EARTH", nodeType: "region" }, 0, 2);
   const mars = matchChild(diagram.root, { label: "MARS", nodeType: "region" }, 1, 2);
 
   matchChild(earth, { label: "Mission Control", nodeType: "box" }, 0, 1);
   matchChild(mars, { label: "Mars Orbiter", nodeType: "box" }, 0, 2);
-  testCompleted(t);
 });
 
-Deno.test("Region: vertical layouts leave top header notes outside the first region", (t) => {
+test("Region: vertical layouts leave top header notes outside the first region", () => {
   const map = `\
   # Top-Level Header Note
 
@@ -255,7 +248,7 @@ Deno.test("Region: vertical layouts leave top header notes outside the first reg
    │  xkcd   │
    └─────────┘`;
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
   const filters = matchChild(diagram.root, { label: "FILTERS", nodeType: "region" }, 0, 1);
 
   // The header note is promoted to root labels and is outside the FILTERS region.
@@ -264,10 +257,9 @@ Deno.test("Region: vertical layouts leave top header notes outside the first reg
 
   // The xkcd box should be inside the FILTERS region.
   matchChild(filters, { label: "xkcd", nodeType: "box" });
-  testCompleted(t);
 });
 
-Deno.test("Region: distinct vertically stacked regions do not merge on large maps", (t) => {
+test("Region: distinct vertically stacked regions do not merge on large maps", () => {
   const map = `\
   # Top-Level Header Note
 
@@ -283,7 +275,7 @@ Deno.test("Region: distinct vertically stacked regions do not merge on large map
    │  file   │
    └─────────┘` + "\n".repeat(80);
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
 
   // We expect exactly 2 distinct region children stacked vertically.
   const filters = matchChild(diagram.root, { label: "FILTERS", nodeType: "region" }, 0, 2);
@@ -291,10 +283,9 @@ Deno.test("Region: distinct vertically stacked regions do not merge on large map
 
   assertEquals(filters.y < symbols.y, true);
   assertEquals(filters.y + filters.h <= symbols.y, true);
-  testCompleted(t);
 });
 
-Deno.test("Region: mixed-columns layout allows grids and varying widths", (t) => {
+test("Region: mixed-columns layout allows grids and varying widths", () => {
   const map = `\
   ## R1
 
@@ -324,7 +315,7 @@ Deno.test("Region: mixed-columns layout allows grids and varying widths", (t) =>
 
      [ U ]  [ V ]     [ W ]`;
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
 
   // 15 regions: R1, R2.A/B, R3.A/B, R4, R5.A/B/C, R6.A/B/C, R7.A/B/C
   const r1 = matchChild(diagram.root, { label: "R1", nodeType: "region" }, 0, 15);
@@ -395,11 +386,9 @@ Deno.test("Region: mixed-columns layout allows grids and varying widths", (t) =>
   matchChild(r3a, { label: "I", nodeType: "inline" }, 1, 2);
   matchChild(r3b, { label: "J", nodeType: "inline" }, 0, 2);
   matchChild(r3b, { label: "K", nodeType: "inline" }, 1, 2);
-
-  testCompleted(t);
 });
 
-Deno.test("Region: mixed-columns layout with shifted column seed", (t) => {
+test("Region: mixed-columns layout with shifted column seed", () => {
   const map = `\
   ## R1
 
@@ -413,7 +402,7 @@ Deno.test("Region: mixed-columns layout with shifted column seed", (t) => {
 
      [ H ] [ I ]   [ J ] [ K ]`;
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
 
   const r2a = matchChild(diagram.root, { label: "R2.A", nodeType: "region" }, 1, 5);
   const r2b = matchChild(diagram.root, { label: "R2.B", nodeType: "region" }, 2, 5);
@@ -429,17 +418,15 @@ Deno.test("Region: mixed-columns layout with shifted column seed", (t) => {
   matchChild(r3a, { label: "I", nodeType: "inline" }, 1, 2);
   matchChild(r3b, { label: "J", nodeType: "inline" }, 0, 2);
   matchChild(r3b, { label: "K", nodeType: "inline" }, 1, 2);
-
-  testCompleted(t);
 });
 
-Deno.test("Region: mixed-columns layout where box is pushed to right column", (t) => {
+test("Region: mixed-columns layout where box is pushed to right column", () => {
   const map = `\
   ## R2.A      ## R2.B
 
      [ D ] [ E ]   [ F ] [ G ]`;
 
-  const diagram = testParseDiagram(t, map);
+  const diagram = parseDiagram(map);
 
   const r2a = matchChild(diagram.root, { label: "R2.A", nodeType: "region" }, 0, 2);
   const r2b = matchChild(diagram.root, { label: "R2.B", nodeType: "region" }, 1, 2);
@@ -451,6 +438,4 @@ Deno.test("Region: mixed-columns layout where box is pushed to right column", (t
   matchChild(r2b, { label: "E", nodeType: "inline" }, 0, 3);
   matchChild(r2b, { label: "F", nodeType: "inline" }, 1, 3);
   matchChild(r2b, { label: "G", nodeType: "inline" }, 2, 3);
-
-  testCompleted(t);
 });

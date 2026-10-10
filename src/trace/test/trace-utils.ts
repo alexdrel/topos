@@ -1,14 +1,12 @@
-import { assert, assertEquals, assertObjectMatch } from "@std/assert";
+import { deepStrictEqual as assertEquals, ok as assert, partialDeepStrictEqual as assertObjectMatch } from "node:assert/strict";
 import { DeepPartial } from "../../test/test-utils.ts";
 import type { TraceBox, TraceMap } from "../types.ts";
 import { projectTracesToGrid } from "../../ink/ink.ts";
 import { Direction } from "../../geo.ts";
 
 export function assertArrayMatch<T>(actual: T[], expected: DeepPartial<T>[]) {
-  assertObjectMatch(
-    actual as unknown as Record<PropertyKey, unknown>,
-    expected as unknown as Record<PropertyKey, unknown>,
-  );
+  assert(actual.length >= expected.length, "Not enough array elements to match");
+  expected.forEach((pattern, index) => assertObjectMatch(actual[index], pattern));
 }
 
 export type TraceKey =

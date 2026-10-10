@@ -36,7 +36,7 @@ export interface LegendRule {
 const SELECTOR_OPERATOR = /^(?:>>|<~>|<~|~>|~~|<->|<-|->|--|-|\^|[>,])/;
 const SELECTOR_BRACKET = /^(?:\[[^\]]*\]|\([^)]*\)|<[^>]*>|\{[^}]*\})/;
 const SELECTOR_PATTERN = /^(?:\*|%[^%]*%|"[^"]*")/;
-const SELECTOR_LABEL = /^(?:(?!->|--|~>|~~|-\*)[^\s,><:[\]()\"{}+^])+/;
+const SELECTOR_LABEL = /^(?:(?!->|--|~>|~~|-\*)[^\s,><:[\]()"{}+^])+/;
 
 const ANNOTATION_TOKEN = /^(?: ?= ?|, ?|\s+|"[^"]*"|[^\s,=]+)/;
 const ANNOTATION_KEY = /^[\w-]+$/;

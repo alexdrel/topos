@@ -29,10 +29,10 @@ trigger: always_on
 
 - **VISUAL TESTS FIRST (CRITICAL)**: Tests that operate on diagrams (parsing, refining, annotating, mutations, etc.) MUST use ASCII diagrams (`parseDiagram`/`matchDiagram`). **DO NOT construct AST objects manually in tests.** Manual construction frequently misses obvious visual gaps and regression cases. If you are testing anything beyond simple standalone helpers, write an ASCII diagram.
 - **ASCII Template Literals**: Always start ASCII diagram test literals with a backslash `\` (e.g., ``const input = `\``). This prevents an unintended leading newline and ensures exact coordinate alignment.
-- **Standard Assertions**: Always use the `@std/assert` bare specifier. Never use direct URLs or specific file imports for assertions.
-- **Core Dependency Imports**: In the distributable core runtime under `src/`, declare external dependencies as versioned aliases in `deno.json` and import them through bare specifiers. Tooling, scripts, and editor code may use direct `npm:`, `jsr:`, or URL specifiers when appropriate.
-- **Test Task**: Run `deno task test` (which combines linter/tsc/unittests) to validate all changes.
-- **CLI Rendering and Inspection**: Use `deno run -A package-topos/cli.ts input.topos -o tmp/input.svg --inspect > tmp/input.inspect.json` to render a diagram and inspect the resolved node hierarchy, connections, formatting, visual intent, and compact geometry in one pass. Prefer the inspection JSON over raw SVG markup when understanding or repairing a diagram, but keep the `.topos` text as the source of truth. The inspection shape is intentionally unstable; do not treat incidental fields as a public contract.
+- **Standard Assertions**: Use `node:assert/strict` for standard assertions and `src/test/assertions.ts` for shared assertions without a direct Node equivalent. Tests use `node:test`.
+- **Core Dependency Imports**: Declare external dependencies in `package.json` and import them through bare specifiers.
+- **Test Task**: Run `npm test` (which combines TypeScript checking, Oxlint, and Node unit tests) to validate all changes.
+- **CLI Rendering and Inspection**: Use `npm run --silent cli -- input.topos -o tmp/input.svg --inspect > tmp/input.inspect.json` to render a diagram and inspect the resolved node hierarchy, connections, formatting, visual intent, and compact geometry in one pass. `--silent` keeps npm's script banner out of redirected output. Prefer the inspection JSON over raw SVG markup when understanding or repairing a diagram, but keep the `.topos` text as the source of truth. The inspection shape is intentionally unstable; do not treat incidental fields as a public contract.
 
 ## 5. Safe Development & VCS Rules
 

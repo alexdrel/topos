@@ -1,9 +1,10 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { traceMap } from "../../../../src/trace/trace-map.ts";
 import { createHub, createLabel, createText, deleteTrace, reconcileLabels, setHubTraceGlyph, setLabel } from "../../mutate.ts";
 import { findTrace, matchTraceMap } from "../../../../src/trace/test/trace-utils.ts";
 
-Deno.test("trace: hub glyph and label mutations", () => {
+test("trace: hub glyph and label mutations", () => {
   const state = traceMap(`\
   ◎ Top
 `);
@@ -46,7 +47,7 @@ Deno.test("trace: hub glyph and label mutations", () => {
   matchTraceMap(state, "");
 });
 
-Deno.test("trace: left-labeled hub mutations and roundtrips", () => {
+test("trace: left-labeled hub mutations and roundtrips", () => {
   const state = traceMap(`\
    Bottom ◎
 `);
@@ -70,7 +71,7 @@ Deno.test("trace: left-labeled hub mutations and roundtrips", () => {
       Top ◇`);
 });
 
-Deno.test("trace: create hub trace with label", () => {
+test("trace: create hub trace with label", () => {
   const state = traceMap("");
   const hub = createHub(state, { x: 2, y: 1 }, "◎");
   createLabel(state, hub, "Server");
@@ -78,7 +79,7 @@ Deno.test("trace: create hub trace with label", () => {
   ◎ Server`);
 });
 
-Deno.test("trace: reconcile label with a pathless hub", () => {
+test("trace: reconcile label with a pathless hub", () => {
   const state = traceMap("");
   const hub = createHub(state, { x: 2, y: 1 }, "◎");
   const text = createText(state, { x: 4, y: 1 }, "Server");

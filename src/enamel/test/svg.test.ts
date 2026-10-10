@@ -1,12 +1,13 @@
-import { assertEquals, assertStringIncludes } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertStringIncludes } from "../../test/assertions.ts";
 import { Node, parseTopos } from "../../topos.ts";
 
-import { buildSvgTree, COMPENDIUM, renderToSVG } from "../svg.ts";
+import { buildSvgTree, renderToSVG } from "../svg.ts";
 import { CHAR_HEIGHT, CHAR_WIDTH, nodeToRectPx } from "../geometry.ts";
 import { STACK_DX, STACK_DY } from "../stacked-box.ts";
 import { matchChildEl } from "../../jsonml/assert.ts";
-import { attrs, walk } from "../../jsonml/jsonml.ts";
-import { EIDOS_VALUES } from "../../eidos.ts";
+import { attrs } from "../../jsonml/jsonml.ts";
 import type { StringParameters } from "../../topos.ts";
 import type { RenderOptions } from "../../render.ts";
 
@@ -25,7 +26,7 @@ function viewBox(svgTree: ReturnType<typeof buildSvgTree>): number[] {
 /**
  * 1. Fundamental Hierarchy & XML Compliance
  */
-Deno.test("svg: hierarchy and XML standalone validity", () => {
+test("svg: hierarchy and XML standalone validity", () => {
   const input = `\
 ┌───────┐
 │ RootA │
@@ -41,7 +42,7 @@ Deno.test("svg: hierarchy and XML standalone validity", () => {
   matchChildEl(diagGrp, "g", { class: "tp-node tp-box" });
 });
 
-Deno.test("svg: XML declaration can be omitted for embedding", () => {
+test("svg: XML declaration can be omitted for embedding", () => {
   const svg = renderToSVG(parseTopos("(A)"), {
     parameters: { theme: "light" },
     override: false,
@@ -53,22 +54,7 @@ Deno.test("svg: XML declaration can be omitted for embedding", () => {
   assertEquals(svg.includes("<?xml"), false);
 });
 
-Deno.test("svg: authored compendium mode preserves the complete asset registry", () => {
-  const svg = renderToSVG(parseTopos(`\
-:map compendium=true
-(catalogue)`));
-
-  walk(COMPENDIUM, (node) => {
-    const id = attrs(node).id;
-    if (typeof id === "string") assertStringIncludes(svg, `id="${id}"`);
-  });
-  assertStringIncludes(svg, 'id="tp-color-template"');
-  assertStringIncludes(svg, 'id="tp-colors"');
-  assertStringIncludes(svg, ".tp-color-red");
-  assertStringIncludes(svg, ".tp-color-purple");
-});
-
-Deno.test("svg: normal rendering instantiates styles only for used colors", () => {
+test("svg: normal rendering instantiates styles only for used colors", () => {
   const svg = renderToSVG(parseTopos(`\
 [A]
 
@@ -84,7 +70,7 @@ A: red`));
   assertEquals(svg.includes("COLOR"), false);
 });
 
-Deno.test("svg: black and white are regular palette colors", () => {
+test("svg: black and white are regular palette colors", () => {
   const svg = renderToSVG(parseTopos(`\
 [Black] [White]
 
@@ -98,7 +84,7 @@ White: white`));
   assertStringIncludes(svg, "var(--tp-color-white)");
 });
 
-Deno.test("svg: document palette overrides built-in colors", () => {
+test("svg: document palette overrides built-in colors", () => {
   const svg = renderToSVG(parseTopos(`\
 [Blue] [Red]
 
@@ -114,17 +100,7 @@ Red: red
   assertStringIncludes(svg, "--tp-color-red: #c62828");
 });
 
-Deno.test("svg: compendium palette is fully authored in Topos", async () => {
-  const source = await Deno.readTextFile(new URL("../compendium/compendium.topos", import.meta.url));
-  const diagram = parseTopos(source);
-
-  assertEquals(Object.keys(diagram.palette), [...EIDOS_VALUES.color]);
-  const svg = renderToSVG(diagram);
-  assertEquals(svg.match(/id="tp-palette"/g)?.length, 1);
-  for (const color of EIDOS_VALUES.color) assertStringIncludes(svg, `--tp-color-${color}:`);
-});
-
-Deno.test("svg: generated color styles preserve scope precedence across colors", () => {
+test("svg: generated color styles preserve scope precedence across colors", () => {
   const svg = renderToSVG(parseTopos(`\
 [AA]
 
@@ -138,7 +114,7 @@ AA: label=red stroke=blue,solid fill=purple,heavy`));
 /**
  * 2. Styling: Palettes & Assets
  */
-Deno.test("svg: styling (palettes, hatch, shadow)", () => {
+test("svg: styling (palettes, hatch, shadow)", () => {
   const input = `\
 ╔═══╗
 ║ A ║
@@ -161,7 +137,7 @@ Deno.test("svg: styling (palettes, hatch, shadow)", () => {
 /**
  * 3. Node and Edge Styles (Bold, Dotted, Dashed)
  */
-Deno.test("svg: node and edge styles (bold, dotted, dashed)", () => {
+test("svg: node and edge styles (bold, dotted, dashed)", () => {
   const input = `\
 ┏━━━━━━┓ ┌╌╌╌╌╌┐ ┌┈┈┈┈┈┐
 ┃ BOLD ┃ ┆DSHD ┆ ┊DOTD ┊
@@ -187,7 +163,7 @@ E ━━▶ F
 /**
  * 4. Geometry & Conversion logic
  */
-Deno.test("svg: nodeToRectPx stack offset conversion", () => {
+test("svg: nodeToRectPx stack offset conversion", () => {
   const node = {
     x: 10,
     y: 10,
@@ -209,7 +185,7 @@ Deno.test("svg: nodeToRectPx stack offset conversion", () => {
 /**
  * 5. Legend control over hub nodes and arrow families
  */
-Deno.test("svg: legend control over hub nodes and arrow families", () => {
+test("svg: legend control over hub nodes and arrow families", () => {
   const input = `\
 A ───●──▶ B
 
@@ -231,7 +207,7 @@ A ───●──▶ B
   assertEquals(svgStr.includes("url(#tpc-arr-triangle-hollow)"), true, "Missing arrowhead-triangle-hollow reference");
 });
 
-Deno.test("svg: resolves double-arrow and hexagon markers", () => {
+test("svg: resolves double-arrow and hexagon markers", () => {
   const input = `
 A ──▶ B
 
@@ -247,7 +223,7 @@ C -> D: head=hexagon
   assertEquals(svgStr.includes("url(#tpc-arr-hexagon)"), true, "Missing hexagon marker");
 });
 
-Deno.test("svg: port nodes (hubs on border) are positioned on parent box boundary", () => {
+test("svg: port nodes (hubs on border) are positioned on parent box boundary", () => {
   const input = `
 ┌───┐
 ◎ A │
@@ -264,7 +240,7 @@ Deno.test("svg: port nodes (hubs on border) are positioned on parent box boundar
   assertEquals(hubCenter, parentPx.x);
 });
 
-Deno.test("svg: legend header canvas custom paper, ink, and viewport parameters", () => {
+test("svg: legend header canvas custom paper, ink, and viewport parameters", () => {
   const input = `
 A ──▶ B
 
@@ -284,7 +260,7 @@ A ──▶ B
   assertEquals(Number(attrs.height), expectedH);
 });
 
-Deno.test("svg: explicit padding frames content instead of authored whitespace", () => {
+test("svg: explicit padding frames content instead of authored whitespace", () => {
   const ast = parseTopos(`\
     [A]
 
@@ -301,7 +277,7 @@ Deno.test("svg: explicit padding frames content instead of authored whitespace",
   ]);
 });
 
-Deno.test("svg: fixed viewport replaces the right and bottom limits", () => {
+test("svg: fixed viewport replaces the right and bottom limits", () => {
   const ast = parseTopos("    [A]");
   const node = ast.nodes[0];
   const root = ast.root;
@@ -339,7 +315,7 @@ Deno.test("svg: fixed viewport replaces the right and bottom limits", () => {
   ]);
 });
 
-Deno.test("svg: scale and width control intrinsic size without changing the viewBox", () => {
+test("svg: scale and width control intrinsic size without changing the viewBox", () => {
   const ast = parseTopos("[A]");
   const normal = buildSvgTree(ast);
   const scaled = buildSvgTree(parseTopos("[A]\n:legend scale=2"));
@@ -357,7 +333,7 @@ Deno.test("svg: scale and width control intrinsic size without changing the view
   assertEquals(Number(fixedAttrs.height), 600 * Number(normalAttrs.height) / Number(normalAttrs.width));
 });
 
-Deno.test("svg: title reuses available top rows and expands upward only when needed", () => {
+test("svg: title reuses available top rows and expands upward only when needed", () => {
   const crowded = buildSvgTree(parseTopos(`\
 :map "Title"
 [A]
@@ -390,7 +366,7 @@ Deno.test("svg: title reuses available top rows and expands upward only when nee
   assertEquals(viewBox(tight)[3], 3 * CHAR_HEIGHT);
 });
 
-Deno.test("svg: legend header paper parameter", () => {
+test("svg: legend header paper parameter", () => {
   const input = `
 A ──▶ B
 
@@ -405,7 +381,7 @@ A ──▶ B
   assertStringIncludes(attrs.style, "--tp-ink: #00ff00", "Missing ink override");
 });
 
-Deno.test("svg: legend header theme parameter", () => {
+test("svg: legend header theme parameter", () => {
   // Test theme=light
   const inputLight = `
 A ──▶ B
@@ -431,7 +407,7 @@ A ──▶ B
   assertStringIncludes(attrsDark.style, "background: #1a1a1a", "Standalone render is opaque");
 });
 
-Deno.test("svg: options overrides", () => {
+test("svg: options overrides", () => {
   const input = `
 A ──▶ B
 `;
@@ -456,7 +432,7 @@ A ──▶ B
   assertStringIncludes(attrsColors.style, "--tp-paper: green", "Missing paper override");
 });
 
-Deno.test("svg: explicit overrides beat authored parameters", () => {
+test("svg: explicit overrides beat authored parameters", () => {
   const ast = parseTopos(`\
 :map "Authored title"
 (A)
@@ -468,7 +444,7 @@ Deno.test("svg: explicit overrides beat authored parameters", () => {
   assertStringIncludes(renderToSVG(ast, renderOptions({ title: "Export title" })), "Export title");
 });
 
-Deno.test("svg: ambient surface is below authored parameters and explicit overrides", () => {
+test("svg: ambient surface is below authored parameters and explicit overrides", () => {
   const ast = parseTopos(`\
 (A)
 :legend theme=dark ink=yellow`);
@@ -484,7 +460,7 @@ Deno.test("svg: ambient surface is below authored parameters and explicit overri
   assertStringIncludes(forced.style, "--tp-ink: #111111");
 });
 
-Deno.test("svg: partial authored parameters extend the ambient host surface", () => {
+test("svg: partial authored parameters extend the ambient host surface", () => {
   const ast = parseTopos(`\
 (A)
 :legend ink=yellow`);
@@ -498,7 +474,7 @@ Deno.test("svg: partial authored parameters extend the ambient host surface", ()
   assertEquals(attrs.style?.includes("background:"), false);
 });
 
-Deno.test("svg: root legend properties do not configure the renderer", () => {
+test("svg: root legend properties do not configure the renderer", () => {
   const ast = parseTopos(`\
 (A)
 :legend

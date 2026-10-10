@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { Dir } from "../../../src/geo.ts";
 import { findTrace } from "../../../src/trace/test/trace-utils.ts";
 import { traceMap } from "../../../src/trace/trace-map.ts";
@@ -17,7 +18,7 @@ function selectionContext(scale = 1) {
   };
 }
 
-Deno.test("slate draw: selected line uses ellipses for termini and square handles for turns", () => {
+test("slate draw: selected line uses ellipses for termini and square handles for turns", () => {
   const map = traceMap(`\
 A ───┐
      │
@@ -34,7 +35,7 @@ A ───┐
   ]);
 });
 
-Deno.test("slate draw: selected box uses vertically padded bounds and resize handles", () => {
+test("slate draw: selected box uses vertically padded bounds and resize handles", () => {
   const map = traceMap(`\
 ┌───┐
 │   │
@@ -67,7 +68,7 @@ Deno.test("slate draw: selected box uses vertically padded bounds and resize han
   assertEquals(enlarged[1][1].height, 16);
 });
 
-Deno.test("slate draw: selected inline has horizontal resize handles", () => {
+test("slate draw: selected inline has horizontal resize handles", () => {
   const inline = findTrace(traceMap("[Spirit]"), { type: "inline", x: 0, y: 0 });
 
   const selection = drawSelection([inline], selectionContext());
@@ -75,7 +76,7 @@ Deno.test("slate draw: selected inline has horizontal resize handles", () => {
   assertEquals(selection.slice(1).map(([, attrs]) => attrs["data-handle"]), ["w", "e"]);
 });
 
-Deno.test("slate draw: multi-selection hides line handles and draws a selected terminus", () => {
+test("slate draw: multi-selection hides line handles and draws a selected terminus", () => {
   const map = traceMap("A ───▶ B");
   const line = findTrace(map, { type: "line", x: 2, y: 0, startDir: Dir.W });
 
@@ -87,7 +88,7 @@ Deno.test("slate draw: multi-selection hides line handles and draws a selected t
   ]);
 });
 
-Deno.test("slate draw: rectangular grid-cell selection has resize handles", () => {
+test("slate draw: rectangular grid-cell selection has resize handles", () => {
   const map = traceMap(`\
 ┌─────┬─────┐
 │  A  │  B  │
@@ -106,7 +107,7 @@ Deno.test("slate draw: rectangular grid-cell selection has resize handles", () =
   assertEquals(incomplete.some(([, attrs]) => attrs["data-handle"]), false);
 });
 
-Deno.test("slate draw: selected hub bounds include its label", () => {
+test("slate draw: selected hub bounds include its label", () => {
   const map = traceMap("●");
   const hub = findTrace(map, { type: "hub", x: 0, y: 0 });
   createLabel(map, hub, "Hi");
@@ -123,7 +124,7 @@ Deno.test("slate draw: selected hub bounds include its label", () => {
   }]]);
 });
 
-Deno.test("slate draw: selected unlabeled hub uses the terminus ellipse", () => {
+test("slate draw: selected unlabeled hub uses the terminus ellipse", () => {
   const hub = findTrace(traceMap("●"), { type: "hub", x: 0, y: 0 });
 
   const selection = drawSelection([hub], selectionContext());
@@ -135,7 +136,7 @@ Deno.test("slate draw: selected unlabeled hub uses the terminus ellipse", () => 
   }]]);
 });
 
-Deno.test("slate draw: marquee normalizes reverse drag and applies projection offset", () => {
+test("slate draw: marquee normalizes reverse drag and applies projection offset", () => {
   const marquee = createMarqueeEl({ x: 4, y: 3 }, { x: 2, y: 1 }, { charWidth: 10, charHeight: 20 }, { x: 1, y: 2 }, "subtract");
 
   assertEquals(marquee, ["rect", {

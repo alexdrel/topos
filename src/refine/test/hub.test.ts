@@ -1,21 +1,19 @@
-import { testParseDiagram, testCompleted, flushPendingWrites } from '../../test/test-utils.ts';
+import { parseDiagram } from "../refine.ts";
+import { test } from "node:test";
+
 import { matchChild, matchEdge } from '../../test/test-utils.ts';
-import { assertEquals } from "@std/assert";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { projectTracesToGrid } from "../../ink/ink.ts";
 
-
-Deno.test.afterEach(flushPendingWrites);
-
-Deno.test("Standalone Hub", (t) => {
+test("Standalone Hub", () => {
   const diagram = `\
     ●
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { nodeType: 'hub', glyph: '●', label: undefined }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Hub Resolution and Ghost Edge Pruning", (t) => {
+test("Hub Resolution and Ghost Edge Pruning", () => {
   const diagram = `\
 ●─────────▶●◀────────────●
            │
@@ -24,7 +22,7 @@ Deno.test("Hub Resolution and Ghost Edge Pruning", (t) => {
            ▼
            ●
 `;
-  const result = testParseDiagram(t, diagram);
+  const result = parseDiagram(diagram);
   const root = result.root;
 
   const leftHub = matchChild(root, { nodeType: "hub", glyph: "●" }, 0, 4);
@@ -36,28 +34,24 @@ Deno.test("Hub Resolution and Ghost Edge Pruning", (t) => {
   matchEdge(root, { source: leftHub, target: centerHub, direction: "uni" }, 0, 3);
   matchEdge(root, { source: rightHub, target: centerHub, direction: "uni" }, 1, 3);
   matchEdge(root, { source: centerHub, target: bottomHub, direction: "uni" }, 2, 3);
-
-  testCompleted(t);
 });
 
-Deno.test("Standalone Hub with label is promoted to a hub node", (t) => {
+test("Standalone Hub with label is promoted to a hub node", () => {
   const diagram = `\
 ● client
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { nodeType: 'hub', glyph: '●', label: 'client' }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Standalone Hub with label is promoted to a hub node", (t) => {
+test("Standalone Hub with label is promoted to a hub node", () => {
   const diagram = `\
 ● client
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchChild(root, { nodeType: 'hub', glyph: '●', label: 'client' }, 0, 1);
-  testCompleted(t);
 });
-Deno.test("Connected Hubs with Labels", (t) => {
+test("Connected Hubs with Labels", () => {
   const diagram = `\
   ◎ Top   
   │       
@@ -66,18 +60,16 @@ Deno.test("Connected Hubs with Labels", (t) => {
   ▼       
   ◇ Bottom
 `;
-  const result = testParseDiagram(t, diagram);
+  const result = parseDiagram(diagram);
   const root = result.root;
 
   const topHub = matchChild(root, { nodeType: 'hub', glyph: '◎', label: 'Top' }, 0, 2);
   const bottomHub = matchChild(root, { nodeType: 'hub', glyph: '◇', label: 'Bottom' }, 1, 2);
 
   matchEdge(root, { source: topHub, target: bottomHub, direction: 'uni' }, 0, 1);
-
-  testCompleted(t);
 });
 
-Deno.test("Hubs example: parses correctly with 5 hubs and 4 edges", (t) => {
+test("Hubs example: parses correctly with 5 hubs and 4 edges", () => {
   const diagram = `\
             ■ Top
             │
@@ -90,7 +82,7 @@ Deno.test("Hubs example: parses correctly with 5 hubs and 4 edges", (t) => {
             ◇ Bottom
 `;
 
-  const result = testParseDiagram(t, diagram);
+  const result = parseDiagram(diagram);
   const root = result.root;
 
   // Verify hubs using matchChild
@@ -113,11 +105,9 @@ Deno.test("Hubs example: parses correctly with 5 hubs and 4 edges", (t) => {
 
   // Verify that it roundtrips via traces
   assertEquals(projectTracesToGrid(result).text.trimEnd(), diagram.trimEnd());
-
-  testCompleted(t);
 });
 
-Deno.test("Hubs connected with space (read with hub glyphs as part of text traces)", (t) => {
+test("Hubs connected with space (read with hub glyphs as part of text traces)", () => {
   const diagram = `\
   ┌─▶ ◎ Top
   │        
@@ -126,15 +116,14 @@ Deno.test("Hubs connected with space (read with hub glyphs as part of text trace
   ▼        
   ◇ Bottom
 `;
-  const result = testParseDiagram(t, diagram);
+  const result = parseDiagram(diagram);
   const root = result.root;
   const topHub = matchChild(root, { nodeType: "hub", glyph: "◎", label: "Top" }, 0, 2);
   const bottomHub = matchChild(root, { nodeType: "hub", glyph: "◇", label: "Bottom" }, 1, 2);
   matchEdge(root, { source: topHub, target: bottomHub, direction: "bi" }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Hubs connected directly via line (read with hub glyphs as part of line trace)", (t) => {
+test("Hubs connected directly via line (read with hub glyphs as part of line trace)", () => {
   const diagram = `\
   ◎ Top   
   │       
@@ -143,31 +132,29 @@ Deno.test("Hubs connected directly via line (read with hub glyphs as part of lin
   │       
   ◇ Bottom
 `;
-  const result = testParseDiagram(t, diagram);
+  const result = parseDiagram(diagram);
   const root = result.root;
   const topHub = matchChild(root, { nodeType: "hub", glyph: "◎", label: "Top" }, 0, 2);
   const bottomHub = matchChild(root, { nodeType: "hub", glyph: "◇", label: "Bottom" }, 1, 2);
   matchEdge(root, { source: topHub, target: bottomHub, direction: "none" }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Hub on box boundary (port with label)", (t) => {
+test("Hub on box boundary (port with label)", () => {
   const diagram = `\
              ┌────┐
         ◀────□ A  │
              └────┘
 `;
-  const result = testParseDiagram(t, diagram);
+  const result = parseDiagram(diagram);
   const root = result.root;
   const boxNode = matchChild(root, { nodeType: "box", label: undefined }, 0, 1);
   const port = matchChild(boxNode, { nodeType: "hub", glyph: "□", label: "A" }, 0, 1);
   const edge = matchEdge(root, { source: port, direction: "uni" }, 0, 1);
   assertEquals(edge.source.glyph, "");
   assertEquals(projectTracesToGrid(result).text.trimEnd(), diagram.trimEnd());
-  testCompleted(t);
 });
 
-Deno.test("Box border hubs are named child nodes without edges", (t) => {
+test("Box border hubs are named child nodes without edges", () => {
   const diagram = `\
         ┌─inet_srv──┐
         │           │
@@ -178,7 +165,7 @@ Deno.test("Box border hubs are named child nodes without edges", (t) => {
         □  ftp      │
         │           │
         └───────────┘`;
-  const result = testParseDiagram(t, diagram);
+  const result = parseDiagram(diagram);
   const root = result.root;
   const boxNode = matchChild(root, { nodeType: "box", label: "inet_srv" }, 0, 1);
 
@@ -187,22 +174,20 @@ Deno.test("Box border hubs are named child nodes without edges", (t) => {
   matchChild(boxNode, { nodeType: "hub", glyph: "□", label: "ftp" }, 2, 3);
   assertEquals(result.edges.length, 0);
   assertEquals(projectTracesToGrid(result).text.trimEnd(), diagram.trimEnd());
-  testCompleted(t);
 });
 
-Deno.test("Hubs connected with space (label to the left of glyph)", (t) => {
+test("Hubs connected with space (label to the left of glyph)", () => {
   const diagram = `\
   A ◎ ◀─▶ B ◇
 `;
-  const result = testParseDiagram(t, diagram);
+  const result = parseDiagram(diagram);
   const root = result.root;
   const topHub = matchChild(root, { nodeType: "hub", glyph: "◎", label: "A" }, 0, 2);
   const bottomHub = matchChild(root, { nodeType: "hub", glyph: "◇", label: "B" }, 1, 2);
   matchEdge(root, { source: topHub, target: bottomHub, direction: "bi" }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Hub with 3-direction intersection of lines", (t) => {
+test("Hub with 3-direction intersection of lines", () => {
   const diagram = `\
       │    
       │    
@@ -211,11 +196,10 @@ Deno.test("Hub with 3-direction intersection of lines", (t) => {
   │       │
   ▼       ▼
 `;
-  const result = testParseDiagram(t, diagram);
+  const result = parseDiagram(diagram);
   const root = result.root;
   const hubNode = matchChild(root, { nodeType: "hub", glyph: "◆" }, 0, 1);
   matchEdge(root, { target: hubNode, direction: "none" }, 0, 3);
   matchEdge(root, { source: hubNode, direction: "uni" }, 1, 3);
   matchEdge(root, { source: hubNode, direction: "uni" }, 2, 3);
-  testCompleted(t);
 });

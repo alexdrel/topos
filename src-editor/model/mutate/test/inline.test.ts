@@ -1,9 +1,10 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { traceMap } from "../../../../src/trace/trace-map.ts";
 import { findTrace, matchTraceMap } from "../../../../src/trace/test/trace-utils.ts";
 import { reshapeInlineTrace, resizeInlineTrace } from "../../mutate.ts";
 
-Deno.test("trace: inline resize centers content with authored spaces", () => {
+test("trace: inline resize centers content with authored spaces", () => {
   const state = traceMap(`\
 [Spirit]
 [Opportunity]`);
@@ -18,7 +19,7 @@ Deno.test("trace: inline resize centers content with authored spaces", () => {
 [  Opportunity ]`);
 });
 
-Deno.test("trace: inline resize removes padding and respects the content minimum", () => {
+test("trace: inline resize removes padding and respects the content minimum", () => {
   const state = traceMap("[  Spirit ]");
   const inline = findTrace(state, { type: "inline", x: 0, y: 0 });
 

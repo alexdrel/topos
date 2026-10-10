@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "typescript/no-explicit-any": "error",
+    "no-unused-vars": ["error", {
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_",
+      "caughtErrorsIgnorePattern": "^_"
+    }],
+    "no-unused-expressions": ["error", {
+      "allowShortCircuit": true,
+      "allowTernary": true
+    }]
+  },
+  "env": {
+    "browser": true
+  },
+  "ignorePatterns": [
+    "**/*.gen.ts",
+    "**/*.gen.json",
+    "**/dist/**",
+    "**/out/**",
+    "tmp/**"
+  ]
+}

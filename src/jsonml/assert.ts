@@ -1,4 +1,4 @@
-import { assertEquals, assertObjectMatch } from "@std/assert";
+import { deepStrictEqual as assertEquals, partialDeepStrictEqual as assertObjectMatch } from "node:assert/strict";
 import { Attrs, attrs, children, tag, textContent, XmlEl } from "./jsonml.ts";
 
 // ─── Query / Test Helpers ─────────────────────────────────────────────────────

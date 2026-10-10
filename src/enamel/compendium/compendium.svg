@@ -4,8 +4,8 @@
     <!--═══════════════════════════════════════════════════════════════
      compendium.svg  —  Topos / Enamel element library
      Definitions: style · filters · patterns · markers · symbols
-     Gallery: edit compendium.topos, then run deno task gen:compendium
-     Definitions: edit this defs block, then run deno task gen:defs
+     Gallery: edit compendium.topos, then run npm run gen:compendium
+     Definitions: edit this defs block, then run npm run gen:defs
      ═══════════════════════════════════════════════════════════════-->
 
     <style id="tp-palette">
@@ -750,93 +750,93 @@
         <path d="M 390.8,540 L 588.4,540" class="tp tpc-shape" marker-end="url(#tpc-arr-triangle)"/>
       </g>
       <g class="tp tp-edge tp-block tp-chevron">
-        <polygon class="tp tpc-shape" points="131.6,621.0 909.0,621.0 909.0,576.0 916.0,576.0 900.0,554.0 884.0,576.0 891.0,576.0 891.0,603.0 131.6,603.0"/>
+        <polygon class="tp tpc-shape" points="129.6,621.0 909.0,621.0 909.0,576.0 916.0,576.0 900.0,554.0 884.0,576.0 891.0,576.0 891.0,603.0 129.6,603.0"/>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.012100677637947725;0.012100677637947725" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.012071463061323033;0.012071463061323033" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.04574890676636519;0.04574890676636519" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.04572170698812841;0.04572170698812841" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.07939713589478244;0.07939713589478244" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.07937195091493357;0.07937195091493357" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.1130453650231999;0.1130453650231999" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.11302219484173895;0.11302219484173895" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.14669359415161737;0.14669359415161737" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.14667243876854433;0.14667243876854433" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.18034182328003484;0.18034182328003484" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.1803226826953497;0.1803226826953497" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.21399005240845206;0.21399005240845206" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.21397292662215486;0.21397292662215486" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.24763828153686954;0.24763828153686954" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.24762317054896024;0.24762317054896024" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.281286510665287;0.281286510665287" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.2812734144757656;0.2812734144757656" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.31493473979370423;0.31493473979370423" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.31492365840257075;0.31492365840257075" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.3485829689221217;0.3485829689221217" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.34857390232937613;0.34857390232937613" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.3822311980505391;0.3822311980505391" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.3822241462561815;0.3822241462561815" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.4158794271789564;0.4158794271789564" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.41587439018298666;0.41587439018298666" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.44952765630737385;0.44952765630737385" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.44952463410979204;0.44952463410979204" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.4831758854357913;0.4831758854357913" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.4831748780365974;0.4831748780365974" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.5168241145642086;0.5168241145642086" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.5168251219634026;0.5168251219634026" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.5504723436926261;0.5504723436926261" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.550475365890208;0.550475365890208" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.5841205728210436;0.5841205728210436" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.5841256098170133;0.5841256098170133" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.6177688019494608;0.6177688019494608" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.6177758537438185;0.6177758537438185" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.6514170310778783;0.6514170310778783" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.6514260976706239;0.6514260976706239" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.6850652602062958;0.6850652602062958" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.6850763415974293;0.6850763415974293" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.718713489334713;0.718713489334713" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.7187265855242344;0.7187265855242344" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.7523617184631304;0.7523617184631304" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.7523768294510398;0.7523768294510398" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.7860099475915479;0.7860099475915479" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.7860270733778452;0.7860270733778452" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.8196581767199651;0.8196581767199651" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.8196773173046503;0.8196773173046503" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.8533064058483826;0.8533064058483826" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.8533275612314557;0.8533275612314557" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.8869546349768;0.8869546349768" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.8869778051582611;0.8869778051582611" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.9206028641052173;0.9206028641052173" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.9206280490850662;0.9206280490850662" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 131.6,612 L 900,612 L 900,554" dur="28.694444444444443s" repeatCount="indefinite" rotate="auto" keyPoints="0.954251093233635;0.954251093233635" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 129.6,612 L 900,612 L 900,554" dur="28.76388888888889s" repeatCount="indefinite" rotate="auto" keyPoints="0.9542782930118718;0.9542782930118718" keyTimes="0;1" calcMode="linear"/>
         </use>
       </g>
     </g>
@@ -1470,81 +1470,81 @@
         </use>
       </g>
       <g class="tp tp-edge tp-block tp-chevron tp-animate" style="--tp-animation-delay: -2.08s; --tp-animation-duration: 5s">
-        <polygon class="tp tpc-shape" points="246.8,3093.0 909.0,3093.0 909.0,3048.0 916.0,3048.0 900.0,3026.0 884.0,3048.0 891.0,3048.0 891.0,3075.0 246.8,3075.0"/>
+        <polygon class="tp tpc-shape" points="244.8,3093.0 909.0,3093.0 909.0,3048.0 916.0,3048.0 900.0,3026.0 884.0,3048.0 891.0,3048.0 891.0,3075.0 244.8,3075.0"/>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-10.26s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-10.29s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-11.25s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-11.28s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-12.24s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-12.27s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-13.22s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-13.26s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-14.21s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-14.25s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-15.2s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-15.24s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-16.19s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-16.23s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-17.17s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-17.22s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-18.16s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-18.21s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-19.15s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-19.2s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-20.14s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-20.2s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-21.13s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-21.19s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-22.11s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-22.18s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-23.1s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-23.17s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-24.09s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-24.16s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-25.08s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-25.15s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-26.06s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-26.14s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-27.05s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-27.13s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-28.04s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-28.12s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-29.03s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-29.11s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-30.02s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-30.1s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-31s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-31.09s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-31.99s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-32.08s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-32.98s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-33.07s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
         <use x="-10" y="-10" width="20" height="20" href="#tpc-particle-chevron" class="tp tpc-particle tp-chevron">
-          <animateMotion path="M 246.8,3084 L 900,3084 L 900,3026" dur="24.694444444444443s" begin="-33.97s" repeatCount="indefinite" rotate="auto" keyPoints="0.014060742407199098;0.9859392575928009" keyTimes="0;1" calcMode="linear"/>
+          <animateMotion path="M 244.8,3084 L 900,3084 L 900,3026" dur="24.76388888888889s" begin="-34.06s" repeatCount="indefinite" rotate="auto" keyPoints="0.014021312394840156;0.9859786876051598" keyTimes="0;1" calcMode="linear"/>
         </use>
       </g>
     </g>

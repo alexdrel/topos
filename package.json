@@ -1,0 +1,67 @@
+{
+  "name": "topos-workspace",
+  "version": "0.5.6",
+  "description": "Development workspace for Topos, a plain-text ASCII diagram engine, visual editor, CLI, and VS Code extension.",
+  "private": true,
+  "type": "module",
+  "author": "Alex Drel",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexdrel/topos.git"
+  },
+  "homepage": "https://github.com/alexdrel/topos#readme",
+  "bugs": {
+    "url": "https://github.com/alexdrel/topos/issues"
+  },
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "cli": "node --enable-source-maps --import @oxc-node/core/register package-topos/cli.ts",
+    "serve": "vite",
+    "fmt": "dprint fmt",
+    "fmt:check": "dprint check",
+    "lint": "oxlint --deny-warnings src src-editor www vscode-topos/src package-topos scripts vite.config.ts",
+    "check:ext": "tsc --project vscode-topos/tsconfig.json",
+    "check": "tsc && npm run check:ext",
+    "gen:defs": "node scripts/extract-defs.ts",
+    "gen:compendium": "npm run gen:defs && npm run package:build && node package-topos/dist/topos.js src/enamel/compendium/compendium.topos -o src/enamel/compendium/compendium.svg",
+    "build": "node scripts/build.ts",
+    "ext:compile": "npm run build",
+    "ext:package": "node scripts/package-extension.ts",
+    "ext:watch": "node scripts/build.ts --watch",
+    "package:build": "node scripts/build.ts --package",
+    "test:unit": "node --import @oxc-node/core/register --test --test-reporter=dot",
+    "test": "npm run check && npm run lint && npm run test:unit",
+    "coverage": "c8 node --import @oxc-node/core/register --test --test-reporter=dot"
+  },
+  "c8": {
+    "reporter": [
+      "html",
+      "text-summary"
+    ],
+    "reports-dir": "coverage",
+    "include": [
+      "src/**/*.ts",
+      "src-editor/**/*.ts",
+      "package-topos/*.ts"
+    ]
+  },
+  "devDependencies": {
+    "@dprint/json": "^0.25.2",
+    "@dprint/markdown": "^0.26.0",
+    "@dprint/typescript": "^0.96.1",
+    "@oxc-node/core": "^0.1.5",
+    "@types/node": "^24.19.2",
+    "@types/vscode": "^1.140.0",
+    "@vscode/vsce": "^4.0.0",
+    "@xmldom/xmldom": "^0.9.12",
+    "c8": "^12.0.0",
+    "dprint": "^0.61.1",
+    "esbuild": "^0.28.2",
+    "oxlint": "^1.87.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
+  }
+}

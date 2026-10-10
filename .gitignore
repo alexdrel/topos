@@ -1,8 +1,7 @@
 # Node.js dependencies
 node_modules/
 
-# Deno/Vite cache and dependencies
-.deno/
+# Vite cache
 .vite/
 
 # Vite build output
@@ -35,9 +34,6 @@ private/
 
 # Snapshots
 tests/corpus/snapshots/
-
-# Viz failed test artifacts
-examples/failed-tests/**/*.topos
 
 # Extension artifacts and work files
 vscode-topos/out/

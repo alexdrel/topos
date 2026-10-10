@@ -1,122 +1,110 @@
-import { testParseDiagram, testCompleted, flushPendingWrites } from '../../test/test-utils.ts';
+import { parseDiagram } from "../refine.ts";
+import { test } from "node:test";
+
 import { matchChild, matchEdge, matchNode } from "../../test/test-utils.ts";
-import { assertEquals } from "@std/assert";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { Dir } from "../../geo.ts";
 
-Deno.test.afterEach(flushPendingWrites);
-
-
-Deno.test("Simple Right Arrow ->", (t) => {
+test("Simple Right Arrow ->", () => {
   const diagram = `
     A -> B
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'uni', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Simple Left Arrow <-", (t) => {
+test("Simple Left Arrow <-", () => {
   const diagram = `
     B <- A
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'uni', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Double Arrow <->", (t) => {
+test("Double Arrow <->", () => {
   const diagram = `
     A <-> B
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'bi', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Windy Arrow", (t) => {
+test("Windy Arrow", () => {
   const diagram = `
     A
     |
     +---> B
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'uni', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Windy Arrow 1", (t) => {
+test("Windy Arrow 1", () => {
   const diagram = `
     +---> B
     |
  A -+
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'uni', source: "A", target: "B" });
-  testCompleted(t);
 });
 
 
-Deno.test("Arrow with Horizontal Label Span", (t) => {
+test("Arrow with Horizontal Label Span", () => {
   const diagram = `
     --- status -->
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const edge = matchEdge(root, { direction: 'uni' });
   assertEquals(edge.polyline.length, 2, "Simplified polyline for straight arrow should have 2 points");
-  testCompleted(t);
 });
 
-Deno.test("Unicode Right Arrow ─►", (t) => {
+test("Unicode Right Arrow ─►", () => {
   const diagram = `
     A ─► B
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'uni', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Unicode Left Arrow ◄─", (t) => {
+test("Unicode Left Arrow ◄─", () => {
   const diagram = `
     B ◄─ A
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'uni', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Unicode Bidirectional ◄─►", (t) => {
+test("Unicode Bidirectional ◄─►", () => {
   const diagram = `
     A ◄─► B
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'bi', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Unicode Double Chevron »", (t) => {
+test("Unicode Double Chevron »", () => {
   const diagram = `
     A «──» B
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'bi', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Unicode UnDirectional", (t) => {
+test("Unicode UnDirectional", () => {
   const diagram = `
     A ───── B
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'none', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Half-wires resolve only through connectable termini", (t) => {
+test("Half-wires resolve only through connectable termini", () => {
   const diagram = `\
 [A]──[B]
 [A]╶╴[B]
 [A]◀─╴╶─⯈[B]`;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
 
   matchEdge(root, { source: "A", target: "B" }, 0, 4);
 
@@ -137,23 +125,20 @@ Deno.test("Half-wires resolve only through connectable termini", (t) => {
   assertEquals(right.source.dir, Dir.None);
   assertEquals(right.source.node, undefined);
   assertEquals(right.target.node?.label, "B");
-
-  testCompleted(t);
 });
 
-Deno.test("Unicode UnDirectional Path with Junctions", (t) => {
+test("Unicode UnDirectional Path with Junctions", () => {
   const diagram = `
 ┌──A 
 │ 
 └B
     `;
 
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'none', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Unicode Arrows with Junction Start ├─►", (t) => {
+test("Unicode Arrows with Junction Start ├─►", () => {
   const diagram = `
 ┌──────────┐      ┌───────┐
 │          │      │       │
@@ -163,7 +148,7 @@ Deno.test("Unicode Arrows with Junction Start ├─►", (t) => {
      │                │
      └────────────────┘
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
 
   // Verify Boxes
   const aa = matchChild(root, { label: "AA", nodeType: 'box', x: 0, y: 1, w: 12, h: 5 }, 0, 2);
@@ -171,32 +156,29 @@ Deno.test("Unicode Arrows with Junction Start ├─►", (t) => {
 
   matchEdge(root, { direction: 'uni', source: aa, target: bb }, 0, 2);
   matchEdge(root, { direction: 'uni', source: bb, target: aa }, 1, 2);
-  testCompleted(t);
 });
 
-Deno.test("Complex Circuit with Junctions", (t) => {
+test("Complex Circuit with Junctions", () => {
   const diagram = `
        +--------+
        |        |
     A -+        +-> B
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'uni', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Unicode Complex Path with Corners", (t) => {
+test("Unicode Complex Path with Corners", () => {
   const diagram = `
     A
     │
     ╰──►B
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchEdge(root, { direction: 'uni', source: "A", target: "B" });
-  testCompleted(t);
 });
 
-Deno.test("Complex Box-to-Box Connection", (t) => {
+test("Complex Box-to-Box Connection", () => {
   const diagram = `
        ┌───────────────┐
        │               │
@@ -213,17 +195,16 @@ Deno.test("Complex Box-to-Box Connection", (t) => {
 `;
 
   // Parse
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
 
   // Verify Boxes
   const aa = matchChild(root, { label: "AA", x: 2, y: 4, w: 12, h: 6 }, 0, 2);
   const bb = matchChild(root, { label: "BB", x: 29, y: 5, w: 15, h: 5 }, 1, 2);
 
   matchEdge(root, { direction: 'uni', source: aa, target: bb });
-  testCompleted(t);
 });
 
-Deno.test("Spiral", (t) => {
+test("Spiral", () => {
   const diagram = `
 ┌───────────────────────T 
 │ ┌─────────────────────┐ 
@@ -239,16 +220,15 @@ Deno.test("Spiral", (t) => {
 │ └───────────────────┘ │ 
 └───────────────────────┘ 
   `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   // The incomplete spiral is not a box; remnants are note nodes with undirected edges.
   const T = matchChild(root, { nodeType: "note", label: "T" }, 0, 2);
   const X = matchChild(root, { nodeType: "note", label: "X" }, 1, 2);
   matchEdge(root, { direction: 'none', source: T, target: X });
-  testCompleted(t);
 });
 
 
-Deno.test("Internal Label vs Edge Target Promotion Clash", (t) => {
+test("Internal Label vs Edge Target Promotion Clash", () => {
   const diagram = `
 ┌──────┐            
 │  A   │            
@@ -263,7 +243,7 @@ Deno.test("Internal Label vs Edge Target Promotion Clash", (t) => {
        │           │
        └───────────┘
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
 
   // Box A
   const a = matchChild(root, { label: "A", nodeType: 'box' }, 0, 2);
@@ -274,18 +254,16 @@ Deno.test("Internal Label vs Edge Target Promotion Clash", (t) => {
 
   // Edge should ideally point to note B, and B should not be promoted to label
   matchEdge(root, { source: a, target: b, direction: 'uni' });
-
-  testCompleted(t);
 });
 
-Deno.test("Narrow Corners (A -> B via corners)", (t) => {
+test("Narrow Corners (A -> B via corners)", () => {
   const diagram = `
 A  ┐ ┌ C 
    │ │    
    │ │    
 B  ┘ └ D 
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
 
   const a = matchChild(root, { label: "A", nodeType: 'note', $links: 1 }, 0, 4);
   const c = matchChild(root, { label: "C", nodeType: 'note' }, 1, 4);
@@ -295,24 +273,21 @@ B  ┘ └ D
   // Edge should point to note B, and A should not be promoted to label
   matchEdge(root, { source: a, target: b, direction: 'none' }, 0, 2);
   matchEdge(root, { source: c, target: d, direction: 'none' }, 1, 2);
-
-  testCompleted(t);
 });
 
 
-Deno.test("Vertical wire crossing horizontal text does not split label", (t) => {
+test("Vertical wire crossing horizontal text does not split label", () => {
   const diagram = `\
   │
 hello
   │
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   assertEquals(root.children.length, 0);
   matchEdge(root, { label: 'hello' });
-  testCompleted(t);
 });
 
-Deno.test("Edges: LCA distribution", (t) => {
+test("Edges: LCA distribution", () => {
   const diagram = `
 ╭──────────────── Outer ────────────────╮
 │                                       │
@@ -326,7 +301,7 @@ Deno.test("Edges: LCA distribution", (t) => {
 │                                       │
 ╰───────────────────────────────────────╯
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   matchNode(root, { $children: 1, $edges: 0 });
 
   const outer = matchChild(root, { label: "Outer", $edges: 0, $children: 1 }, 0, 1);
@@ -335,40 +310,37 @@ Deno.test("Edges: LCA distribution", (t) => {
   const b = matchChild(inner, { label: "B" }, 1 /* second B */, 2);
 
   matchEdge(inner, { direction: 'uni', source: a, target: b }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Edges: gap label association", (t) => {
+test("Edges: gap label association", () => {
   const diagram = `
 ┌───────┐                         ┌────────┐
 │  Src  ├────────── Foo ─────────▶│  Dest  │
 └───────┘                         └────────┘
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const src = matchChild(root, { label: "Src", $children: 0 }, 0, 2);
   const dest = matchChild(root, { label: "Dest", $children: 0 }, 1, 2);
 
   matchEdge(root, { label: "Foo", source: src, target: dest }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Edges: port blocking", (t) => {
+test("Edges: port blocking", () => {
   const diagram = `
 ┌───┐             ┌────────┐             ┌───┐
 │ A │------------>│ Middle │<------------│ B │
 └───┘             └────────┘             └───┘
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const a = matchChild(root, { label: "A" }, 0, 3);
   const middle = matchChild(root, { label: "Middle" }, 1, 3);
   const b = matchChild(root, { label: "B" }, 2, 3);
 
   matchEdge(root, { direction: 'uni', source: a, target: middle }, 0, 2);
   matchEdge(root, { direction: 'uni', source: b, target: middle }, 1, 2);
-  testCompleted(t);
 });
 
-Deno.test("Edges: directionality", (t) => {
+test("Edges: directionality", () => {
   const cases = [
     {
       diag: `
@@ -400,16 +372,15 @@ Deno.test("Edges: directionality", (t) => {
   ];
 
   for (const c of cases) {
-    const root = testParseDiagram(t, c.diag).root;
+    const root = parseDiagram(c.diag).root;
     const a = matchChild(root, { label: "A" }, 0, 2);
     const b = matchChild(root, { label: "B" }, 1, 2);
 
     matchEdge(root, { direction: c.dir, source: c.reverse ? b : a, target: c.reverse ? a : b }, 0, 1);
   }
-  testCompleted(t);
 });
 
-Deno.test("Edges: embedded vertical arrowhead", (t) => {
+test("Edges: embedded vertical arrowhead", () => {
   const diagram = `
 ┌──────┐
 │  A   │
@@ -420,29 +391,27 @@ Deno.test("Edges: embedded vertical arrowhead", (t) => {
        │   B   │
        └───────┘
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const a = matchChild(root, { label: "A" }, 0, 2);
   const b = matchChild(root, { label: "B" }, 1, 2);
 
   matchEdge(root, { direction: 'uni', source: a, target: b }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Edges: embedded horizontal arrowhead", (t) => {
+test("Edges: embedded horizontal arrowhead", () => {
   const diagram = `
 ┌───┐      ┌───┐
 │ A ├──────▶ B │
 └───┘      └───┘
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const a = matchChild(root, { label: "A" }, 0, 2);
   const b = matchChild(root, { label: "B" }, 1, 2);
 
   matchEdge(root, { direction: 'uni', source: a, target: b }, 0, 1);
-  testCompleted(t);
 });
 
-Deno.test("Edges: embedded arrowhead on complex path", (t) => {
+test("Edges: embedded arrowhead on complex path", () => {
   const diagram = `
           ┌────────────────┐
           │                │
@@ -451,11 +420,10 @@ Deno.test("Edges: embedded arrowhead on complex path", (t) => {
 │  A   ◇──┘   │   B   ◀────┘
 └──────┘      └───────┘
     `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const a = matchChild(root, { label: "A" }, 0, 2);
   const b = matchChild(root, { label: "B" }, 1, 2);
   const port = matchChild(a, { nodeType: "hub" }, 0, 1);
 
   matchEdge(root, { direction: 'uni', source: port, target: b }, 0, 1);
-  testCompleted(t);
 });

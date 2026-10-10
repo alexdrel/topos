@@ -1,19 +1,9 @@
-import { assert, assertEquals, assertObjectMatch } from "@std/assert";
+import { deepStrictEqual as assertEquals, ok as assert, partialDeepStrictEqual as assertObjectMatch } from "node:assert/strict";
 import { renderToText } from "../ink/ast-ink.ts";
 import { Edge, MapAST, MapLabel, Node, Terminus, TraceKind } from "../topos.ts";
-import { parseDiagram, ParseOptions } from "../refine/refine.ts";
-import { captureFailedCase } from "./failure-capture.ts";
 import { traceMap } from "../trace/trace-map.ts";
 
-export { flushPendingWrites, testCompleted } from "./failure-capture.ts";
-
-export function testParseDiagram(context: Deno.TestContext, text: string, options: ParseOptions = {}) {
-  captureFailedCase(text, context);
-  return parseDiagram(text, options);
-}
-
-export function testTraceMap(context: Deno.TestContext, text: string, filterOut: TraceKind[] = ["label", "terminus"]) {
-  captureFailedCase(text, context);
+export function testTraceMap(text: string, filterOut: TraceKind[] = ["label", "terminus"]) {
   const traces = traceMap(text).traces;
   return traces.filter((x) => !filterOut.includes(x.type));
 }

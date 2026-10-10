@@ -1,4 +1,4 @@
-// deno-fmt-ignore-file
+// dprint-ignore-file
 
 import { borders, compareByArea, contains, type Loc, midpoint, type Rect, simplifyPath } from "../../geo.ts";
 import { isBordered, type TraceBox, type TraceMap } from "../../trace/types.ts";

@@ -1,8 +1,13 @@
-import { assertEquals, assertStringIncludes } from "@std/assert";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertStringIncludes } from "../../src/test/assertions.ts";
 import packageJson from "../package.json" with { type: "json" };
 import { runCli } from "./cli-runner.ts";
 
-Deno.test("CLI: no arguments show help without reading stdin", async () => {
+test("CLI: no arguments show help without reading stdin", async () => {
   const result = await runCli([]);
 
   assertEquals(result.code, 0);
@@ -12,7 +17,7 @@ Deno.test("CLI: no arguments show help without reading stdin", async () => {
   assertEquals(result.stderr, "");
 });
 
-Deno.test("CLI: explicit stdin writes clean SVG to stdout", async () => {
+test("CLI: explicit stdin writes clean SVG to stdout", async () => {
   const result = await runCli(["-", "-d", "-t"], { stdin: "[ stdin ]" });
 
   assertEquals(result.code, 0);
@@ -20,10 +25,10 @@ Deno.test("CLI: explicit stdin writes clean SVG to stdout", async () => {
   assertEquals(result.stderr, "");
 });
 
-Deno.test("CLI: trailing dash writes file input to stdout", async () => {
-  const directory = await Deno.makeTempDir();
+test("CLI: trailing dash writes file input to stdout", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "topos-test-"));
   const input = `${directory}/source.topos`;
-  await Deno.writeTextFile(input, "[ stdout ]");
+  await writeFile(input, "[ stdout ]");
 
   try {
     const result = await runCli([input, "-"], { cwd: directory });
@@ -32,14 +37,14 @@ Deno.test("CLI: trailing dash writes file input to stdout", async () => {
     assertStringIncludes(result.stdout, "<?xml");
     assertEquals(result.stderr, "");
   } finally {
-    await Deno.remove(directory, { recursive: true });
+    await rm(directory, { recursive: true });
   }
 });
 
-Deno.test("CLI: file input derives output in the current directory", async () => {
-  const directory = await Deno.makeTempDir();
+test("CLI: file input derives output in the current directory", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "topos-test-"));
   const input = `${directory}/source.topos`;
-  await Deno.writeTextFile(input, "[ file ]");
+  await writeFile(input, "[ file ]");
 
   try {
     const result = await runCli([input], { cwd: directory });
@@ -47,16 +52,16 @@ Deno.test("CLI: file input derives output in the current directory", async () =>
     assertEquals(result.code, 0);
     assertStringIncludes(result.stderr, "Rendered");
     assertStringIncludes(
-      await Deno.readTextFile(`${directory}/source.svg`),
+      await readFile(`${directory}/source.svg`, "utf8"),
       "<svg",
     );
   } finally {
-    await Deno.remove(directory, { recursive: true });
+    await rm(directory, { recursive: true });
   }
 });
 
-Deno.test("CLI: output and render parameters use explicit syntax", async () => {
-  const directory = await Deno.makeTempDir();
+test("CLI: output and render parameters use explicit syntax", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "topos-test-"));
   const output = `${directory}/result.svg`;
 
   try {
@@ -74,13 +79,13 @@ Deno.test("CLI: output and render parameters use explicit syntax", async () => {
 
     assertEquals(result.code, 0);
     assertStringIncludes(result.stderr, `to ${output}`);
-    assertStringIncludes(await Deno.readTextFile(output), "<svg");
+    assertStringIncludes(await readFile(output, "utf8"), "<svg");
   } finally {
-    await Deno.remove(directory, { recursive: true });
+    await rm(directory, { recursive: true });
   }
 });
 
-Deno.test("CLI: failures are concise", async () => {
+test("CLI: failures are concise", async () => {
   const result = await runCli(["missing.topos"]);
 
   assertEquals(result.code, 1);
@@ -88,7 +93,7 @@ Deno.test("CLI: failures are concise", async () => {
   assertEquals(result.stderr.includes("    at "), false);
 });
 
-Deno.test("CLI: contradictory shortcuts are rejected", async () => {
+test("CLI: contradictory shortcuts are rejected", async () => {
   const result = await runCli(["-", "-l", "-d"], { stdin: "box" });
 
   assertEquals(result.code, 1);

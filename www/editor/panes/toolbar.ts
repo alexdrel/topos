@@ -122,16 +122,11 @@ export function initToolbar(config: ToolbarConfig): ToolbarApi {
     return await response.text();
   }
 
-  function parseCaseOption(path: string): { scope: "examples" | "failed"; label: string } {
+  function parseCaseOption(path: string): { label: string } {
     const segments = path.replace(/^\/+/, "").split("/");
-    const scope = segments[0] === "failed-tests" ? "failed" : "examples";
     const stem = (segments.at(-1) ?? "diagram.topos").replace(/\.topos$/i, "");
-    if (scope === "failed") {
-      const suite = (segments[1] ?? "").replace(/\.test$/i, "");
-      return { scope, label: suite ? `[failed] ${suite}: ${stem}` : `[failed] ${stem}` };
-    }
     const parent = segments.slice(0, -1).join("/");
-    return { scope, label: parent ? `${parent}: ${stem}` : stem };
+    return { label: parent ? `${parent}: ${stem}` : stem };
   }
 
   async function loadCaseLibrary() {
@@ -152,7 +147,6 @@ export function initToolbar(config: ToolbarConfig): ToolbarApi {
     if (!response.ok) return;
     const paths = (await response.json()) as string[];
     const entries = paths.map((path) => ({ id: path, ...parseCaseOption(path) })).sort((a, b) => {
-      if (a.scope !== b.scope) return a.scope === "failed" ? -1 : 1;
       return a.label.localeCompare(b.label);
     });
 

@@ -273,7 +273,7 @@ export function applyAnnotation(target: Entity, annotation: Annotation): void {
   for (const [key, value] of Object.entries(fields)) {
     if (value !== undefined) {
       const k = key as keyof Annotation;
-      // deno-lint-ignore no-explicit-any
+      // oxlint-disable-next-line typescript/no-explicit-any
       target[k] = value as any;
     }
   }

@@ -1,4 +1,6 @@
-import { assertEquals, assertAlmostEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertAlmostEquals } from "../../test/assertions.ts";
 
 import { buildSvgTree } from "../svg.ts";
 import { CHAR_HEIGHT, CHAR_WIDTH } from "../geometry.ts";
@@ -18,7 +20,7 @@ const attrNum = (el: XmlEl, key: string) => +(el[1][key] ?? NaN);
  * Grid Cell Box (x,y,w,h):
  *   Uses Proportional Scaling relative to parent.w and parent.h.
  */
-Deno.test("svg: grid cell geometry (divided evenly)", () => {
+test("svg: grid cell geometry (divided evenly)", () => {
   const diagram = `\
 ┌───┬───┐
 │ A │ B │
@@ -74,7 +76,7 @@ Deno.test("svg: grid cell geometry (divided evenly)", () => {
   assertAlmostEquals(attrNum(shapeA, "x") + attrNum(shapeA, "width"), attrNum(shapeB, "x"), 0.001);
 });
 
-Deno.test("svg: grid cell geometry (proportional 1x3)", () => {
+test("svg: grid cell geometry (proportional 1x3)", () => {
   const diagram = `\
 ┌───┬───┬───┐
 │ A │ B │ C │

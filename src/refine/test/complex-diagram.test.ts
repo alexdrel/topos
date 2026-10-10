@@ -1,12 +1,10 @@
-import { assert } from "@std/assert";
-import { testParseDiagram, testCompleted, flushPendingWrites } from '../../test/test-utils.ts';
+import { parseDiagram } from "../refine.ts";
+import { test } from "node:test";
+import { ok as assert } from "node:assert/strict";
 
 import { matchChild, matchEdge } from '../../test/test-utils.ts';
 
-Deno.test.afterEach(flushPendingWrites);
-
-
-Deno.test("Mars Rover Diagram", (t) => {
+test("Mars Rover Diagram", () => {
   const diagram = `\
         ## EARTH                                       ## MARS
 
@@ -25,7 +23,7 @@ Deno.test("Mars Rover Diagram", (t) => {
                                                              └──────────────┘
 `;
 
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const earth = matchChild(root, { label: "EARTH", nodeType: "region", $children: 1 }, 0, 2);
   const mars = matchChild(root, { label: "MARS", nodeType: "region", $children: 2 }, 1, 2);
 
@@ -38,10 +36,9 @@ Deno.test("Mars Rover Diagram", (t) => {
 
   matchChild(rovers, { label: "Opportunity" }, 0, 2);
   matchChild(rovers, { label: "Curiosity" }, 1, 2);
-  testCompleted(t);
 });
 
-Deno.test("Sample Arch", (t) => {
+test("Sample Arch", () => {
   const diagram = `\
                   ╭┈┈┈┈┈┈┈┈┈┈┈┈┈┈Back-End┈┈┈┈┈┈┈┈┈┈┈┈┈┈╮
   ┏━━━━━━━━┓      ┊                                    ┊
@@ -64,7 +61,7 @@ Deno.test("Sample Arch", (t) => {
                   ┊                                    ┊
                   ╰┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
 `;
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
   const backend = matchChild(root, { label: "Back-End", nodeType: "box", $children: 5 }, 0, 3);
   const client = matchChild(root, { label: "Client", nodeType: "box" }, 1, 3);
   const web = matchChild(root, { label: "Web", nodeType: "box" }, 2, 3);
@@ -84,10 +81,9 @@ Deno.test("Sample Arch", (t) => {
 
   assert(webBranch.source.stem === clientGateway);
   assert(redisBranch.source.stem === postgresStem);
-  testCompleted(t);
 });
 
-Deno.test("Extreme Connections", (t) => {
+test("Extreme Connections", () => {
   const diagram = `
    ╭────────────────────────────────────╮
    │                Top                 │
@@ -119,7 +115,7 @@ Deno.test("Extreme Connections", (t) => {
 `;
 
   // Parse
-  const root = testParseDiagram(t, diagram).root;
+  const root = parseDiagram(diagram).root;
 
   // Verify Boxes
   // Top Level
@@ -152,5 +148,4 @@ Deno.test("Extreme Connections", (t) => {
 
   // 5. BB to AA (path through junction) - bottom
   matchEdge(bottom, { label: "Bar", direction: 'uni', source: bb, target: aa }, 1, 2);
-  testCompleted(t);
 });

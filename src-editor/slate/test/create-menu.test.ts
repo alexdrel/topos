@@ -1,8 +1,9 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { getCreateOptions } from "../create-menu.ts";
 import { isMac } from "../dom.ts";
 
-Deno.test("create menu teaches native Slate gestures", () => {
+test("create menu teaches native Slate gestures", () => {
   const mac = isMac();
   assertEquals(
     getCreateOptions().map(({ kind, gesture }) => [kind, gesture]),

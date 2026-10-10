@@ -1,21 +1,20 @@
+import { test } from "node:test";
 // src/trace/test/arrowMouse.test.ts
 import { traceMap } from "../trace-map.ts";
-import { assertEquals } from "@std/assert";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { Dir } from "../../geo.ts";
 import { assertArrayMatch, matchTraceMap } from "./trace-utils.ts";
-import { flushPendingWrites, testTraceMap, testCompleted } from "../../test/test-utils.ts";
+import { testTraceMap } from "../../test/test-utils.ts";
 import { AntEvent } from "../recorder.ts";
 
-Deno.test.afterEach(flushPendingWrites);
-
-Deno.test("arrowMouse: Simple Ascii Horizontal Arrows ->", (t) => {
+test("arrowMouse: Simple Ascii Horizontal Arrows ->", () => {
   const diagram = `
     A -> B
     A --> B
     B <- A
     B <-- A
     `;
-  const traces = testTraceMap(t, diagram, ["text", "terminus"]);
+  const traces = testTraceMap(diagram, ["text", "terminus"]);
 
   assertArrayMatch(traces, [
     // A -> B (Search: West for A, East for B)
@@ -27,11 +26,9 @@ Deno.test("arrowMouse: Simple Ascii Horizontal Arrows ->", (t) => {
     // B <-- A 
     { type: "line", text: "<--", source: { dir: Dir.W }, target: { dir: Dir.E } },
   ]);
-
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Simple Ascii Vertical Arrows", (t) => {
+test("arrowMouse: Simple Ascii Vertical Arrows", () => {
   const diagram = `
     A   A    A  A   A  
     |   |    |  ^   ^    
@@ -39,8 +36,8 @@ Deno.test("arrowMouse: Simple Ascii Vertical Arrows", (t) => {
     v   V       |        
     B   B    B  B   B
 `;
-  const traces = testTraceMap(t, diagram, ["text", "terminus"]);
-  const lineTraces = [...traces.filter((x) => x.type === "line")]
+  const traces = testTraceMap(diagram, ["text", "terminus"]);
+  const lineTraces = traces.filter((x) => x.type === "line")
     .sort((a, b) => (a.x - b.x) || (a.y - b.y));
 
   assertArrayMatch(lineTraces, [
@@ -52,12 +49,10 @@ Deno.test("arrowMouse: Simple Ascii Vertical Arrows", (t) => {
     { text: "^||", source: { dir: Dir.N }, target: { dir: Dir.S } },
     { text: "^|", source: { dir: Dir.N }, target: { dir: Dir.S } },
   ]);
-
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: straight shaft determines style at a mixed junction", (t) => {
-  const traces = testTraceMap(t, `\
+test("arrowMouse: straight shaft determines style at a mixed junction", () => {
+  const traces = testTraceMap(`\
       ▵
       ┊
       ┊
@@ -67,86 +62,80 @@ Deno.test("arrowMouse: straight shaft determines style at a mixed junction", (t)
     { type: "line", text: "▵┊┊┻", style: { family: "unicode", weight: "dotted" } },
     { type: "line", text: "━━━━━━┻━━━", style: { family: "unicode", weight: "bold" } },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Windy Arrow", (t) => {
+test("arrowMouse: Windy Arrow", () => {
   const diagram = `
     A
     |
     +---> B
     `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     // Search: North for A, East for B
     { type: "line", text: "|+--->", source: { dir: Dir.N }, target: { dir: Dir.E } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Simple Connector ■", (t) => {
+test("arrowMouse: Simple Connector ■", () => {
   const diagram = `A ■──▶ B`;
-  const traces = testTraceMap(t, diagram, ["text", "label", "terminus"]);
+  const traces = testTraceMap(diagram, ["text", "label", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "──▶", source: { dir: Dir.W }, target: { dir: Dir.E } },
     { type: "hub", text: "■" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Box-to-Box Connection", (t) => {
+test("arrowMouse: Box-to-Box Connection", () => {
   const diagram = `
 ┌───┐      ┌───┐
 │ A ├──────┤ B │
 └───┘      └───┘
     `;
-  const traces = testTraceMap(t, diagram, ["text", "terminus"]);
+  const traces = testTraceMap(diagram, ["text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "box" },
     { type: "box" },
     { type: "line", text: "├──────┤", source: { dir: Dir.None }, target: { dir: Dir.None } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Box-to-Box Connection with Label", (t) => {
+test("arrowMouse: Box-to-Box Connection with Label", () => {
   const diagram = `
 ┌───┐      ┌───┐
 │ A ├─1234─┤ B │
 └───┘      └───┘
     `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "box" },
     { type: "box" },
     { type: "line", text: "├─1234─┤", source: { dir: Dir.None }, target: { dir: Dir.None } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Bidirectional Unicode Arrow", (t) => {
+test("arrowMouse: Bidirectional Unicode Arrow", () => {
   const diagram = `A ◄───► B`;
-  const traces = testTraceMap(t, diagram, ["text", "terminus"]);
+  const traces = testTraceMap(diagram, ["text", "terminus"]);
 
   assertArrayMatch(traces, [
     // ◄ points West, ► points East
     { type: "line", text: "◄───►", source: { dir: Dir.W }, target: { dir: Dir.E } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Multiple Connectors and Junctions", (t) => {
+test("arrowMouse: Multiple Connectors and Junctions", () => {
   const diagram = `
       A ────●──▶ B
             │
             ▼
             C
     `;
-  const traces = testTraceMap(t, diagram, ["text", "terminus"]);
+  const traces = testTraceMap(diagram, ["text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "────", source: { dir: Dir.W }, target: { dir: Dir.E } },
@@ -154,10 +143,9 @@ Deno.test("arrowMouse: Multiple Connectors and Junctions", (t) => {
     { type: "line", text: "│▼", source: { dir: Dir.N }, target: { dir: Dir.S } },
     { type: "hub", text: "●" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Crossing Arrows (Not joint)", (t) => {
+test("arrowMouse: Crossing Arrows (Not joint)", () => {
   const diagram = `
       ^
       |
@@ -165,17 +153,16 @@ Deno.test("arrowMouse: Crossing Arrows (Not joint)", (t) => {
       |
       V
     `;
-  const traces = testTraceMap(t, diagram, ["terminus"]);
+  const traces = testTraceMap(diagram, ["terminus"]);
   assertArrayMatch(traces, [
     // Vertical: ^|+|V (Search: North at top, South at bottom)
     { type: "line", text: "^|+|V", source: { dir: Dir.N }, target: { dir: Dir.S } },
     // Horizontal: --+--> (Search: West at start, East at end)
     { type: "line", text: "--+-->", source: { dir: Dir.W }, target: { dir: Dir.E } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Embedded Arrowhead (Bottom/Top)", (t) => {
+test("arrowMouse: Embedded Arrowhead (Bottom/Top)", () => {
   const diagram = `
 ┌──────┐        
 │  A   │        
@@ -186,33 +173,31 @@ Deno.test("arrowMouse: Embedded Arrowhead (Bottom/Top)", (t) => {
        │   B   │
        └───────┘
     `;
-  const traces = testTraceMap(t, diagram, ["text", "terminus"]);
+  const traces = testTraceMap(diagram, ["text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "box" },
     { type: "box" },
     { type: "line", text: "┬│└──────┐▼", source: { dir: Dir.None }, target: { dir: Dir.S } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Horizontal Embedded Arrowhead", (t) => {
+test("arrowMouse: Horizontal Embedded Arrowhead", () => {
   const diagram = `
 ┌───┐      ┌───┐
 │ A ├──────▶ B │
 └───┘      └───┘
     `;
-  const traces = testTraceMap(t, diagram, ["text", "terminus"]);
+  const traces = testTraceMap(diagram, ["text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "box" },
     { type: "box" },
     { type: "line", text: "├──────▶", source: { dir: Dir.None }, target: { dir: Dir.E } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Complex Path Embedded Arrowhead", (t) => {
+test("arrowMouse: Complex Path Embedded Arrowhead", () => {
   const diagram = `
           ┌────────────────┐
           │                │
@@ -221,7 +206,7 @@ Deno.test("arrowMouse: Complex Path Embedded Arrowhead", (t) => {
 │  A   ◇──┘   │   B   ◀────┘
 └──────┘      └───────┘     
     `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "box" },
@@ -229,10 +214,9 @@ Deno.test("arrowMouse: Complex Path Embedded Arrowhead", (t) => {
     { type: "line", text: "──┘│││┌────────────────┐│││┘────◀", source: { dir: Dir.W }, target: { dir: Dir.W } },
     { type: "hub", text: "◇" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Complex Path with label Embedded Arrowhead", (t) => {
+test("arrowMouse: Complex Path with label Embedded Arrowhead", () => {
   const diagram = `
           ┌──── Label ─────┐
           │                │
@@ -241,7 +225,7 @@ Deno.test("arrowMouse: Complex Path with label Embedded Arrowhead", (t) => {
 │  A   ◇──┘   │   B   ◀────┘
 └──────┘      └───────┘     
     `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "box" },
@@ -249,10 +233,9 @@ Deno.test("arrowMouse: Complex Path with label Embedded Arrowhead", (t) => {
     { type: "line", text: "──┘│││┌──── Label ─────┐│││┘────◀", source: { dir: Dir.W }, target: { dir: Dir.W } },
     { type: "hub", text: "◇" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Phantom Connectors (Horizontal and Vertical)", () => {
+test("arrowMouse: Phantom Connectors (Horizontal and Vertical)", () => {
   const diagram = `\
 ============
 -- status --
@@ -274,7 +257,7 @@ A -- B`;
   matchTraceMap(result, diagram);
 });
 
-Deno.test("arrowMouse: Valid Non-Arrow Edges (Unicode & Anchored)", (t) => {
+test("arrowMouse: Valid Non-Arrow Edges (Unicode & Anchored)", () => {
   const diagram = `
     A ── B
    
@@ -292,7 +275,7 @@ Deno.test("arrowMouse: Valid Non-Arrow Edges (Unicode & Anchored)", (t) => {
     |     |   |     |
     +-----+   +-----+
     `;
-  const traces = testTraceMap(t, diagram, ["text", "terminus"]);
+  const traces = testTraceMap(diagram, ["text", "terminus"]);
   assertArrayMatch(traces, [
     { type: "box" },
     { type: "box" },
@@ -305,26 +288,23 @@ Deno.test("arrowMouse: Valid Non-Arrow Edges (Unicode & Anchored)", (t) => {
     // One +---+ Two
     { type: "line", text: "+---+", source: { dir: Dir.None }, target: { dir: Dir.None } }
   ]);
-
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Junction Jump Case", (t) => {
+test("arrowMouse: Junction Jump Case", () => {
   const diagram = `
        +--------+
        |        |
     A -+        +-> B
     `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     // Search: West at start, East at end
     { type: "line", text: "-+|+--------+|+->", source: { dir: Dir.W }, target: { dir: Dir.E } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Label Jump", (t) => {
+test("arrowMouse: Label Jump", () => {
   const diagram = `
     A -- Label -> B
     A -- The Label --+
@@ -333,7 +313,7 @@ Deno.test("arrowMouse: Label Jump", (t) => {
     B <- The Label -- A
     B <- My Long Label -- A
     `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "-- Label ->", source: { dir: Dir.W }, target: { dir: Dir.E } },
@@ -342,22 +322,20 @@ Deno.test("arrowMouse: Label Jump", (t) => {
     { type: "line", text: "<- The Label --", source: { dir: Dir.W }, target: { dir: Dir.E } },
     { type: "line", text: "<- My Long Label --", source: { dir: Dir.W }, target: { dir: Dir.E } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Label Jump - Hyphen in label", (t) => {
+test("arrowMouse: Label Jump - Hyphen in label", () => {
   const diagram = `[API-GW] -> B`;
-  const traces = testTraceMap(t, diagram, ["label", "text", "inline", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "inline", "terminus"]);
 
   assertArrayMatch(traces, [
     // Should only find the "->" trace, not "-GW] ->"
     { type: "line", text: "->", source: { dir: Dir.W }, target: { dir: Dir.E } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: whitespace does not join separate lines", (t) => {
-  const traces = testTraceMap(t, "◀───────────     ──────────▶", [
+test("arrowMouse: whitespace does not join separate lines", () => {
+  const traces = testTraceMap("◀───────────     ──────────▶", [
     "terminus",
   ]);
 
@@ -365,17 +343,16 @@ Deno.test("arrowMouse: whitespace does not join separate lines", (t) => {
     { type: "line", text: "◀───────────" },
     { type: "line", text: "──────────▶" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: one-space label crossing joins a vertical line", (t) => {
+test("arrowMouse: one-space label crossing joins a vertical line", () => {
   const diagram = `\
   ╷
   │
 UH relay
   │
   ▼`;
-  const traces = testTraceMap(t, diagram, ["label", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "terminus"]);
 
   assertArrayMatch(traces, [
     {
@@ -384,10 +361,9 @@ UH relay
       rawLabels: [{ text: "UH relay" }],
     },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: ambiguous ASCII bars do not join across a blank row", () => {
+test("arrowMouse: ambiguous ASCII bars do not join across a blank row", () => {
   const lines = traceMap(`\
 |a|
 
@@ -396,8 +372,8 @@ Deno.test("arrowMouse: ambiguous ASCII bars do not join across a blank row", () 
   assertEquals(lines.length, 0);
 });
 
-Deno.test("arrowMouse: label text joins line segments", (t) => {
-  const traces = testTraceMap(t, "◀───────────  A  ──────────▶", [
+test("arrowMouse: label text joins line segments", () => {
+  const traces = testTraceMap("◀───────────  A  ──────────▶", [
     "label",
     "terminus",
   ]);
@@ -409,41 +385,37 @@ Deno.test("arrowMouse: label text joins line segments", (t) => {
       rawLabels: [{ text: "  A  " }],
     },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Label Jump - Hyphen in edge style label", (t) => {
+test("arrowMouse: Label Jump - Hyphen in edge style label", () => {
   const diagram = `[ C ] -- .triangle-hollow --> [ D ]`;
-  const traces = testTraceMap(t, diagram, ["text", "inline", "terminus"]);
+  const traces = testTraceMap(diagram, ["text", "inline", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "-- .triangle-hollow -->", source: { dir: Dir.W }, target: { dir: Dir.E } },
     { type: "label", text: " .triangle-hollow " },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Label Jump - Bidirectional ASCII arrow <->", (t) => {
+test("arrowMouse: Label Jump - Bidirectional ASCII arrow <->", () => {
   const diagram = `[ K ] <-> [ L ]`;
-  const traces = testTraceMap(t, diagram, ["text", "inline", "terminus"]);
+  const traces = testTraceMap(diagram, ["text", "inline", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "<->", source: { dir: Dir.W }, target: { dir: Dir.E } },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Label Jump - < in label", (t) => {
+test("arrowMouse: Label Jump - < in label", () => {
   const diagram = `<User> -> B`;
-  const traces = testTraceMap(t, diagram, ["label", "text", "inline", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "inline", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "->", source: { dir: Dir.W }, target: { dir: Dir.E } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Branch restart jumps to origin in recorder", (_t) => {
+test("arrowMouse: Branch restart jumps to origin in recorder", (_t) => {
   const diagram = `
 ┼──►
 │
@@ -461,14 +433,14 @@ Deno.test("arrowMouse: Branch restart jumps to origin in recorder", (_t) => {
   }
 });
 
-Deno.test("Split Arrows: Raw implicit split traces shared stem and branch", (t) => {
+test("Split Arrows: Raw implicit split traces shared stem and branch", () => {
   const diagram = `
 A ───┬──▶ B
      │
      └──▶ C
 `;
 
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     // A ───┬──▶ B (Search: West for A, East for B)
@@ -476,24 +448,22 @@ A ───┬──▶ B
     // ┬│└──▶ C (Exact stem contact at ┬, search East for C)
     { type: "line", text: "┬│└──▶", source: { dir: Dir.None }, target: { dir: Dir.E } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Split Arrows: file tree traces parent-to-last-child stem first", (t) => {
+test("Split Arrows: file tree traces parent-to-last-child stem first", () => {
   const diagram = `\
  A
  ├── C
  ├── D
  └── B`;
 
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "├├└──", source: { dir: Dir.N }, target: { dir: Dir.E } },
     { type: "line", text: "├──", source: { dir: Dir.None }, target: { dir: Dir.E } },
     { type: "line", text: "├──", source: { dir: Dir.None }, target: { dir: Dir.E } },
   ]);
-  testCompleted(t);
 });
 
 const TREE_ROTATIONS = [
@@ -548,7 +518,7 @@ const TREE_ROTATIONS = [
 ] as const;
 
 for (const { name, diagram, traces: expected } of TREE_ROTATIONS) {
-  Deno.test(`Split Arrows: unlabeled tree traces ${name}`, () => {
+  test(`Split Arrows: unlabeled tree traces ${name}`, () => {
     const traceMapResult = traceMap(diagram);
     const traces = traceMapResult.traces.filter((trace) => trace.type === "line");
     assertArrayMatch(traces, [...expected]);
@@ -556,7 +526,7 @@ for (const { name, diagram, traces: expected } of TREE_ROTATIONS) {
   });
 }
 
-Deno.test("Split Arrows: Raw explicit hub traces stem and both branches", (t) => {
+test("Split Arrows: Raw explicit hub traces stem and both branches", () => {
   const diagram = `
 A ───●──▶ B
      │
@@ -564,7 +534,7 @@ A ───●──▶ B
      C
 `;
 
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "───", source: { dir: Dir.W }, target: { dir: Dir.E } },
@@ -572,10 +542,9 @@ A ───●──▶ B
     { type: "line", text: "│▼", source: { dir: Dir.N }, target: { dir: Dir.S } },
     { type: "hub", text: "●" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Split Arrows: Raw explicit hub 3-way split traces", (t) => {
+test("Split Arrows: Raw explicit hub 3-way split traces", () => {
   const diagram = `
      D
      ▲
@@ -586,7 +555,7 @@ A ───●──▶ B
      C
 `;
 
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "▲│", source: { dir: Dir.N }, target: { dir: Dir.S } },
@@ -595,10 +564,9 @@ A ───●──▶ B
     { type: "line", text: "│▼", source: { dir: Dir.N }, target: { dir: Dir.S } },
     { type: "hub", text: "●" },
   ]);
-  testCompleted(t);
 });
 
-Deno.test("Split Arrows: Raw ASCII + split traces", (t) => {
+test("Split Arrows: Raw ASCII + split traces", () => {
   const diagram = `
 A ---+--> B
      |
@@ -606,16 +574,15 @@ A ---+--> B
      C
 `;
 
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "---+-->", source: { dir: Dir.W }, target: { dir: Dir.E } },
     { type: "line", text: "+|v", source: { dir: Dir.None }, target: { dir: Dir.S } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Windy Unicode Arrow (No heads)", (t) => {
+test("arrowMouse: Windy Unicode Arrow (No heads)", () => {
   const diagram = `
 A  ───────────┐
               │
@@ -624,23 +591,22 @@ A  ───────────┐
               │
 B  ───────────┘
 `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     // Search: West for A, West for B
     { type: "line", text: "───────────┐││││┘───────────", source: { dir: Dir.W }, target: { dir: Dir.W } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: not arrowheads", (t) => {
+test("arrowMouse: not arrowheads", () => {
   const diagram = `
 A  ┐ ┌ C 
    │ │    
    │ │    
 B  ┘ └ D 
 `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     // Reading order text: ┐ at (3,0), ┘ at (3,1)
@@ -648,10 +614,9 @@ B  ┘ └ D
     { type: "line", text: "┐││┘", source: { dir: Dir.W }, target: { dir: Dir.W } },
     { type: "line", text: "┌││└", source: { dir: Dir.E }, target: { dir: Dir.E } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Half-lines", (t) => {
+test("arrowMouse: Half-lines", () => {
   const diagram = `
     A╶─▷B
     A◁─╴B
@@ -660,18 +625,16 @@ Deno.test("arrowMouse: Half-lines", (t) => {
     ╵
     D
     `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "╶─▷", source: { dir: Dir.None }, target: { dir: Dir.E } },
     { type: "line", text: "◁─╴", source: { dir: Dir.W }, target: { dir: Dir.None } },
     { type: "line", text: "╷╵", source: { dir: Dir.None }, target: { dir: Dir.None } }
   ]);
-
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Unicode classic arrows behave like ASCII terminals", (t) => {
+test("arrowMouse: Unicode classic arrows behave like ASCII terminals", () => {
   const diagram = `
 A ─→ B
 C ←─ D
@@ -680,17 +643,16 @@ E
 ↓
 F
 `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "─→", source: { dir: Dir.W }, target: { dir: Dir.E } },
     { type: "line", text: "←─", source: { dir: Dir.W }, target: { dir: Dir.E } },
     { type: "line", text: "│↓", source: { dir: Dir.N }, target: { dir: Dir.S } }
   ]);
-  testCompleted(t);
 });
 
-Deno.test("arrowMouse: Unicode double arrows behave like arrow terminals", (t) => {
+test("arrowMouse: Unicode double arrows behave like arrow terminals", () => {
   const diagram = `\
 A ═⇒ B
 C ⇐═ D
@@ -699,7 +661,7 @@ E    G
 ⩔    ║
 F    H
 `;
-  const traces = testTraceMap(t, diagram, ["label", "text", "terminus"]);
+  const traces = testTraceMap(diagram, ["label", "text", "terminus"]);
 
   assertArrayMatch(traces, [
     { type: "line", text: "═⇒", source: { dir: Dir.W }, target: { dir: Dir.E } },
@@ -707,5 +669,4 @@ F    H
     { type: "line", text: "║⩔", source: { dir: Dir.N }, target: { dir: Dir.S } },
     { type: "line", text: "⩓║", source: { dir: Dir.N }, target: { dir: Dir.S } }
   ]);
-  testCompleted(t);
 });

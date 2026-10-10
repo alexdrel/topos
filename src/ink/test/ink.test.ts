@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { Dir } from "../../geo.ts";
 import { projectTracesToGrid } from "../ink.ts";
 import { renderToText } from "../ast-ink.ts";
@@ -21,33 +22,33 @@ function assertRoundTrip(source: string) {
   assertEquals(projectedTraces, normSource);
 }
 
-Deno.test("ink: simple round-trip (boxes and rawLabels)", () => {
+test("ink: simple round-trip (boxes and rawLabels)", () => {
   assertRoundTrip(`
 ┌───────┐
 │ Topos │
 └───────┘`);
 });
 
-Deno.test("ink: visible space glyph round-trips", () => {
+test("ink: visible space glyph round-trips", () => {
   assertRoundTrip("A␠B");
   assertRoundTrip("A⍽B");
 });
 
-Deno.test("ink: ascii boxes", () => {
+test("ink: ascii boxes", () => {
   assertRoundTrip(`
 +-------+
 | ASCII |
 +-------+`);
 });
 
-Deno.test("ink: mixed pens", () => {
+test("ink: mixed pens", () => {
   assertRoundTrip(`
  ┏━━━━━━┓ ┌──────┐
  ┃ Bold ┃ │Single│
  ┗━━━━━━┛ └──────┘`);
 });
 
-Deno.test("ink: single line preserves a bold box tee", () => {
+test("ink: single line preserves a bold box tee", () => {
   const source = `\
 ┏━━━┓
 ┃ C ┠───>
@@ -59,7 +60,7 @@ Deno.test("ink: single line preserves a bold box tee", () => {
   assertEquals(projectTracesToGrid(traces).text, source);
 });
 
-Deno.test("ink: malformed box candidates round-trip", async (t) => {
+test("ink: malformed box candidates round-trip", async (t) => {
   const cases = [
     {
       name: "broken rounded bottom corner",
@@ -120,25 +121,25 @@ Deno.test("ink: malformed box candidates round-trip", async (t) => {
   ];
 
   for (const { name, source } of cases) {
-    await t.step(name, () => assertRoundTrip(source));
+    await t.test(name, () => assertRoundTrip(source));
   }
 });
 
-Deno.test("ink: simple edge", () => {
+test("ink: simple edge", () => {
   assertRoundTrip(`
   ┌───┐  ┌───┐
   │ A ├──┤ B │
   └───┘  └───┘`);
 });
 
-Deno.test("ink: directed arrow", () => {
+test("ink: directed arrow", () => {
   assertRoundTrip(`
   ┌───┐    ┌───┐
   │ A ├───>│ B │
   └───┘    └───┘`);
 });
 
-Deno.test("ink: complex grid junction", () => {
+test("ink: complex grid junction", () => {
   assertRoundTrip(`
 ┌─┬─┐
 │ │ │
@@ -148,7 +149,7 @@ Deno.test("ink: complex grid junction", () => {
 });
 
 
-Deno.test("ink: nested boxes", () => {
+test("ink: nested boxes", () => {
   assertRoundTrip(`
 ┌───────────┐
 │ Parent    │
@@ -158,7 +159,7 @@ Deno.test("ink: nested boxes", () => {
 └───────────┘`);
 });
 
-Deno.test("ink: crossing edges (bridge)", () => {
+test("ink: crossing edges (bridge)", () => {
   assertRoundTrip(`
   A     B
   │     │
@@ -167,7 +168,7 @@ Deno.test("ink: crossing edges (bridge)", () => {
   C     D`);
 });
 
-Deno.test("ink: editor default map", () => {
+test("ink: editor default map", () => {
   assertRoundTrip(`
 ┌─────────────┐    ┌──────────┐
 │ API Gateway ├───>│  Worker  │
@@ -179,7 +180,7 @@ Deno.test("ink: editor default map", () => {
    └────────┘      └──────────┘`);
 });
 
-Deno.test("ink: Extreme Connections round-trip", () => {
+test("ink: Extreme Connections round-trip", () => {
   assertRoundTrip(`
    ╭────────────────────────────────────╮
    │                Top                 │
@@ -211,7 +212,7 @@ Deno.test("ink: Extreme Connections round-trip", () => {
          `);
 });
 
-Deno.test("ink: preserves padding and empty lines", () => {
+test("ink: preserves padding and empty lines", () => {
   assertRoundTrip(`\
    
   ┌───┐
@@ -222,7 +223,7 @@ Deno.test("ink: preserves padding and empty lines", () => {
 `);
 });
 
-Deno.test("ink: stack boxes", () => {
+test("ink: stack boxes", () => {
   assertRoundTrip(`\
    ┌────────────────┐    
    │ ┌──────────────┴─┐  
@@ -233,7 +234,7 @@ Deno.test("ink: stack boxes", () => {
 `);
 });
 
-Deno.test("ink: stack boxes 2", () => {
+test("ink: stack boxes 2", () => {
   assertRoundTrip(`\
    ┌─STACK────────┐    
    │┌─────────────┴┐  
@@ -244,7 +245,7 @@ Deno.test("ink: stack boxes 2", () => {
 `);
 });
 
-Deno.test("ink: stack boxes all directions", () => {
+test("ink: stack boxes all directions", () => {
   assertRoundTrip(`\
    ┌────────────────┐
    │ ┌──────────────┴─┐
@@ -284,7 +285,7 @@ Deno.test("ink: stack boxes all directions", () => {
 `);
 });
 
-Deno.test("ink: 2x2 Junction Grid", () => {
+test("ink: 2x2 Junction Grid", () => {
   assertRoundTrip(`\
 ┌─────────┬─────────┐
 │  Box A  │  Box B  │
@@ -294,7 +295,7 @@ Deno.test("ink: 2x2 Junction Grid", () => {
 `);
 });
 
-Deno.test("ink: trace projection preserves mixed parent and cell styles", () => {
+test("ink: trace projection preserves mixed parent and cell styles", () => {
   const source = `\
 ┏━━━━━┯━━━━━┓
 ┃  A  │  B  ┃
@@ -305,7 +306,7 @@ Deno.test("ink: trace projection preserves mixed parent and cell styles", () => 
   assertEquals(projectTracesToGrid(traceMap(source)).text, source);
 });
 
-Deno.test("ink: 3x1 Junction Grid (ASCII)", () => {
+test("ink: 3x1 Junction Grid (ASCII)", () => {
   assertRoundTrip(`
 +---+
 | A |
@@ -317,7 +318,7 @@ Deno.test("ink: 3x1 Junction Grid (ASCII)", () => {
 `);
 });
 
-Deno.test("ink: 2x2 Junction Grid (Double Unicode)", () => {
+test("ink: 2x2 Junction Grid (Double Unicode)", () => {
   assertRoundTrip(`
 ╔════WXYZ═══╗
 ║  W  ║  X  ║
@@ -326,7 +327,7 @@ Deno.test("ink: 2x2 Junction Grid (Double Unicode)", () => {
 ╚═════╩═════╝`);
 });
 
-Deno.test("Is it a grid?", () => {
+test("Is it a grid?", () => {
   assertRoundTrip(`
 ┌────────┬───────┐
 │   B    │       │
@@ -338,7 +339,7 @@ Deno.test("Is it a grid?", () => {
 `);
 });
 
-Deno.test("ink: showcase.topos", () => {
+test("ink: showcase.topos", () => {
   const source = `
                       Topos Engine
 
@@ -402,7 +403,7 @@ Deno.test("ink: showcase.topos", () => {
   assertRoundTrip(source);
 });
 
-Deno.test("ink: spiral.topos", () => {
+test("ink: spiral.topos", () => {
   assertRoundTrip(`
 ┌───────────────────────T
 │ ┌─────────────────────┐
@@ -419,7 +420,7 @@ Deno.test("ink: spiral.topos", () => {
 └───────────────────────┘`);
 });
 
-Deno.test("ink: 4x4 Junction Grid", () => {
+test("ink: 4x4 Junction Grid", () => {
   assertRoundTrip(`
 ┌───ABCDEFGHIJKLMNOP────┐
 │  A  │  B  │  C  │  D  │
@@ -432,27 +433,27 @@ Deno.test("ink: 4x4 Junction Grid", () => {
 └─────┴─────┴─────┴─────┘`);
 });
 
-Deno.test("ink: dashed box", () => {
+test("ink: dashed box", () => {
   assertRoundTrip(`
 ┌┄┄┄┄┄┄┄┐
 ┆ Dashed┆
 └┄┄┄┄┄┄┄┘`);
 });
 
-Deno.test("ink: dotted box", () => {
+test("ink: dotted box", () => {
   assertRoundTrip(`\
 ┌┈┈┈┈┈┈┈┐
 ┊ Dotted┊
 └┈┈┈┈┈┈┈┘`);
 });
 
-Deno.test("ink: inline nodes", () => {
+test("ink: inline nodes", () => {
   assertRoundTrip(`\
 [ A (B) <C> ]
 [D] --> [ E ]`);
 });
 
-Deno.test("ink: sigils round-trip", () => {
+test("ink: sigils round-trip", () => {
   assertRoundTrip(`\
 ┌───────────────────────┐
 │ System #id @type      │
@@ -463,14 +464,14 @@ Deno.test("ink: sigils round-trip", () => {
 └───────────────────────┘`);
 });
 
-Deno.test("ink: ceiling sigils round-trip", () => {
+test("ink: ceiling sigils round-trip", () => {
   assertRoundTrip(`
 ┌─ System .class@Sys ─┐
 │                     │
 └─────────────────────┘`);
 });
 
-Deno.test("ink: half-wires round-trip from traces", () => {
+test("ink: half-wires round-trip from traces", () => {
   const source = `\
 [A]──[B]
 [A]╶╴[B]
@@ -479,7 +480,7 @@ Deno.test("ink: half-wires round-trip from traces", () => {
   assertEquals(projectTracesToGrid(traceMap(source)).text, source);
 });
 
-Deno.test("ink: projection identifies contiguous Slate color spans", () => {
+test("ink: projection identifies contiguous Slate color spans", () => {
   const source = `\
 ┌─┐  A──▶●
 │X│
@@ -497,14 +498,14 @@ Deno.test("ink: projection identifies contiguous Slate color spans", () => {
   ]);
 });
 
-Deno.test("ink: projection identifies inline nodes separately from text", () => {
+test("ink: projection identifies inline nodes separately from text", () => {
   assertEquals(projectTracesToGrid(traceMap("[Inline] plain")).spans, [
     { start: 0, end: 8, role: "inline" },
     { start: 9, end: 14, role: "text" },
   ]);
 });
 
-Deno.test("ink: projection identifies text controls but keeps inline nodes uniform", () => {
+test("ink: projection identifies text controls but keeps inline nodes uniform", () => {
   assertEquals(projectTracesToGrid(traceMap("# A⏎\n[B#]")).spans, [
     { start: 0, end: 1, role: "control" },
     { start: 1, end: 3, role: "text" },
@@ -513,7 +514,7 @@ Deno.test("ink: projection identifies text controls but keeps inline nodes unifo
   ]);
 });
 
-Deno.test("ink: box-line junction has a mixed projection role", () => {
+test("ink: box-line junction has a mixed projection role", () => {
   const source = `\
 ┌──┐
 │ A├──▶ B
@@ -525,7 +526,7 @@ Deno.test("ink: box-line junction has a mixed projection role", () => {
   assertEquals(junctionSpan?.role, "mixed");
 });
 
-Deno.test("ink: file tree stems preserve authored tee glyphs", () => {
+test("ink: file tree stems preserve authored tee glyphs", () => {
   const source = `\
 root/
 ├── alpha/
@@ -536,7 +537,7 @@ root/
   assertEquals(projectTracesToGrid(traceMap(source)).text, source);
 });
 
-Deno.test("ink: hubs round-trip", () => {
+test("ink: hubs round-trip", () => {
   assertRoundTrip(`
             ■ Top
             │
@@ -550,8 +551,8 @@ Deno.test("ink: hubs round-trip", () => {
 });
 
 
-Deno.test("ink: standalone note with continuation round-trip", () => {
-  assertRoundTrip(`\  
+test("ink: standalone note with continuation round-trip", () => {
+  assertRoundTrip(`\
 ┌─────────────────────────┐          
 │  This is line one that  │          
 │ wraps with ⏎ carret.    │          
@@ -560,7 +561,7 @@ Deno.test("ink: standalone note with continuation round-trip", () => {
 └─────────────────────────┘`);
 });
 
-Deno.test("ink: AST round-trip (Rovers test case)", () => {
+test("ink: AST round-trip (Rovers test case)", () => {
   assertRoundTrip(`
  ┌─ROVERS────────────────┐
  │   [ Opportunity  ]    │

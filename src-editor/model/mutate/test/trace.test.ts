@@ -1,9 +1,11 @@
-import { assertEquals, assertThrows } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertThrows } from "../../../../src/test/assertions.ts";
 import { traceMap } from "../../../../src/trace/trace-map.ts";
 import { createText, deleteTrace, moveTraces, reconcileLabels, setText } from "../../mutate.ts";
 import { findTrace, matchTraceMap } from "../../../../src/trace/test/trace-utils.ts";
 
-Deno.test("trace: move text trace", () => {
+test("trace: move text trace", () => {
   const state = traceMap(`\
 A
 `);
@@ -16,7 +18,7 @@ A
     A`);
 });
 
-Deno.test("trace: edit and delete text trace", () => {
+test("trace: edit and delete text trace", () => {
   const state = traceMap("Old");
   const text = findTrace(state, { type: "text", x: 0, y: 0 });
 
@@ -27,7 +29,7 @@ Deno.test("trace: edit and delete text trace", () => {
   matchTraceMap(state, "");
 });
 
-Deno.test("trace: text creation and editing reject blank content", () => {
+test("trace: text creation and editing reject blank content", () => {
   const state = traceMap("Old");
   const text = findTrace(state, { type: "text", x: 0, y: 0 });
 
@@ -36,7 +38,7 @@ Deno.test("trace: text creation and editing reject blank content", () => {
   matchTraceMap(state, "Old");
 });
 
-Deno.test("trace: edit inline trace text", () => {
+test("trace: edit inline trace text", () => {
   const state = traceMap("[A]");
   const inline = findTrace(state, { type: "inline", x: 0, y: 0 });
 
@@ -44,7 +46,7 @@ Deno.test("trace: edit inline trace text", () => {
   matchTraceMap(state, "[New]");
 });
 
-Deno.test("trace: text editing detects inline nodes and reconciliation preserves them", () => {
+test("trace: text editing detects inline nodes and reconciliation preserves them", () => {
   const state = traceMap("Old");
   const text = findTrace(state, { type: "text", x: 0, y: 0 });
 
@@ -56,7 +58,7 @@ Deno.test("trace: text editing detects inline nodes and reconciliation preserves
   matchTraceMap(state, "[  New  ]");
 });
 
-Deno.test("trace: inline editing detects plain text and reconciliation preserves it", () => {
+test("trace: inline editing detects plain text and reconciliation preserves it", () => {
   const state = traceMap("[Old]");
   const inline = findTrace(state, { type: "inline", x: 0, y: 0 });
 
@@ -68,7 +70,7 @@ Deno.test("trace: inline editing detects plain text and reconciliation preserves
   matchTraceMap(state, "New");
 });
 
-Deno.test("trace: text creation detects inline nodes and normalizes single-line indentation", () => {
+test("trace: text creation detects inline nodes and normalizes single-line indentation", () => {
   const state = traceMap("");
   const inline = createText(state, { x: 2, y: 1 }, "  [New]");
 
@@ -84,7 +86,7 @@ Deno.test("trace: text creation detects inline nodes and normalizes single-line 
     [New]`);
 });
 
-Deno.test("trace: create and edit multiline text trace", () => {
+test("trace: create and edit multiline text trace", () => {
   const state = traceMap("");
   const text = createText(state, { x: 0, y: 0 }, "Hello\nWorld!");
 

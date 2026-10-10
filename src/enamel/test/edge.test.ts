@@ -1,4 +1,6 @@
-import { assert, assertAlmostEquals, assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { ok as assert, deepStrictEqual as assertEquals } from "node:assert/strict";
+import { assertAlmostEquals } from "../../test/assertions.ts";
 import { parseTopos } from "../../topos.ts";
 import { buildSvgTree } from "../svg.ts";
 import { attrs, children, tag, textContent, XmlEl } from "../../jsonml/jsonml.ts";
@@ -34,7 +36,7 @@ const findEdgeByClass = (node: XmlEl, cls: string): XmlEl | undefined => {
 /**
  * 1. Edge Pipeline: Markers and Labels
  */
-Deno.test("svg: edge pipeline (markers and rawLabels)", () => {
+test("svg: edge pipeline (markers and rawLabels)", () => {
   const input = `\
 ┌───┐       ┌───┐
 │ A ├─call──▶ B │
@@ -52,7 +54,7 @@ Deno.test("svg: edge pipeline (markers and rawLabels)", () => {
   matchChildEl(edge, "text", { class: "tpc-label", $text: "call" });
 });
 
-Deno.test("svg: open edge termini use break markers", () => {
+test("svg: open edge termini use break markers", () => {
   for (const input of ["╶──╴", "╷\n│\n╵"]) {
     const svgTree = buildSvgTree(parseTopos(input));
     const diagGrp = matchChildEl(svgTree, "g", { class: "tp-root" });
@@ -66,7 +68,7 @@ Deno.test("svg: open edge termini use break markers", () => {
   }
 });
 
-Deno.test("svg: connected T-stops do not use break markers", () => {
+test("svg: connected T-stops do not use break markers", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ C ├───┤ D │
@@ -80,7 +82,7 @@ Deno.test("svg: connected T-stops do not use break markers", () => {
   assertEquals(attrs(path)["marker-end"], undefined);
 });
 
-Deno.test("svg: connected T-stops preserve their authored off-center row", () => {
+test("svg: connected T-stops preserve their authored off-center row", () => {
   const input = `\
 ┌─────┐   ┌─────┐
 │ A   ├───┤ B   │
@@ -101,7 +103,7 @@ Deno.test("svg: connected T-stops preserve their authored off-center row", () =>
 /**
  * 2. Abstract Edges and Fill-None
  */
-Deno.test("svg: abstract edges and fill-none", () => {
+test("svg: abstract edges and fill-none", () => {
   const input = `\
 ┌───┐       ┌───┐
 │ A ├───────┤ B │
@@ -117,7 +119,7 @@ Deno.test("svg: abstract edges and fill-none", () => {
   matchChildEl(diagGrp, "g", { class: "tp-edge legend tp-fill-none" });
 });
 
-Deno.test("svg: local colors directly override edge paint", () => {
+test("svg: local colors directly override edge paint", () => {
   const input = `\
 ┌───┐       ┌───┐
 │ A ├───────┤ B │
@@ -138,32 +140,32 @@ Deno.test("svg: local colors directly override edge paint", () => {
 /**
  * 3. Edge Processing & Geometry
  */
-Deno.test("edge path: rounds a corner", () => {
+test("edge path: rounds a corner", () => {
   assertEquals(
     toPathStr([{ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 10, y: 10 }], 4),
     "M 0,0 L 6,0 Q 10,0 10,4 L 10,10",
   );
 });
 
-Deno.test("edge path: bevels a corner", () => {
+test("edge path: bevels a corner", () => {
   assertEquals(
     toPathStr([{ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 10, y: 10 }], 4, "bevel"),
     "M 0,0 L 6,0 L 10,4 L 10,10",
   );
 });
 
-Deno.test("edge path: requires at least two points", () => {
+test("edge path: requires at least two points", () => {
   assertEquals(toPathStr([{ x: 5, y: 5 }]), "");
 });
 
-Deno.test("edge path: caps radius to half the adjacent segment", () => {
+test("edge path: caps radius to half the adjacent segment", () => {
   assertEquals(
     toPathStr([{ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 10, y: 10 }], 20),
     "M 0,0 L 5,0 Q 10,0 10,5 L 10,10",
   );
 });
 
-Deno.test("svg: edge geometry (label multipoint midpoint)", () => {
+test("svg: edge geometry (label multipoint midpoint)", () => {
   const input = `\
 ┌───┐
 │ A │
@@ -186,7 +188,7 @@ Deno.test("svg: edge geometry (label multipoint midpoint)", () => {
   assertEquals(y > 0, true, "Label should be dynamically positioned");
 });
 
-Deno.test("svg: edge label preserves its authored center relative to the edge bounds", () => {
+test("svg: edge label preserves its authored center relative to the edge bounds", () => {
   const input = `\
 ┌───┐             ┌───┐
 │ A ├─left────────▶ B │
@@ -202,7 +204,7 @@ Deno.test("svg: edge label preserves its authored center relative to the edge bo
   assert(Number(attrs(label).x) < pathMidpointX, "A left-authored edge label should render left of the path midpoint");
 });
 
-Deno.test("svg: vertical edge label center is not displaced by its source width", () => {
+test("svg: vertical edge label center is not displaced by its source width", () => {
   const input = `\
        ┌─────────────────────────────────────⯈
        │
@@ -225,7 +227,7 @@ Long label text
   assertAlmostEquals(Number(attrs(label).x), Math.min(...pathXs));
 });
 
-Deno.test("svg: edge label center may remain outside the polyline bounds", () => {
+test("svg: edge label center may remain outside the polyline bounds", () => {
   const input = `\
               ┌────▶
               │
@@ -251,7 +253,7 @@ Long label text
   assert(Number(attrs(label).x) < Math.min(...pathXs), "The rendered label center should remain left of the vertical line");
 });
 
-Deno.test("svg: legend edge labels align from traced vertical paths", () => {
+test("svg: legend edge labels align from traced vertical paths", () => {
   const input = `\
 [A]            ▲
  │             │
@@ -286,7 +288,7 @@ B -> _: "RIGHT" right
   assertEquals(attrs(placements.RIGHT.label)["text-anchor"], "start");
 });
 
-Deno.test("svg: lateral block and standard labels share the path midpoint Y", () => {
+test("svg: lateral block and standard labels share the path midpoint Y", () => {
   const input = `\
 ┌─────────┐
 │    A    │
@@ -313,7 +315,7 @@ Deno.test("svg: lateral block and standard labels share the path midpoint Y", ()
   assertEquals(labels.map((label) => attrs(label)["dominant-baseline"]), ["middle", "middle"]);
 });
 
-Deno.test("svg: Legend positions authored labels on vertical edges", () => {
+test("svg: Legend positions authored labels on vertical edges", () => {
   const input = `\
 ▲             ▲
 │             │
@@ -343,7 +345,7 @@ el2: right
   assert(Number(attrs(placements.el2.label).x) > placements.el2.pathX);
 });
 
-Deno.test("svg: explicit legend edge label coordinates override both axes", () => {
+test("svg: explicit legend edge label coordinates override both axes", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A │──▶│ B │
@@ -365,7 +367,7 @@ Deno.test("svg: explicit legend edge label coordinates override both axes", () =
   assertAlmostEquals(Number(attrs(label).y), Math.min(...pathYs) + 2 * CHAR_HEIGHT, 0.02);
 });
 
-Deno.test("svg: multi-line edge labels support scoped line alignment", () => {
+test("svg: multi-line edge labels support scoped line alignment", () => {
   const input = `\
 A ── Link ──▶ B
 
@@ -382,7 +384,7 @@ A ── Link ──▶ B
   assertEquals(tspans.map((tspan) => attrs(tspan)["text-anchor"]), ["start", "start"]);
 });
 
-Deno.test("svg: bottom-right edge label stays above a traced bend", () => {
+test("svg: bottom-right edge label stays above a traced bend", () => {
   const input = `\
 ┌───┐
 │ A ├──────┐
@@ -409,7 +411,7 @@ Deno.test("svg: bottom-right edge label stays above a traced bend", () => {
   assertEquals(attrs(label)["text-anchor"], "start");
 });
 
-Deno.test("svg: left and right choose opposite ends of a horizontal path", () => {
+test("svg: left and right choose opposite ends of a horizontal path", () => {
   const render = (position: "left" | "right") => {
     const input = `\
 ┌─────────label─────────▶
@@ -444,7 +446,7 @@ label: ${position}
 /**
  * 4. Orthogonal Arrival (Alignment Fix)
  */
-Deno.test("svg: orthogonal arrival (no crooked arrowheads)", () => {
+test("svg: orthogonal arrival (no crooked arrowheads)", () => {
   const input = `\
    ┌───┐
    │ A │
@@ -469,7 +471,7 @@ Deno.test("svg: orthogonal arrival (no crooked arrowheads)", () => {
   assertAlmostEquals(x1, x2, 0.01, `Edge arrival should be perfectly vertical: ${d}`);
 });
 
-Deno.test("svg: terminus offset leaves authored space around attached notes", () => {
+test("svg: terminus offset leaves authored space around attached notes", () => {
   const input = `\
        +--------+
        |        |
@@ -493,7 +495,7 @@ Deno.test("svg: terminus offset leaves authored space around attached notes", ()
   }
 });
 
-Deno.test("svg: edges keep a fixed clearance from node perimeters", () => {
+test("svg: edges keep a fixed clearance from node perimeters", () => {
   const input = `\
 ┌───┐   ┌───┐
 │ A ├──▶│ B │
@@ -514,7 +516,7 @@ Deno.test("svg: edges keep a fixed clearance from node perimeters", () => {
   assertAlmostEquals(coordinates.at(-2)!, target.x - 2, 0.02);
 });
 
-Deno.test("svg: terminus attachment can be overridden by Legend", () => {
+test("svg: terminus attachment can be overridden by Legend", () => {
   const ast = parseTopos(`\
 ┌───┐             ┌───┐
 │ A ├────────────▶│ B │
@@ -536,7 +538,7 @@ A -> B: gap head=m-gap
 /**
  * 5. Hub Trimming
  */
-Deno.test("svg: hub trimming (no lines going into center)", () => {
+test("svg: hub trimming (no lines going into center)", () => {
   const input = `\
  ●───▶ [A]
  │
@@ -593,7 +595,7 @@ Deno.test("svg: hub trimming (no lines going into center)", () => {
 /**
  * 6. Rounding Levels (Drafting Style)
  */
-Deno.test("svg: edge rounding levels (tight vs loose)", () => {
+test("svg: edge rounding levels (tight vs loose)", () => {
   const input = `\
   [A]
    │
@@ -641,7 +643,7 @@ Deno.test("svg: edge rounding levels (tight vs loose)", () => {
 /**
  * 7. Glyph-based Rounding & Overrides (6-case matrix)
  */
-Deno.test("svg: edge rounding completion (6 edges matrix)", () => {
+test("svg: edge rounding completion (6 edges matrix)", () => {
   const input = `\
   [A]
    │

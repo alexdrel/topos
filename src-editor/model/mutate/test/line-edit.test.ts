@@ -1,10 +1,11 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { Dir } from "../../../../src/geo.ts";
 import { traceMap } from "../../../../src/trace/trace-map.ts";
 import { createLine, moveLinePoint, moveTraces, setTerminusGlyph, setTerminusLocation } from "../../mutate.ts";
 import { findTrace, matchTraceMap } from "../../../../src/trace/test/trace-utils.ts";
 
-Deno.test("line_edit: move horizontal arrow endpoint right", () => {
+test("line_edit: move horizontal arrow endpoint right", () => {
   const state = traceMap(`A ---> B`);
   const line = findTrace(state, { type: "line", x: 2, y: 0, startDir: Dir.W });
 
@@ -14,7 +15,7 @@ Deno.test("line_edit: move horizontal arrow endpoint right", () => {
   matchTraceMap(state, `A ---->B`);
 });
 
-Deno.test("line_edit: move horizontal arrow endpoint left", () => {
+test("line_edit: move horizontal arrow endpoint left", () => {
   const state = traceMap(`A ---> B`);
   const line = findTrace(state, { type: "line", x: 2, y: 0, startDir: Dir.W });
 
@@ -24,7 +25,7 @@ Deno.test("line_edit: move horizontal arrow endpoint left", () => {
   matchTraceMap(state, `A -->  B`);
 });
 
-Deno.test("line_edit: move vertical arrow endpoint down", () => {
+test("line_edit: move vertical arrow endpoint down", () => {
   const state = traceMap(`\
 A
 |
@@ -45,7 +46,7 @@ v
 B`);
 });
 
-Deno.test("line_edit: move horizontal line with label", () => {
+test("line_edit: move horizontal line with label", () => {
   const state = traceMap(`A -------label ----->`);
   const line = findTrace(state, { type: "line", x: 2, y: 0, startDir: Dir.W });
 
@@ -55,7 +56,7 @@ Deno.test("line_edit: move horizontal line with label", () => {
   matchTraceMap(state, `A -------label --------->`);
 });
 
-Deno.test("line_edit: move edge connected to boxes", () => {
+test("line_edit: move edge connected to boxes", () => {
   const state = traceMap(`\
 ┌───┐   ┌───┐
 │ C ├───┤ D │
@@ -80,7 +81,7 @@ Deno.test("line_edit: move edge connected to boxes", () => {
 └───┘   └───┘`);
 });
 
-Deno.test("line_edit: create an undirected line between boxes", () => {
+test("line_edit: create an undirected line between boxes", () => {
   const state = traceMap(`\
 ┌───┐   ┌───┐
 │ C │   │ D │
@@ -94,7 +95,7 @@ Deno.test("line_edit: create an undirected line between boxes", () => {
 └───┘   └───┘`);
 });
 
-Deno.test("line_edit: extend a newly created line", () => {
+test("line_edit: extend a newly created line", () => {
   const state = traceMap("");
   const line = createLine(state, [{ x: 2, y: 0 }, { x: 3, y: 0 }]);
   setTerminusGlyph(state, line.source!, "◀");
@@ -106,7 +107,7 @@ Deno.test("line_edit: extend a newly created line", () => {
   matchTraceMap(state, `  ◀──▶`);
 });
 
-Deno.test("line_edit: move source endpoint through its terminus", () => {
+test("line_edit: move source endpoint through its terminus", () => {
   const state = traceMap("A ---> B");
   const line = findTrace(state, { type: "line", x: 2, y: 0, startDir: Dir.W });
 
@@ -116,7 +117,7 @@ Deno.test("line_edit: move source endpoint through its terminus", () => {
   assertEquals({ x: line.source!.x, y: line.source!.y }, { x: 1, y: 0 });
 });
 
-Deno.test("line_edit: moving an open terminus preserves the half-wire", () => {
+test("line_edit: moving an open terminus preserves the half-wire", () => {
   const state = traceMap("[A]╶──╴[B]");
   const line = findTrace(state, { type: "line", x: 3, y: 0, startDir: Dir.None });
 
@@ -128,7 +129,7 @@ Deno.test("line_edit: moving an open terminus preserves the half-wire", () => {
       ╵`);
 });
 
-Deno.test("line_edit: Z-shape drag interior vertex horizontally", () => {
+test("line_edit: Z-shape drag interior vertex horizontally", () => {
   const state = traceMap(`\
 s─────┐
       │
@@ -151,7 +152,7 @@ s───┐
     └───────▶ e`);
 });
 
-Deno.test("line_edit: Z-shape drag interior vertex vertically", () => {
+test("line_edit: Z-shape drag interior vertex vertically", () => {
   const state = traceMap(`\
 s─────┐
       │
@@ -170,7 +171,7 @@ s
       └─────▶ e`);
 });
 
-Deno.test("line_edit: endpoint drag creates L-shape on off-axis move", () => {
+test("line_edit: endpoint drag creates L-shape on off-axis move", () => {
   const state = traceMap(`s─────▶`);
   const line = findTrace(state, { type: "line", x: 1, y: 0, startDir: Dir.W });
 
@@ -183,7 +184,7 @@ s─────┐
       ▼`);
 });
 
-Deno.test("line_edit: redundant vertex removal after slide", () => {
+test("line_edit: redundant vertex removal after slide", () => {
   const state = traceMap(`\
 s─────┐
       │
@@ -202,7 +203,7 @@ s
  ───────────▶ e`);
 });
 
-Deno.test("line_edit: create line and drag in Z-shape pattern during creation", () => {
+test("line_edit: create line and drag in Z-shape pattern during creation", () => {
   const state = traceMap("");
   const line = createLine(state, [{ x: 2, y: 0 }, { x: 2, y: 1 }]);
   setTerminusGlyph(state, line.target!, "▶");
@@ -225,7 +226,7 @@ Deno.test("line_edit: create line and drag in Z-shape pattern during creation", 
      ▼`);
 });
 
-Deno.test("line_edit: 1-cell jitter is ignored during line creation", () => {
+test("line_edit: 1-cell jitter is ignored during line creation", () => {
   const state = traceMap("");
   const line = createLine(state, [{ x: 2, y: 0 }, { x: 3, y: 0 }]);
   setTerminusGlyph(state, line.target!, "▶");
@@ -239,7 +240,7 @@ Deno.test("line_edit: 1-cell jitter is ignored during line creation", () => {
   matchTraceMap(state, `  ──▶`);
 });
 
-Deno.test("line_edit: do not allow line to collapse into single cell", () => {
+test("line_edit: do not allow line to collapse into single cell", () => {
   const state = traceMap(`A ---> B`);
   const line = findTrace(state, { type: "line", x: 2, y: 0, startDir: Dir.W });
 
@@ -250,7 +251,7 @@ Deno.test("line_edit: do not allow line to collapse into single cell", () => {
   matchTraceMap(state, `A ---> B`);
 });
 
-Deno.test("line_edit: loops collapse to simplified path during creation or edit", () => {
+test("line_edit: loops collapse to simplified path during creation or edit", () => {
   const state = traceMap("");
   const line = createLine(state, [{ x: 2, y: 0 }, { x: 2, y: 1 }]);
   setTerminusGlyph(state, line.source!, "▽");
@@ -270,7 +271,7 @@ Deno.test("line_edit: loops collapse to simplified path during creation or edit"
   ▽`);
 });
 
-Deno.test("line_edit: endpoint may close an imported broken perimeter", () => {
+test("line_edit: endpoint may close an imported broken perimeter", () => {
   const state = traceMap(`\
 ╭────╮
 │ A  │
@@ -285,7 +286,7 @@ Deno.test("line_edit: endpoint may close an imported broken perimeter", () => {
 ╰────╯`);
 });
 
-Deno.test("line_edit: endpoint edit drag off-axis adds corner or suppresses jitter", () => {
+test("line_edit: endpoint edit drag off-axis adds corner or suppresses jitter", () => {
   const state = traceMap(`s─────▶`);
   const line = findTrace(state, { type: "line", x: 1, y: 0, startDir: Dir.W });
 
@@ -301,7 +302,7 @@ s─────┐
       ▼`);
 });
 
-Deno.test("line_edit: omitted bend threshold is exact and Infinity locks to the current axis", () => {
+test("line_edit: omitted bend threshold is exact and Infinity locks to the current axis", () => {
   const immediateState = traceMap("s─────▶");
   const immediateLine = findTrace(immediateState, { type: "line", x: 1, y: 0, startDir: Dir.W });
   setTerminusLocation(immediateState, immediateLine.target!, { x: 6, y: 1 });

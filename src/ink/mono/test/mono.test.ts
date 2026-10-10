@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { test } from "node:test";
+import { deepStrictEqual as assertEquals } from "node:assert/strict";
 import { traceMap } from "../../../trace/trace-map.ts";
 import { type MonoBox, type MonoFormat, type MonoLine, renderToMono } from "../mono.ts";
 
@@ -6,7 +7,7 @@ function render(source: string, name = "Test Diagram"): MonoFormat {
   return JSON.parse(renderToMono(traceMap(source), name));
 }
 
-Deno.test("Monosketch: exports traced boxes, line, arrowhead, and connectors", () => {
+test("Monosketch: exports traced boxes, line, arrowhead, and connectors", () => {
   const data = render(`\
 ┌───────┐      ┌───────┐
 │   A   ├─────▶│   B   │
@@ -24,7 +25,7 @@ Deno.test("Monosketch: exports traced boxes, line, arrowhead, and connectors", (
   assertEquals(data.connectors.length, 2);
 });
 
-Deno.test("Monosketch: preserves ceiling and internal labels", () => {
+test("Monosketch: preserves ceiling and internal labels", () => {
   const data = render(`\
 ┌── Grammar ──┐
 │             │
@@ -37,7 +38,7 @@ Deno.test("Monosketch: preserves ceiling and internal labels", () => {
   assertEquals(boxes.find((box) => box.b === "0|0|15|4")?.t, "");
 });
 
-Deno.test("Monosketch: preserves line labels as standalone text", () => {
+test("Monosketch: preserves line labels as standalone text", () => {
   const data = render(`\
 ┌───┐  Label  ┌───┐
 │ A ├────────▶│ B │
@@ -46,7 +47,7 @@ Deno.test("Monosketch: preserves line labels as standalone text", () => {
   assertEquals(boxes.some((box) => box.t.includes("Label")), true);
 });
 
-Deno.test("Monosketch: exports traced stack layers and styles", () => {
+test("Monosketch: exports traced stack layers and styles", () => {
   const data = render(`\
 ┌────────┐
 │┌───────┴┐
@@ -57,7 +58,7 @@ Deno.test("Monosketch: exports traced stack layers and styles", () => {
   assertEquals(boxes.length >= 3, true);
 });
 
-Deno.test("Monosketch: maps traced terminus glyphs", () => {
+test("Monosketch: maps traced terminus glyphs", () => {
   const source = "A ──▶ B";
   const cases = [
     ["▷", "A12"],
@@ -83,7 +84,7 @@ Deno.test("Monosketch: maps traced terminus glyphs", () => {
   }
 });
 
-Deno.test("Monosketch: maps traced box stroke styles", () => {
+test("Monosketch: maps traced box stroke styles", () => {
   const cases = [
     [{ family: "unicode", weight: "single", corner: "sharp" }, "S1"],
     [{ family: "unicode", weight: "bold", corner: "sharp" }, "S2"],
@@ -100,7 +101,7 @@ Deno.test("Monosketch: maps traced box stroke styles", () => {
   }
 });
 
-Deno.test("Monosketch: adjacent hubs become line terminals", () => {
+test("Monosketch: adjacent hubs become line terminals", () => {
   const data = render(`\
 ●───── A
 
@@ -117,7 +118,7 @@ B ─────□
   assertEquals(circle.jps.slice(0, 2), ["0|0", "5|0"]);
 });
 
-Deno.test("Monosketch: preserves multiple text rows inside boxes", () => {
+test("Monosketch: preserves multiple text rows inside boxes", () => {
   const data = render(`\
 ┌────────────┐
 │ first      │

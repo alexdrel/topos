@@ -1,0 +1,43 @@
+{
+  "lineWidth": 160,
+  "indentWidth": 2,
+  "typescript": {
+    "deno": true,
+    "ignoreFileCommentText": "dprint-ignore-file",
+    "lineWidth": 160
+  },
+  "json": {
+    "deno": true,
+    "packageJson.applyConventions": false,
+    "lineWidth": 160
+  },
+  "markdown": {
+    "textWrap": "never",
+    "wrapCodeSpans": false,
+    "codeBlock.skipFormat": true
+  },
+  "includes": [
+    "docs/**",
+    "src/**",
+    "src-editor/**",
+    "www/**",
+    "vscode-topos/src/**",
+    "package-topos/**",
+    "scripts/**",
+    "vite.config.ts"
+  ],
+  "excludes": [
+    "**/*.gen.ts",
+    "**/*.test.ts",
+    "**/compendium*",
+    "package-topos/dist/**",
+    "vscode-topos/out/**",
+    "node_modules/**",
+    "tmp/**"
+  ],
+  "plugins": [
+    "./node_modules/@dprint/typescript/plugin.wasm",
+    "./node_modules/@dprint/json/plugin.wasm",
+    "./node_modules/@dprint/markdown/plugin.wasm"
+  ]
+}

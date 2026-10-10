@@ -1,4 +1,4 @@
-// deno-fmt-ignore-file
+// dprint-ignore-file
 // svg.ts
 // Typed SVG wrappers over jsonml.ts.
 // Provides compile-time validation of SVG tag names and per-tag attribute shapes.
