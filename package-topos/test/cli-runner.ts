@@ -2,7 +2,7 @@ import { execFile } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const CLI = fileURLToPath(new URL("../cli.ts", import.meta.url));
-const LOADER = fileURLToPath(import.meta.resolve("@oxc-node/core/register"));
+const LOADER = import.meta.resolve("@oxc-node/core/register");
 
 export async function runCli(
   args: string[],

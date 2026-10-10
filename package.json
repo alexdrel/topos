@@ -32,7 +32,8 @@
     "ext:package": "node scripts/package-extension.ts",
     "ext:watch": "node scripts/build.ts --watch",
     "package:build": "node scripts/build.ts --package",
-    "test:unit": "node --import @oxc-node/core/register --test --test-reporter=dot",
+    "test:dot": "node --import @oxc-node/core/register --test --test-reporter=dot",
+    "test:unit": "node --import @oxc-node/core/register --test --test-reporter=spec",
     "test": "npm run check && npm run lint && npm run test:unit",
     "coverage": "c8 node --import @oxc-node/core/register --test --test-reporter=dot"
   },

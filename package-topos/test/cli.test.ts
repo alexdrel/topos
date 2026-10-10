@@ -10,7 +10,7 @@ import { runCli } from "./cli-runner.ts";
 test("CLI: no arguments show help without reading stdin", async () => {
   const result = await runCli([]);
 
-  assertEquals(result.code, 0);
+  assertEquals(result.code, 0, result.stderr);
   assertStringIncludes(result.stdout, `Topos ${packageJson.version}`);
   assertStringIncludes(result.stdout, "Usage:");
   assertStringIncludes(result.stdout, "--inspect");
