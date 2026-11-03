@@ -1,25 +1,22 @@
 import { GLYPHS, type GlyphSpec, Trait } from "../../../src/grammar.ts";
 import { Dir } from "../../../src/geo.ts";
-import glyphsHtml from "./glyphs.html?raw";
+import template from "./glyphs.html.js";
+import "../css/glyphs.css";
+import { appendChild, type ParamNode } from "@alexdrel/pralinejs";
+import { Panel } from "../panel.ts";
 
-export interface GlyphPaneConfig {
+export class GlyphPane extends Panel {
   onInsert: (glyph: string) => void;
-}
 
-export function initGlyphPane(config: GlyphPaneConfig): void {
-  const glyphSection = document.getElementById("glyph-section") as HTMLDivElement;
-  if (glyphSection) {
-    glyphSection.innerHTML = glyphsHtml;
+  constructor(onInsert: (glyph: string) => void) {
+    const mount = document.getElementById("glyph-section")!;
+    super(mount, mount, "side");
+    this.onInsert = onInsert;
+    this.materialize(template);
+    this.populateGlyphs();
   }
 
-  const glyphPane = document.getElementById("glyph-pane") as HTMLDivElement;
-  const glyphToggleBtn = document.getElementById("btn-glyph-toggle") as HTMLElement;
-
-  let glyphExpanded = true;
-
-  function populateGlyphs() {
-    glyphPane.innerHTML = "";
-
+  populateGlyphs() {
     // We'll build a list of groups to render in order.
     const sections: { title?: string; chars: string[] }[] = [];
 
@@ -31,13 +28,13 @@ export function initGlyphPane(config: GlyphPaneConfig): void {
 
     // 1. Single weight wires
     const single = Object.entries(GLYPHS)
-      .filter(([_, s]) => (s.trait & Trait.Wire) && s.family !== "ascii" && isPureWeight(s, "single") && s.corner !== "rounded")
+      .filter(([_, s]) => s.trait & Trait.Wire && s.family !== "ascii" && isPureWeight(s, "single") && s.corner !== "rounded")
       .map(([c]) => c);
     if (single.length > 0) sections.push({ title: "Single", chars: single });
 
     // 2. Rounded corners
     const rounded = Object.entries(GLYPHS)
-      .filter(([_, s]) => (s.trait & Trait.Wire) && s.family !== "ascii" && s.corner === "rounded")
+      .filter(([_, s]) => s.trait & Trait.Wire && s.family !== "ascii" && s.corner === "rounded")
       .map(([c]) => c);
     if (rounded.length > 0) sections.push({ title: "Rounded Corners", chars: rounded });
 
@@ -46,7 +43,7 @@ export function initGlyphPane(config: GlyphPaneConfig): void {
     for (const w of otherWeights) {
       // Bold and Double now include mixed-weight junctions implicitly via the spec's weight record
       const chars = Object.entries(GLYPHS)
-        .filter(([_, s]) => (s.trait & Trait.Wire) && s.family !== "ascii" && matchWeight(s, w) && s.corner !== "rounded")
+        .filter(([_, s]) => s.trait & Trait.Wire && s.family !== "ascii" && matchWeight(s, w) && s.corner !== "rounded")
         .map(([c]) => c);
       if (chars.length > 0) {
         sections.push({ title: w, chars });
@@ -58,7 +55,7 @@ export function initGlyphPane(config: GlyphPaneConfig): void {
     const arrowRows = arrowOrder
       .map((mask) =>
         Object.entries(GLYPHS)
-          .filter(([_, s]) => (s.trait & Trait.Arrow) && (s.mask === mask))
+          .filter(([_, s]) => s.trait & Trait.Arrow && s.mask === mask)
           .map(([c]) => c)
       )
       .filter((chars) => chars.length > 0);
@@ -68,7 +65,7 @@ export function initGlyphPane(config: GlyphPaneConfig): void {
 
     // 5. Hubs
     const hubs = Object.entries(GLYPHS)
-      .filter(([_, s]) => (s.trait & Trait.Hub))
+      .filter(([_, s]) => s.trait & Trait.Hub)
       .map(([char]) => char);
     if (hubs.length > 0) sections.push({ title: "Hubs", chars: hubs });
 
@@ -79,37 +76,18 @@ export function initGlyphPane(config: GlyphPaneConfig): void {
       .map(([c]) => c);
     if (misc.length > 0) sections.push({ title: "Misc", chars: misc });
 
+    const content: ParamNode[] = [];
     for (const section of sections) {
       if (section.title) {
-        const title = document.createElement("div");
-        title.className = "field-label glyph-group-title";
-        title.textContent = section.title;
-        glyphPane.appendChild(title);
+        content.push(["div", { class: "group-title" }, section.title]);
       }
 
-      const grid = document.createElement("div");
-      grid.className = "glyph-grid";
-
-      for (const char of section.chars) {
-        const item = document.createElement("div");
-        item.className = "glyph-item";
-        item.textContent = char;
-        item.title = `Insert ${char}`;
-        item.addEventListener("click", () => config.onInsert(char));
-        grid.appendChild(item);
-      }
-      glyphPane.appendChild(grid);
+      content.push([
+        "div",
+        { class: "grid" },
+        ...section.chars.map((char) => ["div", { class: "item", title: `Insert ${char}`, onClick: () => this.onInsert(char) }, char] satisfies ParamNode),
+      ]);
     }
+    appendChild(this.content, content);
   }
-
-  glyphToggleBtn.addEventListener("click", () => {
-    glyphExpanded = !glyphExpanded;
-    glyphSection.classList.toggle("collapsed", !glyphExpanded);
-    glyphToggleBtn.setAttribute("aria-expanded", String(glyphExpanded));
-    const chevron = document.getElementById("glyph-chevron");
-    if (chevron) chevron.textContent = glyphExpanded ? "▾" : "▸";
-    globalThis.dispatchEvent(new Event("resize"));
-  });
-
-  populateGlyphs();
 }

@@ -1,139 +1,121 @@
 /// <reference lib="dom" />
+import { Context } from "@alexdrel/perky";
+import { PersistedSignal } from "./signals/persisted-signal.ts";
+import { cancelInteraction, MainEditorView, mainEditorViews } from "./app-context.ts";
 import defaultSource from "./default.topos?raw";
 import { EditorModel } from "../../src-editor/model/model.ts";
 import { ToposDocument } from "../../src-editor/model/document.ts";
-import { initToolbar, type MainView } from "./panes/toolbar.ts";
-import { initSlatePane } from "./panes/slate.ts";
-import { initLegendPane } from "./panes/legend.ts";
-import { initEnamelPane } from "./panes/enamel.ts";
-import { initInspectorPane } from "./panes/inspector.ts";
-import { initLayoutPane } from "./layout.ts";
-import { initSource } from "./panes/source.ts";
+import { Toolbar } from "./panes/toolbar.ts";
+import { SlatePane } from "./panes/slate.ts";
+import { LegendPane } from "./panes/legend.ts";
+import { EnamelPane, MainEnamelViewer } from "./panes/enamel.ts";
+import { InspectorPane } from "./panes/inspector.ts";
+import { Layout } from "./layout.ts";
+import { Source } from "./panes/source.ts";
+import { GlyphPane } from "./panes/glyphs.ts";
+import { Cheatsheet } from "./panes/cheatsheet.ts";
 import { EditorHistory } from "../../src-editor/model/history.ts";
 import { renderToMono } from "../../src/ink/mono/mono.ts";
 
-const surfacePanel = document.querySelector(".surface-panel") as HTMLDivElement;
 const DOCUMENT_STORAGE_KEY = "topos-editor-document";
-const VIEW_STORAGE_KEY = "topos-editor-view";
 
-const storedView = localStorage.getItem(VIEW_STORAGE_KEY);
-let view: MainView = storedView === "svg" ? "svg" : "slate";
-let viewerOrigin: Exclude<MainView, "svg"> = "slate";
+class App {
+  mainEditorView = new PersistedSignal("topos-editor-view", mainEditorViews);
+  context = new Context(MainEditorView(this.mainEditorView));
+  lastEditorView: MainEditorView = "slate";
 
-const toposDocument = new ToposDocument(localStorage.getItem(DOCUMENT_STORAGE_KEY) ?? defaultSource);
-const model = new EditorModel(toposDocument);
-const history = new EditorHistory(model);
-const inspectorPane = initInspectorPane(model);
+  toposDocument = new ToposDocument(localStorage.getItem(DOCUMENT_STORAGE_KEY) ?? defaultSource);
+  model = new EditorModel(this.toposDocument);
+  history = new EditorHistory(this.model);
 
-const enamelPane = initEnamelPane({
-  sectionId: "enamel-section",
-  paneId: "enamel-pane",
-});
-const mainEnamelPane = initEnamelPane({
-  paneId: "main-enamel-pane",
-  toolbarMountId: "surface-toolbar-mount",
-  paperStorageKey: "topos-editor-main-enamel-paper",
-  keyboardShortcuts: true,
-});
+  inspectorPane = new InspectorPane(this.model);
+  enamelPane = new EnamelPane(this.context);
+  mainEnamelPane = new MainEnamelViewer(this.context);
+  legendPane = new LegendPane(this.model);
+  cheatsheet = Cheatsheet(document.body);
+  slatePane = new SlatePane(this.model, this.history);
+  sourcePane = new Source(
+    (source) => this.history.updateSource(source),
+    () => this.commitSource(),
+  );
+  glyphPane = new GlyphPane(this.sourcePane.insertAtCursor);
+  toolbar = new Toolbar(this.model, this.mainEditorView);
 
-const legendPane = initLegendPane(model);
+  layout = new Layout(
+    document.querySelector(".workspace")!,
+    document.querySelector(".side-panel")!,
+    [this.slatePane, this.sourcePane, this.mainEnamelPane],
+    [this.inspectorPane, this.legendPane, this.enamelPane, this.glyphPane],
+  );
 
-const slatePane = initSlatePane(model, history);
-const sourcePane = initSource({
-  change: (source) => history.updateSource(source),
-  commit: () => {
-    history.commitSource();
-    storeDocument();
-  },
-});
-
-const layoutPane = initLayoutPane({
-  getInspectorExpanded: inspectorPane.isExpanded,
-  getLegendExpanded: legendPane.isExpanded,
-  getEnamelExpanded: enamelPane.isExpanded,
-  onLayoutChange: () => {
-    slatePane.refresh();
-    enamelPane.refresh();
-    mainEnamelPane.refresh();
-  },
-});
-
-function renderPreviews() {
-  const showSide = view === "slate" && enamelPane.isExpanded();
-  if (showSide) enamelPane.setContent(toposDocument.source);
-  else enamelPane.clear();
-  if (view === "svg") mainEnamelPane.setContent(toposDocument.source);
-  else mainEnamelPane.clear();
-}
-
-function syncView() {
-  const svg = view === "svg";
-  const source = view === "source";
-  surfacePanel.classList.toggle("svg-focus", svg);
-  document.body.classList.toggle("svg-focus", svg);
-  document.body.classList.toggle("source-focus", source);
-  slatePane.setVisible(view === "slate");
-  if (svg) legendPane.setExpanded(true);
-  layoutPane.updateSidePanelState();
-  layoutPane.refreshLayoutAfterWindowResize();
-  renderPreviews();
-  toolbar.refresh();
-}
-
-function setView(next: MainView) {
-  if (next === "svg" && view !== "svg") viewerOrigin = view;
-  if (view === "source") sourcePane.close();
-  view = next;
-  localStorage.setItem(VIEW_STORAGE_KEY, view);
-  if (view === "source") sourcePane.open(toposDocument.source);
-  syncView();
-  if (view === "slate") slatePane.focus();
-}
-
-function storeDocument() {
-  localStorage.setItem(DOCUMENT_STORAGE_KEY, toposDocument.source);
-}
-
-function replaceDocument(source: string, nextView: MainView = "slate") {
-  slatePane.cancel();
-  source = source.split(/\r?\n/).map((line) => line.trimEnd()).join("\n").trimEnd();
-  model.applySource(source);
-  setView(nextView);
-}
-
-const toolbar = initToolbar({
-  getView: () => view,
-  setView,
-  onNewCase: () => replaceDocument(""),
-  onCaseLoaded: (source) => replaceDocument(source, view === "svg" ? "svg" : "slate"),
-  onCopyAll: () => toposDocument.source,
-  onPasteAll: replaceDocument,
-  renderMonosketch: (name) => renderToMono(model.traceMap, name),
-});
-
-model.subscribe((_model, event) => {
-  inspectorPane.render();
-  renderPreviews();
-  if (event?.commit) storeDocument();
-});
-
-globalThis.addEventListener("resize", slatePane.refresh);
-globalThis.addEventListener("keydown", (event) => {
-  const mod = event.metaKey || event.ctrlKey;
-  const key = event.key.toLowerCase();
-
-  if (!mod || !event.shiftKey) return;
-  if (key === "v") {
-    event.preventDefault();
-    setView(view === "svg" ? viewerOrigin : "svg");
-    return;
+  constructor() {
+    this.slatePane.toggleCheatsheet = this.cheatsheet.toggle;
+    this.toolbar.renderMonosketch = (name) => renderToMono(this.model.traceMap, name);
+    this.mainEditorView.apply = this.applyMainView;
+    this.model.subscribe((_model, event) => this.onModelChange(event?.commit));
+    globalThis.addEventListener("keydown", this.onKeyDown);
+    this.applyMainView(this.mainEditorView.value, undefined);
   }
-  if (key === "d") {
-    event.preventDefault();
-    setView(view === "slate" ? "source" : "slate");
-  }
-});
 
-layoutPane.initialize();
-syncView();
-if (view === "slate") slatePane.focus();
+  applyMainView = (view: MainEditorView, previous: MainEditorView | undefined) => {
+    if (previous !== undefined && view !== previous) cancelInteraction.value = this;
+    if (view === "svg" && previous !== undefined && previous !== "svg") this.lastEditorView = previous;
+    if (view === "source") this.sourcePane.open(this.toposDocument.source);
+    const svg = view === "svg";
+    const source = view === "source";
+    this.slatePane.toggle(view === "slate");
+    this.sourcePane.toggle(source);
+    this.mainEnamelPane.toggle(svg);
+    this.inspectorPane.toggle(view === "slate");
+    this.enamelPane.toggle(view === "slate");
+    this.legendPane.toggle(!source);
+    this.glyphPane.toggle(source);
+    if (view !== "slate") this.enamelPane.source = null;
+    if (!svg) this.mainEnamelPane.source = null;
+    this.layout.resize();
+    this.renderPreview(view);
+    if (view === "slate") this.slatePane.focus();
+  };
+
+  renderPreview(view: MainEditorView) {
+    if (view === "slate") this.enamelPane.source = this.toposDocument.source;
+    else if (view === "svg") this.mainEnamelPane.source = this.toposDocument.source;
+  }
+
+  onModelChange(commit = false) {
+    this.inspectorPane.render();
+    this.renderPreview(this.mainEditorView.value);
+    if (commit) this.storeDocument();
+  }
+
+  commitSource() {
+    this.history.commitSource();
+    this.storeDocument();
+  }
+
+  storeDocument() {
+    localStorage.setItem(DOCUMENT_STORAGE_KEY, this.toposDocument.source);
+  }
+
+  onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      cancelInteraction.value = event.key;
+      return;
+    }
+    const mod = event.metaKey || event.ctrlKey;
+    const key = event.key.toLowerCase();
+
+    if (!mod || !event.shiftKey) return;
+    if (key === "v") {
+      event.preventDefault();
+      this.mainEditorView.value = this.mainEditorView.value === "svg" ? this.lastEditorView : "svg";
+      return;
+    }
+    if (key === "d") {
+      event.preventDefault();
+      this.mainEditorView.value = this.mainEditorView.value === "slate" ? "source" : "slate";
+    }
+  };
+}
+
+new App();

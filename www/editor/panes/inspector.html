@@ -1,1 +1,16 @@
-<div id="inspector-content" class="inspector-block"></div>
+<header ref="{{panelToolbar}}" class="inspector-header">
+  <div class="pane-head-toggle">
+    <span>Inspector</span>
+    <span ref="{{inspectorMeta}}" class="meta"></span>
+  </div>
+</header>
+<div ref="{{panelBody}}" class="inspector-body pane-body">
+  <div class="block">
+    <template ref="{{inspectorRow}}">
+      <div class="row">
+        <span class="key">{{key}}</span>
+        <span class="value">{{value}}</span>
+      </div>
+    </template>
+  </div>
+</div>

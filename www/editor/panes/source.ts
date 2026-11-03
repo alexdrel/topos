@@ -1,40 +1,90 @@
-import sourceHtml from "./source.html?raw";
-import { initGlyphPane } from "./glyphs.ts";
+import template, { type Refs } from "./source.html.js";
+import "../css/source.css";
+import { Panel } from "../panel.ts";
+import { observe } from "@alexdrel/perky";
 
-interface SourceEditorApi {
-  setText(text: string): void;
-  focus(): void;
-  insertAtCursor(text: string): void;
+function caretFromText(text: string, index: number): { x: number; y: number } {
+  const bounded = Math.max(0, Math.min(index, text.length));
+  let y = 0;
+  let lastBreak = -1;
+  for (let i = 0; i < bounded; i++) {
+    if (text.charCodeAt(i) === 10) {
+      y++;
+      lastBreak = i;
+    }
+  }
+  return { x: bounded - (lastBreak + 1), y };
 }
 
-function initSourceEditor(onChange: (source: string) => void, onCommit: () => void): SourceEditorApi {
-  const sourceInput = document.getElementById("source-input") as HTMLTextAreaElement;
-  const caretPos = document.getElementById("caret-pos") as HTMLSpanElement;
-  const overwriteBtn = document.getElementById("btn-overwrite") as HTMLButtonElement;
+function indexFromCaret(lines: string[], x: number, y: number): number {
+  let index = 0;
+  for (let i = 0; i < y; i++) index += lines[i].length + 1;
+  return index + x;
+}
 
-  let overwriteMode = true;
-  let isNormalizing = false;
+function normalizeGrid(text: string, start: number, end: number, forceAll: boolean) {
+  const { x: startX, y: startY } = caretFromText(text, start);
+  const { x: endX, y: endY } = caretFromText(text, end);
+  const lines = text.split("\n");
+  const width = Math.max(0, ...lines.map((line) => line.length));
 
-  // Sync initial UI state
-  if (overwriteBtn) {
-    overwriteBtn.classList.toggle("active", overwriteMode);
-  }
-  sourceInput.classList.toggle("ovr-active", overwriteMode);
-
-  function toggleOverwrite() {
-    overwriteMode = !overwriteMode;
-    if (overwriteBtn) {
-      overwriteBtn.classList.toggle("active", overwriteMode);
+  let changed = false;
+  const padded = lines.map((line, index) => {
+    // Pad selected lines by default to keep the edit and undo range small.
+    if ((forceAll || (index >= startY && index <= endY)) && line.length < width) {
+      changed = true;
+      return line.padEnd(width);
     }
-    sourceInput.classList.toggle("ovr-active", overwriteMode);
-    updateCaretPositionDisplay();
+    return line;
+  });
+  if (!changed) return;
+  return {
+    text: padded.join("\n"),
+    start: indexFromCaret(padded, startX, startY),
+    end: indexFromCaret(padded, endX, endY),
+  };
+}
+
+function textChange(oldText: string, newText: string) {
+  let start = 0;
+  while (start < oldText.length && start < newText.length && oldText[start] === newText[start]) start++;
+
+  let oldEnd = oldText.length;
+  let newEnd = newText.length;
+  while (oldEnd > start && newEnd > start && oldText[oldEnd - 1] === newText[newEnd - 1]) {
+    oldEnd--;
+    newEnd--;
+  }
+  return { start, end: oldEnd, replacement: newText.slice(start, newEnd) };
+}
+
+export class Source extends Panel {
+  refs: Refs;
+  change: (source: string) => void;
+  commit: () => void;
+  overwriteMode = false;
+  isNormalizing = false;
+
+  constructor(change: (source: string) => void, commit: () => void) {
+    super(document.getElementById("surface-toolbar-mount")!, document.getElementById("surface-stack")!, "main");
+    this.change = change;
+    this.commit = commit;
+    const refs = this.materialize(template, { toggleOverwrite: () => (this.overwriteMode = !this.overwriteMode) });
+    this.refs = refs;
+    observe(this, "overwriteMode", (overwrite) => {
+      refs.overwriteBtn.classList.toggle("active", overwrite);
+      refs.overwriteBtn.setAttribute("aria-pressed", String(overwrite));
+      refs.sourceInput.classList.toggle("ovr-active", overwrite);
+    });
+    refs.sourceInput.addEventListener("keydown", this.onKeydown);
+    for (const event of ["input", "click", "keyup", "select", "focus"]) {
+      refs.sourceInput.addEventListener(event, this.onInteraction);
+    }
+    refs.sourceInput.addEventListener("blur", this.onBlur);
   }
 
-  if (overwriteBtn) {
-    overwriteBtn.addEventListener("click", toggleOverwrite);
-  }
-
-  function applyFullTextChangeUndoable(newValue: string, newStart: number, newEnd: number) {
+  applyFullTextChangeUndoable(newValue: string, newStart: number, newEnd: number) {
+    const { sourceInput } = this.refs;
     const oldValue = sourceInput.value;
     if (oldValue === newValue) {
       sourceInput.setSelectionRange(newStart, newEnd);
@@ -42,26 +92,10 @@ function initSourceEditor(onChange: (source: string) => void, onCommit: () => vo
     }
 
     const { scrollTop, scrollLeft } = sourceInput;
-
-    // Find minimal range to replace to avoid "Select All" in undo history
-    let i = 0;
-    while (i < oldValue.length && i < newValue.length && oldValue[i] === newValue[i]) i++;
-
-    let j = 0;
-    while (
-      j < oldValue.length - i &&
-      j < newValue.length - i &&
-      oldValue[oldValue.length - 1 - j] === newValue[newValue.length - 1 - j]
-    ) {
-      j++;
-    }
-
-    const rangeStart = i;
-    const rangeEnd = oldValue.length - j;
-    const replacement = newValue.slice(i, newValue.length - j);
+    const { start, end, replacement } = textChange(oldValue, newValue);
 
     sourceInput.focus();
-    sourceInput.setSelectionRange(rangeStart, rangeEnd);
+    sourceInput.setSelectionRange(start, end);
 
     // execCommand('insertText') is the only way to preserve undo stack in textarea
     if (!document.execCommand("insertText", false, replacement)) {
@@ -73,14 +107,15 @@ function initSourceEditor(onChange: (source: string) => void, onCommit: () => vo
     sourceInput.scrollLeft = scrollLeft;
   }
 
-  sourceInput.addEventListener("keydown", (e) => {
+  onKeydown = (e: KeyboardEvent) => {
+    const { sourceInput } = this.refs;
     if (e.key === "Insert") {
       e.preventDefault();
-      toggleOverwrite();
+      this.overwriteMode = !this.overwriteMode;
       return;
     }
 
-    if (overwriteMode && e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    if (this.overwriteMode && e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) {
       const start = sourceInput.selectionStart;
       if (start === sourceInput.selectionEnd) {
         const val = sourceInput.value;
@@ -95,140 +130,60 @@ function initSourceEditor(onChange: (source: string) => void, onCommit: () => vo
         }
       }
     }
-  });
+  };
 
-  function caretFromText(text: string, index: number): { x: number; y: number } {
-    const bounded = Math.max(0, Math.min(index, text.length));
-    let y = 0;
-    let lastBreak = -1;
-    for (let i = 0; i < bounded; i++) {
-      if (text.charCodeAt(i) === 10) {
-        y++;
-        lastBreak = i;
-      }
-    }
-    return { x: bounded - (lastBreak + 1), y };
-  }
-
-  function updateCaretPositionDisplay() {
+  updateCaretPositionDisplay() {
+    const { sourceInput, caretPos } = this.refs;
     const index = sourceInput.selectionStart ?? 0;
     const { x, y } = caretFromText(sourceInput.value, index);
     caretPos.textContent = `x ${x}, y ${y}`;
   }
 
-  function indexFromCaret(lines: string[], x: number, y: number): number {
-    let index = 0;
-    for (let i = 0; i < y; i++) {
-      index += lines[i].length + 1;
-    }
-    return index + x;
-  }
-
-  function normalizeGrid(forceAll = false) {
-    if (isNormalizing) return;
-    isNormalizing = true;
+  normalizeGrid(forceAll = false) {
+    if (this.isNormalizing) return;
+    this.isNormalizing = true;
+    const { sourceInput } = this.refs;
     try {
-      const text = sourceInput.value;
-      const start = sourceInput.selectionStart ?? 0;
-      const end = sourceInput.selectionEnd ?? 0;
-
-      const { x: startX, y: startY } = caretFromText(text, start);
-      const { x: endX, y: endY } = caretFromText(text, end);
-
-      const lines = text.split("\n");
-      const targetW = Math.max(0, ...lines.map((l) => l.length));
-
-      let changed = false;
-      const nextLines = lines.map((l, i) => {
-        // Only pad the lines within current selection by default.
-        // This keeps the edit diff minimal and prevents "Select All" on Undo.
-        if ((forceAll || (i >= startY && i <= endY)) && l.length < targetW) {
-          changed = true;
-          return l.padEnd(targetW);
-        }
-        return l;
-      });
-
-      if (changed) {
-        const nextText = nextLines.join("\n");
-        const newStart = indexFromCaret(nextLines, startX, startY);
-        const newEnd = indexFromCaret(nextLines, endX, endY);
-        applyFullTextChangeUndoable(nextText, newStart, newEnd);
-      }
+      const normalized = normalizeGrid(sourceInput.value, sourceInput.selectionStart, sourceInput.selectionEnd, forceAll);
+      if (normalized) this.applyFullTextChangeUndoable(normalized.text, normalized.start, normalized.end);
     } finally {
-      isNormalizing = false;
+      this.isNormalizing = false;
     }
   }
 
-  function onInteraction(event: Event) {
-    normalizeGrid(false);
-    updateCaretPositionDisplay();
-    if (event.type === "input") onChange(sourceInput.value);
-  }
-
-  ["input", "click", "keyup", "select", "focus"].forEach((evt) => {
-    sourceInput.addEventListener(evt, onInteraction);
-  });
-
-  sourceInput.addEventListener("blur", () => {
-    normalizeGrid(true);
-    onChange(sourceInput.value);
-    onCommit();
-  });
-
-  return {
-    setText: (text: string) => {
-      sourceInput.value = text;
-      normalizeGrid();
-      updateCaretPositionDisplay();
-    },
-    focus: () => {
-      requestAnimationFrame(() => {
-        sourceInput.focus({ preventScroll: true });
-        updateCaretPositionDisplay();
-      });
-    },
-    insertAtCursor: (text: string) => {
-      const start = sourceInput.selectionStart ?? 0;
-      const end = sourceInput.selectionEnd ?? 0;
-      sourceInput.setSelectionRange(start, end);
-      if (!document.execCommand("insertText", false, text)) {
-        sourceInput.setRangeText(text, start, end, "end");
-      }
-      normalizeGrid();
-      sourceInput.focus();
-      sourceInput.dispatchEvent(new Event("input", { bubbles: true }));
-    },
+  onInteraction = (event: Event) => {
+    this.normalizeGrid(false);
+    this.updateCaretPositionDisplay();
+    if (event.type === "input") this.change(this.refs.sourceInput.value);
   };
-}
 
-export interface SourceApi {
-  open(source: string): void;
-  close(): void;
-}
+  onBlur = () => {
+    this.normalizeGrid(true);
+    this.change(this.refs.sourceInput.value);
+    this.commit();
+  };
 
-export function initSource(config: { change(source: string): void; commit(): void }): SourceApi {
-  const mount = document.getElementById("source-mount") as HTMLDivElement;
-  const template = document.createElement("template");
-  template.innerHTML = sourceHtml;
-  const toolbar = template.content.querySelector<HTMLElement>("[data-source-part=toolbar]")!;
-  const pane = template.content.querySelector<HTMLElement>("[data-source-part=body]")!;
-  document.getElementById("surface-toolbar-mount")!.appendChild(toolbar);
-  mount.appendChild(pane);
-  const editor = initSourceEditor(config.change, config.commit);
-  initGlyphPane({ onInsert: editor.insertAtCursor });
+  insertAtCursor = (text: string) => {
+    const { sourceInput } = this.refs;
+    const start = sourceInput.selectionStart ?? 0;
+    const end = sourceInput.selectionEnd ?? 0;
+    sourceInput.setSelectionRange(start, end);
+    if (!document.execCommand("insertText", false, text)) {
+      sourceInput.setRangeText(text, start, end, "end");
+    }
+    this.normalizeGrid();
+    sourceInput.focus();
+    sourceInput.dispatchEvent(new Event("input", { bubbles: true }));
+  };
 
-  function close() {
-    toolbar.classList.add("hidden");
-    pane.classList.add("hidden");
+  open(text: string) {
+    this.refs.sourceInput.value = text;
+    this.normalizeGrid();
+    this.updateCaretPositionDisplay();
+    this.toggle(true);
+    requestAnimationFrame(() => {
+      this.refs.sourceInput.focus({ preventScroll: true });
+      this.updateCaretPositionDisplay();
+    });
   }
-
-  function open(text: string) {
-    editor.setText(text);
-    toolbar.classList.remove("hidden");
-    pane.classList.remove("hidden");
-    editor.focus();
-  }
-
-  return { open, close };
 }

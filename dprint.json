@@ -27,6 +27,8 @@
     "vite.config.ts"
   ],
   "excludes": [
+    "www/editor/**/*.html.d.ts",
+    "www/editor/**/*.html.ts",
     "**/*.gen.ts",
     "**/*.test.ts",
     "**/compendium*",

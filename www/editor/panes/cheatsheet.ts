@@ -1,36 +1,33 @@
-import cheatsheetHtml from "./cheatsheet.html?raw";
+import template from "./cheatsheet.html.js";
+import "../css/cheatsheet.css";
 import { isMac } from "../../../src-editor/slate/dom.ts";
+import { materialize } from "@alexdrel/pralinejs";
+import { observe } from "@alexdrel/perky";
+import { cancelInteraction } from "../app-context.ts";
 
-export function initCheatsheet() {
-  const overlay = document.createElement("div");
-  overlay.id = "cheatsheet-overlay";
-  overlay.className = "cheatsheet-overlay hidden";
-  const mac = isMac();
-  overlay.innerHTML = cheatsheetHtml
-    .replaceAll("{{mod}}", mac ? "⌘" : "Ctrl")
-    .replaceAll("{{alt}}", mac ? "⌥" : "Alt")
-    .replaceAll("{{shift}}", mac ? "⇧" : "Shift");
-  document.body.appendChild(overlay);
-
-  const btnClose = overlay.querySelector("#btn-close-cheatsheet")!;
-
-  function toggle() {
-    overlay.classList.toggle("hidden");
-  }
-
-  function hide() {
-    overlay.classList.add("hidden");
-  }
-
-  btnClose.addEventListener("click", hide);
-  overlay.addEventListener("click", (event) => {
-    if (event.target === overlay) {
-      hide();
-    }
+export function Cheatsheet(mount: HTMLElement) {
+  const params = {
+    ...(isMac() ? { mod: "⌘", alt: "⌥", shift: "⇧" } : { mod: "Ctrl", alt: "Alt", shift: "Shift" }),
+    dismiss,
+  };
+  const { fragment, refs } = materialize(template, params);
+  mount.appendChild(fragment);
+  const cheatsheet = { visible: false, toggle };
+  observe(cheatsheet, "visible", (visible) => {
+    if (visible) cancelInteraction.value = cheatsheet;
+    refs.cheatsheetOverlay.hidden = !visible;
+  });
+  cancelInteraction.subscribe((initiator) => {
+    if (initiator !== cheatsheet) cheatsheet.visible = false;
   });
 
-  return {
-    toggle,
-    hide,
-  };
+  function toggle(visible = !cheatsheet.visible) {
+    if (visible !== cheatsheet.visible) cheatsheet.visible = visible;
+  }
+
+  function dismiss(event: MouseEvent) {
+    if (event.target === event.currentTarget) cheatsheet.visible = false;
+  }
+
+  return cheatsheet;
 }

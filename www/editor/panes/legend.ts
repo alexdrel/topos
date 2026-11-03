@@ -1,64 +1,51 @@
-import legendHtml from "./legend.html?raw";
+import template from "./legend.html.js";
+import "../css/legend.css";
 import type { EditorModel } from "../../../src-editor/model/model.ts";
+import { Panel } from "../panel.ts";
 
-export interface LegendPaneApi {
-  setExpanded(expanded: boolean): void;
-  isExpanded(): boolean;
-}
+export class LegendPane extends Panel {
+  model: EditorModel;
+  legendInput: HTMLTextAreaElement;
+  knownLegend: string;
+  knownLegendLines: string[];
+  committedLegend: string;
 
-export function initLegendPane(model: EditorModel): LegendPaneApi {
-  const legendSection = document.getElementById("legend-section") as HTMLElement;
-  if (legendSection) {
-    legendSection.innerHTML = legendHtml;
+  constructor(model: EditorModel) {
+    const mount = document.getElementById("legend-section")!;
+    super(mount, mount, "side");
+    this.model = model;
+    this.knownLegend = model.document.legendSource;
+    this.knownLegendLines = this.knownLegend.split("\n");
+    this.committedLegend = this.knownLegend;
+
+    const refs = this.materialize(template);
+    this.legendInput = refs.legendInput;
+    this.legendInput.value = this.knownLegend;
+
+    this.legendInput.addEventListener("input", this.editLegend);
+    this.legendInput.addEventListener("change", this.commitLegendEdit);
+    this.legendInput.addEventListener("blur", this.commitLegendEdit);
+    model.subscribe((_model, event) => this.syncFromModel(event?.commit));
   }
 
-  const legendInput = document.getElementById("legend-input") as HTMLTextAreaElement;
-  const toggleBtn = document.getElementById("btn-legend-toggle");
-  let expanded = true;
-  let dirty = false;
-  let knownLegend = model.document.legendSource;
-  let knownLegendLines = knownLegend.split("\n");
-  let committedLegend = knownLegend;
-  legendInput.value = knownLegend;
-
-  function setExpanded(e: boolean) {
-    if (!toggleBtn || !legendSection) return;
-    expanded = e;
-    legendSection.classList.toggle("collapsed", !expanded);
-    globalThis.dispatchEvent(new Event("resize"));
-  }
-
-  toggleBtn?.addEventListener("click", () => setExpanded(!expanded));
-
-  legendInput.addEventListener("input", () => {
-    knownLegend = legendInput.value;
-    knownLegendLines = knownLegend.split("\n");
-    dirty = knownLegend !== committedLegend;
-    model.updateLegendSource({ text: knownLegend, lines: knownLegendLines });
-  });
-  function commitLegendEdit() {
-    if (!dirty) return;
-    dirty = false;
-    model.updateLegendSource({ text: knownLegend, lines: knownLegendLines }, true);
-    committedLegend = knownLegend;
-  }
-  legendInput.addEventListener("change", commitLegendEdit);
-  legendInput.addEventListener("blur", commitLegendEdit);
-
-  model.subscribe((_model, event) => {
-    if (model.document.legendSource === knownLegend) {
-      return;
-    }
-    knownLegend = model.document.legendSource;
-    knownLegendLines = knownLegend.split("\n");
-    committedLegend = knownLegend;
-    dirty = false;
-    if (document.activeElement !== legendInput) legendInput.value = knownLegend;
-    if (event?.commit && knownLegend) setExpanded(true);
-  });
-
-  return {
-    setExpanded,
-    isExpanded: () => expanded,
+  editLegend = () => {
+    this.knownLegend = this.legendInput.value;
+    this.knownLegendLines = this.knownLegend.split("\n");
+    this.model.updateLegendSource({ text: this.knownLegend, lines: this.knownLegendLines });
   };
+
+  commitLegendEdit = () => {
+    if (this.knownLegend === this.committedLegend) return;
+    this.model.updateLegendSource({ text: this.knownLegend, lines: this.knownLegendLines }, true);
+    this.committedLegend = this.knownLegend;
+  };
+
+  syncFromModel(commit = false) {
+    if (this.model.document.legendSource === this.knownLegend) return;
+    this.knownLegend = this.model.document.legendSource;
+    this.knownLegendLines = this.knownLegend.split("\n");
+    this.committedLegend = this.knownLegend;
+    if (this.legendInput.ownerDocument.activeElement !== this.legendInput) this.legendInput.value = this.knownLegend;
+    if (commit && this.knownLegend) this.expanded = true;
+  }
 }

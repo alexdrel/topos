@@ -1,12 +1,25 @@
 @import "./themes.css";
-@import "./layout.css";
-@import "./panes.css";
+@import "./controls.css";
 @import "./dropdowns.css";
-@import "./toolbar.css";
-@import "./cheatsheet.css";
-@import "./inspector.css";
-@import "./legend.css";
-@import "./enamel.css";
-@import "./glyphs.css";
-@import "./source.css";
-@import "./slate.css";
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: radial-gradient(circle at top left, var(--bg-start) 0%, var(--bg) 45%, var(--bg-end) 100%);
+  color: var(--ink);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

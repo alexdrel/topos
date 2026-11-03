@@ -1,83 +1,74 @@
 <div class="topbar-actions">
-  <button id="btn-copy-all" class="icon-btn" type="button" title="Copy Map and Legend to Clipboard">
+  <button onClick="{{newDocument}}" class="icon-btn" type="button" title="New document"><span class="btn-glyph">＋</span><span>New</span></button>
+  <button ref="{{copyAllBtn}}" onClick="{{copyAll}}" class="icon-btn" type="button" title="Copy Map and Legend to Clipboard">
     <span class="btn-glyph">📋</span>
     <span>Copy Topos</span>
   </button>
-  <button id="btn-paste-all" class="icon-btn" type="button" title="Replace with Topos from Clipboard">
+  <button ref="{{pasteAllBtn}}" onClick="{{pasteAll}}" class="icon-btn" type="button" title="Replace with Topos from Clipboard">
     <span class="btn-glyph">📥</span>
     <span>Paste Topos</span>
   </button>
 </div>
-<div class="case-controls">
-  <select id="case-select" class="case-select">
-    <option value="__blank__">Blank</option>
-  </select>
-  <button id="btn-reload-cases" class="icon-btn">Clear</button>
+<div class="diagram-controls">
+  <div id="diagram-menu" ref="{{diagram.menu}}" class="dropdown">
+    <button class="icon-btn diagram-menu-btn" type="button" title="Diagram library">
+      <span ref="{{diagram.icon}}" class="btn-glyph">📄</span><span id="document-name" ref="{{diagram.name}}">Untitled</span>
+      <span class="btn-glyph" style="font-size: 0.6rem; margin-left: 2px;">▼</span>
+    </button>
+    <div class="menu-content diagram-menu-content" hidden>
+      <button onClick="{{openDiagram}}" class="menu-item-btn" type="button" data-url="/__topos/compendium" data-name="compendium">
+        <span class="btn-glyph">📚</span><span>Compendium</span>
+      </button>
+      <template ref="{{diagramItem}}">
+        <button onClick="{{openDiagram}}" class="menu-item-btn {{groupClass}}" type="button" data-url="{{url}}" data-name="{{name}}">
+          <span class="btn-glyph">{{icon}}</span><span>{{name}}</span>
+        </button>
+      </template>
+    </div>
+  </div>
+  <button ref="{{diagram.reload}}" onClick="{{reloadDiagram}}" class="icon-btn" type="button" title="Reload current diagram" disabled>
+    <span class="btn-glyph">↻</span><span>Reload</span>
+  </button>
 </div>
 <div class="topbar-actions">
-  <button id="btn-source-focus" class="icon-btn toggle-btn" type="button" aria-pressed="false" title="Edit raw Topos source">
+  <button ref="{{sourceFocusBtn}}" onClick="{{toggleSource}}" class="icon-btn toggle-btn" type="button" aria-pressed="false" title="Edit raw Topos source">
     <span class="btn-glyph">⌨</span>
     <span>Source</span>
   </button>
-  <button id="btn-svg-focus" class="icon-btn toggle-btn" type="button" aria-pressed="false" title="Show SVG on the main panel">
+  <button ref="{{svgFocusBtn}}" onClick="{{toggleSvg}}" class="icon-btn toggle-btn" type="button" aria-pressed="false" title="Show SVG on the main panel">
     <span class="btn-glyph">◧</span>
     <span>SVG View</span>
   </button>
 </div>
 <div class="topbar-meta">
-  <button id="btn-export-mono" class="icon-btn" type="button" title="Export to Monosketch">
+  <button ref="{{exportMonoBtn}}" onClick="{{exportMono}}" class="icon-btn" type="button" title="Export to Monosketch">
     <span class="btn-glyph">↗</span>
     <span>Monosketch</span>
   </button>
-  <div class="dropdown">
-    <button id="btn-font-menu" class="icon-btn dropdown-trigger-btn" type="button" title="Editor Font">
-      <span>Font: JuliaMono</span> <span class="btn-glyph" style="font-size: 0.6rem; margin-left: 2px;">▼</span>
+  <div ref="{{fontMenu}}" class="dropdown">
+    <button class="icon-btn" type="button" title="Editor Font">
+      <span>Font: <span class="choice-label"></span></span> <span class="btn-glyph" style="font-size: 0.6rem; margin-left: 2px;">▼</span>
     </button>
-    <div id="font-menu-content" class="menu-content hidden">
-      <button class="menu-item-btn font-option-btn active" data-value="JuliaMono"
-        style="font-family: 'JuliaMono', monospace; font-size: 0.68rem;">JuliaMono</button>
-      <button class="menu-item-btn font-option-btn" data-value="monospace" style="font-family: monospace; font-size: 0.68rem;">System Mono</button>
-      <button class="menu-item-btn font-option-btn" data-value="Roboto Mono"
-        style="font-family: 'Roboto Mono', monospace; font-size: 0.68rem;">Roboto Mono</button>
-      <button class="menu-item-btn font-option-btn" data-value="Fira Mono" style="font-family: 'Fira Mono', monospace; font-size: 0.68rem;">Fira Mono</button>
+    <div id="font-menu-content" class="menu-content" hidden>
+      <template ref="{{fontItem}}">
+        <button class="menu-item-btn font-option-btn" data-value="{{value}}" style="font-family: {{fontFamily}};">{{label}}</button>
+      </template>
     </div>
   </div>
 
-  <div class="dropdown">
-    <button id="btn-theme-menu" class="icon-btn dropdown-trigger-btn" type="button" title="Editor Theme">
-      <span>Theme: Erebus</span> <span class="btn-glyph" style="font-size: 0.6rem; margin-left: 2px;">▼</span>
+  <div ref="{{themeMenu}}" class="dropdown">
+    <button class="icon-btn" type="button" title="Editor Theme">
+      <span>Theme: <span class="choice-label"></span></span> <span class="btn-glyph" style="font-size: 0.6rem; margin-left: 2px;">▼</span>
     </button>
-    <div id="theme-menu-content" class="menu-content hidden">
-      <button class="menu-item-btn theme-option-btn active" data-value="erebus">
-        <span class="menu-item-title">
-          <span class="theme-color-preview" style="background: #111; border-color: #222;"></span>
-          <span>Erebus</span>
-        </span>
-      </button>
-      <button class="menu-item-btn theme-option-btn" data-value="solarized-dark">
-        <span class="menu-item-title">
-          <span class="theme-color-preview" style="background: #002b36; border-color: #073642;"></span>
-          <span>Solarized Dark</span>
-        </span>
-      </button>
-      <button class="menu-item-btn theme-option-btn" data-value="solarized-light">
-        <span class="menu-item-title">
-          <span class="theme-color-preview" style="background: #fdf6e3; border-color: #eee8d5;"></span>
-          <span>Solarized Light</span>
-        </span>
-      </button>
-      <button class="menu-item-btn theme-option-btn" data-value="classic">
-        <span class="menu-item-title">
-          <span class="theme-color-preview" style="background: #ffffff; border-color: #cccccc;"></span>
-          <span>Classic</span>
-        </span>
-      </button>
-      <button class="menu-item-btn theme-option-btn" data-value="monokai">
-        <span class="menu-item-title">
-          <span class="theme-color-preview" style="background: #272822; border-color: #3e3d32;"></span>
-          <span>Monokai</span>
-        </span>
-      </button>
+    <div id="theme-menu-content" class="menu-content" hidden>
+      <template ref="{{themeItem}}">
+        <button class="menu-item-btn" data-value="{{value}}">
+          <span class="menu-item-title">
+            <span class="theme-color-preview" style="{{previewStyle}}"></span>
+            <span>{{label}}</span>
+          </span>
+        </button>
+      </template>
     </div>
   </div>
 </div>

@@ -1,0 +1,84 @@
+button,
+select,
+textarea,
+input {
+  font-family: inherit;
+}
+
+button,
+select {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--control-grad-start) 0%, var(--control-grad-end) 100%);
+  color: var(--ink);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  font-size: 12px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--active-border);
+    border-color: var(--active-border);
+  }
+}
+
+button {
+  .btn-glyph {
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+    filter: brightness(1.2);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  &:disabled {
+    color: var(--control-disabled);
+  }
+
+  &.danger-btn:not(:disabled) {
+    border-color: #9a5b5b;
+    color: #d8aaaa;
+
+    &:hover {
+      border-color: #b66f6f;
+      color: #efbcbc;
+    }
+  }
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+
+  &.success {
+    border-color: #5b9a68;
+    color: #aad8b6;
+  }
+}
+
+.toggle-btn.active {
+  border-color: var(--line);
+  color: var(--accent-soft);
+  background: linear-gradient(180deg, var(--control-grad-end) 0%, var(--control-grad-start) 100%);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}

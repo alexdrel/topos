@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import type { ServerResponse } from "node:http";
 import { basename, join, relative, resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
+import praline from "@alexdrel/pralinejs/vite";
 
 const TOPOS_WATCH_IGNORED = ["**/src/enamel/compendium/compendium.topos"];
 
@@ -208,7 +209,15 @@ function wwwPlugin(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [toposPlugin(), wwwPlugin()],
+  plugins: [praline({ sources: "www/editor", emit: "dts" }), toposPlugin(), wwwPlugin()],
+  build: {
+    rolldownOptions: {
+      input: {
+        editor: resolve(import.meta.dirname, "www/editor.html"),
+        slate: resolve(import.meta.dirname, "www/slate.html"),
+      },
+    },
+  },
   server: {
     host: "::",
     watch: {

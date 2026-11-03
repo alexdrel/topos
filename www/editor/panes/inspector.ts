@@ -1,12 +1,9 @@
 import { boundingRect } from "../../../src/geo.ts";
 import type { TraceBox } from "../../../src/trace/types.ts";
 import type { EditorModel } from "../../../src-editor/model/model.ts";
-import inspectorHtml from "./inspector.html?raw";
-
-export interface InspectorPaneApi {
-  render(): void;
-  isExpanded(): boolean;
-}
+import template, { type Refs } from "./inspector.html.js";
+import "../css/inspector.css";
+import { Panel } from "../panel.ts";
 
 interface InspectorRow {
   key: string;
@@ -15,7 +12,12 @@ interface InspectorRow {
 
 function traceText(trace: TraceBox): string {
   if (trace.type === "line" || trace.type === "box" || trace.type === "hub") {
-    return trace.rawLabels?.map((label) => label.text).filter(Boolean).join(" · ") ?? "";
+    return (
+      trace.rawLabels
+        ?.map((label) => label.text)
+        .filter(Boolean)
+        .join(" · ") ?? ""
+    );
   }
   return trace.text ?? "";
 }
@@ -74,42 +76,22 @@ function diagramRows(model: EditorModel): InspectorRow[] {
   ];
 }
 
-export function initInspectorPane(model: EditorModel): InspectorPaneApi {
-  const inspectorBody = document.getElementById("inspector-body") as HTMLDivElement;
-  inspectorBody.innerHTML = inspectorHtml;
-  const toggle = document.getElementById("btn-inspector-toggle") as HTMLElement;
-  const content = document.getElementById("inspector-content") as HTMLDivElement;
-  const meta = document.getElementById("inspector-meta") as HTMLSpanElement;
-  const chevron = document.getElementById("inspector-chevron") as HTMLSpanElement;
-  let expanded = true;
+export class InspectorPane extends Panel {
+  model: EditorModel;
+  refs: Refs;
 
-  function setExpanded(next: boolean) {
-    expanded = next;
-    toggle.setAttribute("aria-expanded", String(expanded));
-    chevron.textContent = expanded ? "▾" : "▸";
-    globalThis.dispatchEvent(new Event("resize"));
+  constructor(model: EditorModel) {
+    const mount = document.getElementById("inspector-section")!;
+    super(mount, mount, "side");
+    this.model = model;
+    this.refs = this.materialize(template);
   }
 
-  function render() {
-    const selection = model.selection;
-    meta.classList.remove("hidden");
+  render() {
+    const { inspectorMeta: meta, inspectorRow } = this.refs;
+    const selection = this.model.selection;
     meta.textContent = selection.length === 1 ? selection[0].type : selection.length ? `${selection.length} selected` : "diagram";
-    content.replaceChildren();
-    const rows = selection.length ? selectionRows(selection) : diagramRows(model);
-    for (const row of rows) {
-      const rowEl = document.createElement("div");
-      rowEl.className = "inspector-readonly-row";
-      const key = document.createElement("span");
-      key.className = "row-key";
-      key.textContent = row.key;
-      const value = document.createElement("span");
-      value.className = "inspector-readonly-value";
-      value.textContent = row.value;
-      rowEl.append(key, value);
-      content.appendChild(rowEl);
-    }
+    const rows = selection.length ? selectionRows(selection) : diagramRows(this.model);
+    inspectorRow.replaceItems(rows);
   }
-
-  toggle.addEventListener("click", () => setExpanded(!expanded));
-  return { render, isExpanded: () => expanded };
 }

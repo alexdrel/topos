@@ -8,30 +8,98 @@
   backdrop-filter: blur(8px);
   z-index: 100;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
 
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-.topbar-meta {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
+  .topbar-meta {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
 
-.case-controls {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
+  .diagram-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
 
-.case-select {
-  width: 360px;
-  min-width: 360px;
-  max-width: 360px;
+  #diagram-menu {
+    width: 360px;
+  }
+
+  .diagram-menu-btn {
+    width: 100%;
+    justify-content: space-between;
+
+    #document-name {
+      flex: 1;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .diagram-menu-content {
+    left: 0;
+    right: auto;
+    width: 100%;
+    min-width: 0;
+    max-height: 60vh;
+    overflow-y: auto;
+
+    .menu-item-btn {
+      display: flex;
+      gap: 8px;
+
+      &.group-start {
+        margin-top: 4px;
+        border-top: 1px solid var(--line);
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        padding-top: 10px;
+      }
+
+      .btn-glyph {
+        flex: 0 0 20px;
+        width: 20px;
+        text-align: center;
+      }
+    }
+  }
+
+  #theme-menu-content {
+    min-width: 160px;
+
+    .menu-item-btn {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  #font-menu-content {
+    min-width: 140px;
+
+    .menu-item-btn {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .font-option-btn {
+    font-size: 0.68rem;
+  }
+
+  .theme-color-preview {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: inline-block;
+    flex-shrink: 0;
+  }
 }

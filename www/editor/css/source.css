@@ -1,61 +1,63 @@
-#source-input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-  resize: none;
-  padding: 0;
-  margin: 0;
-  overflow: auto;
-  background: linear-gradient(180deg, var(--surface-grad-start) 0%, var(--surface-grad-end) 100%);
-  color: var(--text-edit);
-  caret-shape: auto;
-  outline: none;
-  z-index: 1;
+.source-header {
+  .caret-position {
+    flex: 0 1 auto;
+    min-width: 0;
+    font-size: 11px;
+    color: var(--subtle-text);
+    letter-spacing: 0.02em;
+    overflow: hidden;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
 }
 
-#source-input.ovr-active {
-  caret-shape: underscore;
-}
+@scope (.source-body) {
+  #source-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    resize: none;
+    padding: var(--surface-padding);
+    margin: 0;
+    overflow: auto;
+    background: linear-gradient(180deg, var(--surface-grad-start) 0%, var(--surface-grad-end) 100%);
+    color: var(--text-edit);
+    caret-shape: auto;
+    outline: none;
+    z-index: 1;
+    box-sizing: border-box;
 
-#source-input:focus {
-  outline: 1px solid color-mix(in oklch, var(--text-edit) 70%, transparent);
-  outline-offset: -2px;
-  box-shadow: none;
-}
+    &.ovr-active {
+      caret-shape: underscore;
+    }
 
-.source-pane {
-  position: absolute;
-  inset: 0;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  background: var(--surface-grad-start);
-}
+    &:focus {
+      outline: 1px solid color-mix(in oklch, var(--text-edit) 70%, transparent);
+      outline-offset: -2px;
+      box-shadow: none;
+    }
+  }
 
-.source-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: auto;
-}
+  :scope {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-grad-start);
+  }
 
-.source-editor {
-  position: relative;
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 0;
-}
-
-.source-pane #source-input {
-  padding: 10px;
-  box-sizing: border-box;
-  font-family: var(--editor-font), monospace;
-  font-size: 14px;
-  line-height: 1.35;
-}
-
-.source-glyph-pane .pane-body {
-  overflow: auto;
+  .editor {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+  }
 }

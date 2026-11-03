@@ -3,6 +3,8 @@ node_modules/
 
 # Vite cache
 .vite/
+www/editor/**/*.html.d.ts
+www/editor/**/*.html.ts
 
 # Vite build output
 dist/

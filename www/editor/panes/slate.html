@@ -1,22 +1,22 @@
-<div data-slate-part="toolbar" class="surface-toolbar slate-surface-toolbar">
-  <div class="slate-toolbar-left">
-    <h2 class="surface-title"><span class="surface-title-label">Slate</span></h2>
-    <button data-slate-part="help" class="icon-btn cheatsheet-toggle-btn" type="button" title="Keyboard Shortcuts & Gestures Help (?)">
+<header ref="{{panelToolbar}}" class="slate-header">
+  <div class="left">
+    <h2 class="surface-title">Slate</h2>
+    <button onClick="{{toggleHelp}}" class="icon-btn cheatsheet-toggle-btn" type="button" title="Keyboard Shortcuts & Gestures Help (?)">
       <span class="btn-glyph">?</span>
     </button>
   </div>
-  <div class="slate-toolbar-tools">
-    <button data-slate-part="replay" class="icon-btn" type="button" title="Replay trace">
+  <div class="tools">
+    <button onClick="{{toggleReplay}}" class="icon-btn" type="button" title="Replay trace">
       <span class="btn-glyph">🐜</span>
       <span>Replay</span>
     </button>
   </div>
-  <div data-slate-part="controls" class="surface-edit-controls">
-    <span data-slate-part="status" class="slate-status"></span>
-    <div id="edit-menu-dropdown" class="dropdown"></div>
-    <div class="node-create-actions">
-      <div id="create-menu-dropdown" class="dropdown"></div>
+  <div class="edit-controls">
+    <span ref="{{slateStatus}}" class="status"></span>
+    <div ref="{{editMenuDropdown}}" class="dropdown"></div>
+    <div class="create-actions">
+      <div ref="{{createMenuDropdown}}" class="dropdown"></div>
     </div>
   </div>
-</div>
-<div data-slate-part="canvas" id="slate-pane" class="slate-pane slate-surface surface-mono"></div>
+</header>
+<div ref="{{panelBody}}" class="slate-pane slate-surface surface-mono"></div>

@@ -24,6 +24,8 @@
     "fmt:check": "dprint check",
     "lint": "oxlint --deny-warnings src src-editor www vscode-topos/src package-topos scripts vite.config.ts",
     "check:ext": "tsc --project vscode-topos/tsconfig.json",
+    "gen:web": "praline www/editor --emit dts",
+    "precheck": "npm run gen:web",
     "check": "tsc && npm run check:ext",
     "gen:defs": "node scripts/extract-defs.ts",
     "gen:compendium": "npm run gen:defs && npm run package:build && node package-topos/dist/topos.js src/enamel/compendium/compendium.topos -o src/enamel/compendium/compendium.svg",
@@ -46,15 +48,20 @@
     "include": [
       "src/**/*.ts",
       "src-editor/**/*.ts",
+      "www/**/*.ts",
       "package-topos/*.ts"
     ]
   },
   "devDependencies": {
+    "@alexdrel/pralinejs": "^0.1.1",
+    "@alexdrel/perky": "^0.2.0",
+    "@alexdrel/jsonml-ts": "^0.6.0",
+    "happy-dom": "^21.0.4",
     "@dprint/json": "^0.25.2",
     "@dprint/markdown": "^0.26.0",
     "@dprint/typescript": "^0.96.1",
     "@oxc-node/core": "^0.1.5",
-    "@types/node": "^24.19.2",
+    "@types/node": "^26.6.5",
     "@types/vscode": "^1.140.0",
     "@vscode/vsce": "^4.0.0",
     "@xmldom/xmldom": "^0.9.12",

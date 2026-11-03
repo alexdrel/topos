@@ -1,224 +1,157 @@
-export interface LayoutPaneConfig {
-  getInspectorExpanded: () => boolean;
-  getLegendExpanded: () => boolean;
-  getEnamelExpanded: () => boolean;
-  onLayoutChange: () => void;
-}
+import { PersistedSignal } from "./signals/persisted-signal.ts";
+import type { Panel } from "./panel.ts";
+import "./css/layout.css";
 
-export interface LayoutPaneApi {
-  initialize(): void;
-  updateSidePanelState(): void;
-  refreshLayoutAfterWindowResize(): void;
-}
-
-type LayoutPrefs = {
+interface LayoutPrefs {
   sideWidth?: number;
-  inspectorRatio?: number;
-  legendRatio?: number;
-};
+  shares?: number[];
+}
 
-const LAYOUT_STORAGE_KEY = "topos-editor-layout-v1";
-const SIDE_WIDTH_MIN = 240;
-const MAIN_WIDTH_MIN = 333;
-const SIDE_SECTION_MIN = 96;
-const LAYOUT_STACK_BREAKPOINT = 760;
+function readLayout(value: unknown): LayoutPrefs {
+  const stored = value as LayoutPrefs | null;
+  const prefs: LayoutPrefs = {};
+  if (typeof stored?.sideWidth === "number" && Number.isFinite(stored.sideWidth) && stored.sideWidth > 0) prefs.sideWidth = stored.sideWidth;
+  if (Array.isArray(stored?.shares) && stored.shares.every((share) => Number.isFinite(share) && share > 0)) prefs.shares = stored.shares;
+  return prefs;
+}
 
-export function initLayoutPane(config: LayoutPaneConfig): LayoutPaneApi {
-  const workspace = document.querySelector(".workspace") as HTMLDivElement;
-  const workspaceSplitter = document.getElementById("workspace-splitter") as HTMLDivElement;
-  const sidePanel = document.querySelector(".side-panel") as HTMLDivElement;
-  const sideSplitter = document.getElementById("side-splitter") as HTMLDivElement;
-  const legendSplitter = document.getElementById("legend-splitter") as HTMLDivElement | null;
-
-  let inspectorRatioPref = 0.4;
-  let legendRatioPref = 0.2;
-  let layoutStorageReady = false;
-
-  let activeDragHandler: ((e: MouseEvent) => void) | null = null;
-
-  function loadLayoutPrefs(): LayoutPrefs {
-    try {
-      const raw = localStorage.getItem(LAYOUT_STORAGE_KEY);
-      if (!raw) return {};
-      const parsed = JSON.parse(raw) as LayoutPrefs;
-      const sideWidth = Number(parsed?.sideWidth);
-      const inspectorRatio = Number(parsed?.inspectorRatio);
-      const legendRatio = Number(parsed?.legendRatio);
-      const safe: LayoutPrefs = {};
-      if (Number.isFinite(sideWidth) && sideWidth > 0) safe.sideWidth = sideWidth;
-      if (Number.isFinite(inspectorRatio) && inspectorRatio >= 0.05 && inspectorRatio <= 0.95) safe.inspectorRatio = inspectorRatio;
-      if (Number.isFinite(legendRatio) && legendRatio >= 0.05 && legendRatio <= 0.95) safe.legendRatio = legendRatio;
-      return safe;
-    } catch {
-      return {};
+/** Distribute available height by weight, freezing panels that reach their minimum. */
+export function panelHeights(available: number, shares: number[], minimums: number[]): number[] {
+  let remaining = Math.max(
+    available,
+    minimums.reduce((sum, height) => sum + height, 0),
+  );
+  let pending = shares.map((_, index) => index);
+  const heights = shares.map(() => 0);
+  while (pending.length) {
+    const weight = pending.reduce((sum, index) => sum + shares[index], 0);
+    const limited = pending.filter((index) => (remaining * shares[index]) / weight < minimums[index]);
+    if (!limited.length) {
+      for (const index of pending) heights[index] = (remaining * shares[index]) / weight;
+      break;
     }
-  }
-
-  function saveLayoutPrefs() {
-    if (!layoutStorageReady) return;
-    const sideWidth = Math.round(sidePanel.getBoundingClientRect().width);
-    const prefs: LayoutPrefs = {
-      sideWidth,
-      inspectorRatio: inspectorRatioPref,
-      legendRatio: legendRatioPref,
-    };
-    try {
-      localStorage.setItem(LAYOUT_STORAGE_KEY, JSON.stringify(prefs));
-    } catch {
-      // Ignore
+    for (const index of limited) {
+      heights[index] = minimums[index];
+      remaining -= heights[index];
     }
+    pending = pending.filter((index) => !limited.includes(index));
+  }
+  return heights;
+}
+
+export class Layout {
+  workspace: HTMLElement;
+  sidebar: HTMLElement;
+  panels: Panel[];
+  sidePanels: Panel[];
+  shares: number[];
+  splitters: HTMLElement[];
+  observer: ResizeObserver;
+  preferences = new PersistedSignal("topos-editor-layout-v1", readLayout);
+  drag?: (event: MouseEvent) => void;
+
+  constructor(workspace: HTMLElement, sidebar: HTMLElement, mainPanels: Panel[], sidePanels: Panel[]) {
+    this.workspace = workspace;
+    this.sidebar = sidebar;
+    this.sidePanels = sidePanels;
+    this.panels = [...mainPanels, ...this.sidePanels];
+    this.shares = sidePanels.map((_, index) => this.preferences.value.shares?.[index] ?? 1);
+    this.splitters = this.sidePanels.slice(0, -1).map((panel, index) => {
+      const splitter = document.createElement("div");
+      splitter.className = "panel-splitter panel-splitter-horizontal";
+      sidebar.append(panel.toolbarMount, splitter);
+      this.bindSplitter(splitter, "ns-resize", (event) => this.startPanelDrag(index, event));
+      return splitter;
+    });
+    const last = this.sidePanels.at(-1);
+    if (last) sidebar.appendChild(last.toolbarMount);
+    this.bindSplitter(document.getElementById("workspace-splitter")!, "ew-resize", (event) => {
+      const start = event.clientX;
+      const width = sidebar.getBoundingClientRect().width;
+      return (next) => {
+        const sideWidth = this.clampWidth(width + start - next.clientX);
+        this.preferences.value = { sideWidth, shares: this.shares };
+        this.resize();
+      };
+    });
+    globalThis.addEventListener("mousemove", (event) => this.drag?.(event));
+    globalThis.addEventListener("mouseup", () => {
+      this.drag = undefined;
+      document.body.classList.remove("resizing-layout");
+      document.body.style.cursor = "";
+    });
+    globalThis.addEventListener("resize", this.resize);
+    this.observer = new ResizeObserver(this.resize);
+    this.observer.observe(workspace);
+    this.observer.observe(sidebar);
   }
 
-  function applyLength(
-    element: HTMLElement,
-    cssVar: string,
-    value: number,
-    min: number,
-    max: number,
-    totalAvailable: number,
-    saveRatio: (r: number) => void,
-  ): number {
-    const clamped = Math.round(Math.min(max, Math.max(min, value)));
-    element.style.setProperty(cssVar, `${clamped}px`);
-    if (totalAvailable > 0) {
-      saveRatio(Math.min(0.95, Math.max(0.05, clamped / totalAvailable)));
-    }
-    return clamped;
+  clampWidth(width: number) {
+    const style = getComputedStyle(this.workspace);
+    const available = this.workspace.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    return Math.max(240, Math.min(Math.max(240, available - 333 - 8), width));
   }
 
-  function applySideWidth(width: number, persist = true) {
-    const maxWidth = Math.max(SIDE_WIDTH_MIN, workspace.clientWidth - MAIN_WIDTH_MIN - (workspaceSplitter.offsetWidth || 8));
-    applyLength(workspace, "--side-width", width, SIDE_WIDTH_MIN, maxWidth, 0, () => {});
-    config.onLayoutChange();
-    if (persist) saveLayoutPrefs();
-  }
-
-  function applyInspectorHeight(height: number, decreaseLegend = false, persist = true, startLegendHeight?: number, startInspectorHeight?: number) {
-    const total = sidePanel.clientHeight;
-    const splitH = sideSplitter.offsetHeight || 8;
-    const maxH = Math.max(SIDE_SECTION_MIN, total - splitH - SIDE_SECTION_MIN);
-
-    const clamped = applyLength(
-      sidePanel,
-      "--inspector-size",
-      height,
-      SIDE_SECTION_MIN,
-      maxH,
-      Math.max(1, total - splitH * 2),
-      (r) => inspectorRatioPref = r,
-    );
-
-    if (decreaseLegend && config.getLegendExpanded() && startLegendHeight !== undefined && startInspectorHeight !== undefined) {
-      const diff = clamped - startInspectorHeight;
-      applyLegendHeight(Math.max(SIDE_SECTION_MIN, startLegendHeight - diff), false);
-    }
-
-    config.onLayoutChange();
-    if (persist) saveLayoutPrefs();
-  }
-
-  function applyLegendHeight(height: number, persist = true) {
-    const total = sidePanel.clientHeight;
-    const splitH = (sideSplitter.offsetHeight || 8) * 2;
-    const topSection = document.getElementById("inspector-section")!;
-    const inspectorH = topSection?.getBoundingClientRect().height || SIDE_SECTION_MIN;
-    const maxH = Math.max(SIDE_SECTION_MIN, total - splitH - inspectorH - SIDE_SECTION_MIN);
-
-    applyLength(sidePanel, "--legend-size", height, SIDE_SECTION_MIN, maxH, Math.max(1, total - splitH), (r) => legendRatioPref = r);
-    config.onLayoutChange();
-    if (persist) saveLayoutPrefs();
-  }
-
-  function bindSplitter(
-    splitter: HTMLElement | null,
-    cursor: string,
-    onDragStart: (e: MouseEvent) => (e: MouseEvent) => void,
-  ) {
-    if (!splitter) return;
+  bindSplitter(splitter: HTMLElement, cursor: string, start: (event: MouseEvent) => ((event: MouseEvent) => void) | undefined) {
     splitter.addEventListener("mousedown", (event) => {
-      if (event.button !== 0) return;
-      if (globalThis.matchMedia(`(max-width: ${LAYOUT_STACK_BREAKPOINT}px)`).matches) return;
-
-      activeDragHandler = onDragStart(event);
+      if (event.button !== 0 || matchMedia("(max-width: 760px)").matches) return;
+      this.drag = start(event);
+      if (!this.drag) return;
       document.body.classList.add("resizing-layout");
       document.body.style.cursor = cursor;
       event.preventDefault();
     });
   }
 
-  bindSplitter(workspaceSplitter, "ew-resize", (e) => {
-    const startX = e.clientX;
-    const startW = sidePanel.getBoundingClientRect().width;
-    return (ev) => applySideWidth(startW + (startX - ev.clientX));
-  });
-
-  bindSplitter(sideSplitter, "ns-resize", (e) => {
-    const startY = e.clientY;
-    const topSection = document.getElementById("inspector-section")!;
-    const startInsp = topSection?.getBoundingClientRect().height || SIDE_SECTION_MIN;
-    const startLeg = document.getElementById("legend-section")?.getBoundingClientRect().height || 0;
-    return (ev) => applyInspectorHeight(startInsp + (ev.clientY - startY), true, true, startLeg, startInsp);
-  });
-
-  bindSplitter(legendSplitter, "ns-resize", (e) => {
-    const startY = e.clientY;
-    const startLeg = document.getElementById("legend-section")?.getBoundingClientRect().height || SIDE_SECTION_MIN;
-    return (ev) => applyLegendHeight(startLeg + (ev.clientY - startY));
-  });
-
-  globalThis.addEventListener("mousemove", (event) => {
-    if (activeDragHandler) activeDragHandler(event);
-  });
-
-  globalThis.addEventListener("mouseup", () => {
-    activeDragHandler = null;
-    document.body.classList.remove("resizing-layout");
-    document.body.style.cursor = "";
-  });
-
-  function updateSidePanelState() {
-    sidePanel.classList.toggle("inspector-collapsed", !config.getInspectorExpanded());
-    sidePanel.classList.toggle("legend-collapsed", !config.getLegendExpanded());
-    sidePanel.classList.toggle("enamel-collapsed", !config.getEnamelExpanded());
-    config.onLayoutChange();
+  startPanelDrag(index: number, event: MouseEvent) {
+    const panel = this.sidePanels[index];
+    const nextIndex = this.sidePanels.findIndex((next, i) => i > index && next.visible && next.expanded);
+    if (!panel.visible || !panel.expanded || nextIndex < 0) return;
+    const next = this.sidePanels[nextIndex];
+    const height = panel.toolbarMount.getBoundingClientRect().height;
+    const total = height + next.toolbarMount.getBoundingClientRect().height;
+    const expanded = this.sidePanels.filter((item) => item.visible && item.expanded);
+    const activeWeight = expanded.reduce((sum, item) => sum + this.shares[this.sidePanels.indexOf(item)], 0);
+    const activeHeight = expanded.reduce((sum, item) => sum + item.toolbarMount.getBoundingClientRect().height, 0);
+    const shares = [...this.shares];
+    for (const item of expanded) shares[this.sidePanels.indexOf(item)] = (activeWeight * item.toolbarMount.getBoundingClientRect().height) / activeHeight;
+    const weight = shares[index] + shares[nextIndex];
+    const minimum = Math.min(96, total / 2);
+    const start = event.clientY;
+    return (move: MouseEvent) => {
+      const size = Math.max(minimum, Math.min(total - minimum, height + move.clientY - start));
+      this.shares = [...shares];
+      this.shares[index] = (weight * size) / total;
+      this.shares[nextIndex] = weight - this.shares[index];
+      this.preferences.value = { ...this.preferences.value, shares: [...this.shares] };
+      this.resize();
+    };
   }
 
-  function initialize() {
-    const prefs = loadLayoutPrefs();
-    if (prefs.inspectorRatio !== undefined) inspectorRatioPref = prefs.inspectorRatio;
-    if (prefs.legendRatio !== undefined) legendRatioPref = prefs.legendRatio;
-    applySideWidth(prefs.sideWidth ?? (sidePanel.getBoundingClientRect().width || 340), false);
-    if (!sidePanel.style.getPropertyValue("--inspector-size")) {
-      const splitterHeight = (sideSplitter?.offsetHeight || 8) * 2;
-      const available = Math.max(0, sidePanel.clientHeight - splitterHeight);
-      if (available > 0) {
-        applyInspectorHeight(available * inspectorRatioPref, false, false);
-        applyLegendHeight(available * legendRatioPref, false);
-      }
-    }
-    layoutStorageReady = true;
-    saveLayoutPrefs();
-    updateSidePanelState();
-  }
-
-  function refreshLayoutAfterWindowResize() {
-    updateSidePanelState();
-    applySideWidth(sidePanel.getBoundingClientRect().width, false);
-    const splitterHeight = (sideSplitter?.offsetHeight || 8) * 2;
-    const available = Math.max(0, sidePanel.clientHeight - splitterHeight);
-    if (available > 0) {
-      applyInspectorHeight(available * inspectorRatioPref, false, false);
-      applyLegendHeight(available * legendRatioPref, false);
-    }
-  }
-
-  globalThis.addEventListener("resize", () => {
-    refreshLayoutAfterWindowResize();
-  });
-
-  return {
-    initialize,
-    updateSidePanelState,
-    refreshLayoutAfterWindowResize,
+  resize = () => {
+    this.workspace.style.setProperty("--side-width", `${this.clampWidth(this.preferences.value.sideWidth ?? 340)}px`);
+    const visible = this.sidePanels.filter((panel) => panel.visible);
+    for (const panel of visible) panel.collapsible = visible.length > 1;
+    const expanded = this.sidePanels.filter((panel) => panel.visible && panel.expanded);
+    this.splitters.forEach((splitter, index) => {
+      const panel = this.sidePanels[index];
+      const active = panel.visible && panel.expanded && panel !== expanded.at(-1);
+      splitter.hidden = !active;
+    });
+    const style = getComputedStyle(this.sidebar);
+    const gaps = this.splitters.reduce((sum, splitter) => sum + splitter.getBoundingClientRect().height, 0);
+    const collapsed = this.sidePanels.filter((panel) => panel.visible && !panel.expanded);
+    for (const panel of collapsed) panel.toolbarMount.style.flex = "0 0 auto";
+    const headers = collapsed.reduce((sum, panel) => sum + panel.toolbarMount.getBoundingClientRect().height, 0);
+    const available = this.sidebar.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - gaps - headers;
+    const minimums = expanded.map((panel) =>
+      Math.max(96, panel.toolbar.getBoundingClientRect().height + panel.toolbarMount.offsetHeight - panel.toolbarMount.clientHeight)
+    );
+    const shares = expanded.map((panel) => this.shares[this.sidePanels.indexOf(panel)]);
+    const heights = panelHeights(available, shares, minimums);
+    expanded.forEach((panel, index) => {
+      panel.toolbarMount.style.flex = `0 0 ${heights[index]}px`;
+    });
+    for (const panel of this.panels) if (panel.visible && panel.expanded) panel.onResize?.();
   };
 }

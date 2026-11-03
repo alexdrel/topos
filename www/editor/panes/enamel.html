@@ -1,15 +1,14 @@
-<div data-enamel-part="toolbar">
-  <div class="pane-head-toggle side-only" aria-expanded="true"><span>Preview</span></div>
-  <h2 class="surface-title main-only"><span class="surface-title-label">SVG View</span></h2>
-  <div data-enamel-part="controls">
-    <button class="icon-btn enamel-zoom-btn btn-zoom-out" type="button" title="Zoom Out">−</button>
-    <button class="icon-btn enamel-zoom-btn btn-zoom-reset" type="button" title="Reset Zoom">100%</button>
-    <button class="icon-btn enamel-zoom-btn btn-zoom-in" type="button" title="Zoom In">+</button>
-    <button class="icon-btn enamel-paper-btn btn-paper" type="button" title="Preview background">White</button>
-    <button class="icon-btn toggle-btn enamel-override-btn btn-override" type="button" title="Override diagram appearance">!</button>
-    <span class="control-separator main-only">|</span>
-    <div id="export-menu-dropdown" class="dropdown main-only"></div>
+<header ref="{{panelToolbar}}" class="enamel-header">
+  <div data-panel-mode="side" class="pane-head-toggle">Preview</div>
+  <h2 data-panel-mode="main" class="surface-title">SVG View</h2>
+  <div class="controls">
+    <button ref="{{zoom.out}}" onClick="{{zoomOut}}" class="icon-btn zoom-btn" type="button" title="Zoom Out">−</button>
+    <button ref="{{zoom.reset}}" onClick="{{resetZoom}}" class="icon-btn zoom-btn zoom-reset-btn" type="button" title="Toggle fit / actual size">100%</button>
+    <button ref="{{zoom.in}}" onClick="{{zoomIn}}" class="icon-btn zoom-btn" type="button" title="Zoom In">+</button>
+    <button ref="{{paperBtn}}" onClick="{{cyclePaper}}" class="icon-btn paper-btn" type="button" title="Enamel background (click to cycle)"></button>
+    <button ref="{{overrideBtn}}" onClick="{{toggleOverride}}" class="icon-btn toggle-btn override-btn" type="button" title="Override">!</button>
+    <span data-panel-mode="main" class="control-separator">|</span>
+    <div data-panel-mode="main" ref="{{exportMenuDropdown}}" class="dropdown"></div>
   </div>
-  <span class="pane-chevron side-only">▾</span>
-</div>
-<div data-enamel-part="pane" class="enamel-pane"></div>
+</header>
+<div ref="{{panelBody}}" class="enamel-pane"></div>

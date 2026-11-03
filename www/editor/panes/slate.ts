@@ -1,187 +1,163 @@
-import editMenuHtml from "./edit-menu.html?raw";
-import createMenuHtml from "./create-menu.html?raw";
-import slateHtml from "./slate.html?raw";
-
+import { PersistedSignal } from "../signals/persisted-signal.ts";
+import editMenuTemplate, { type Params as EditParams, type Refs as EditRefs } from "./edit-menu.html.js";
+import createMenuTemplate from "./create-menu.html.js";
+import slateTemplate, { type Params } from "./slate.html.js";
+import "../css/slate.css";
+import { appendChild, materialize } from "@alexdrel/pralinejs";
+import { Panel } from "../panel.ts";
 import { Slate } from "../../../src-editor/slate/slate.ts";
 import type { EditorModel } from "../../../src-editor/model/model.ts";
-import { initDropdownMenu, isTypingTarget } from "../dom-utils.ts";
-import { initCheatsheet } from "./cheatsheet.ts";
+import { cancelInteraction } from "../app-context.ts";
+import { isTypingTarget } from "../dom-utils.ts";
+import { type DropdownMenu, initDropdownMenu } from "../menus.ts";
 import type { EditorHistory } from "../../../src-editor/model/history.ts";
 import { formatSlateStatus } from "../../../src-editor/slate/status.ts";
 
-const RULER_GRID_STORAGE_KEY = "topos-editor-ruler-grid";
+const rulerGrid = new PersistedSignal("topos-editor-ruler-grid", Boolean);
 
-interface SlatePaneApi {
-  focus(): void;
-  refresh(): void;
-  cancel(): void;
-  setVisible(visible: boolean): void;
-}
+export class SlatePane extends Panel implements Partial<Params>, Partial<EditParams> {
+  model: EditorModel;
+  history: EditorHistory;
+  slate: Slate;
+  editRefs: EditRefs;
+  createMenu: DropdownMenu;
+  editMenu: DropdownMenu;
+  toggleCheatsheet!: (visible?: boolean) => void;
+  focus: () => void;
 
-export function initSlatePane(model: EditorModel, history: EditorHistory): SlatePaneApi {
-  const template = document.createElement("template");
-  template.innerHTML = slateHtml;
-  const toolbar = template.content.querySelector<HTMLElement>("[data-slate-part=toolbar]")!;
-  const controls = template.content.querySelector<HTMLElement>("[data-slate-part=controls]")!;
-  const status = template.content.querySelector<HTMLElement>("[data-slate-part=status]")!;
-  const help = template.content.querySelector<HTMLButtonElement>("[data-slate-part=help]")!;
-  const replay = template.content.querySelector<HTMLButtonElement>("[data-slate-part=replay]")!;
-  const canvas = template.content.querySelector<HTMLDivElement>("[data-slate-part=canvas]")!;
-  document.getElementById("surface-toolbar-mount")!.appendChild(toolbar);
-  document.getElementById("slate-pane-mount")!.appendChild(canvas);
+  constructor(model: EditorModel, history: EditorHistory) {
+    super(document.getElementById("surface-toolbar-mount")!, document.getElementById("surface-stack")!, "main");
+    this.model = model;
+    this.history = history;
+    const refs = this.materialize(slateTemplate, { toggleHelp: () => this.toggleCheatsheet() });
 
-  function element<T extends HTMLElement>(id: string): T {
-    return controls.querySelector<T>(`#${id}`)!;
-  }
-
-  element("edit-menu-dropdown").innerHTML = editMenuHtml;
-  element("create-menu-dropdown").innerHTML = createMenuHtml;
-
-  let visible = true;
-  const slate = new Slate({
-    container: canvas,
-    model,
-    hideChrome: true,
-    nativeClipboard: true,
-    rulerGridVisible: localStorage.getItem(RULER_GRID_STORAGE_KEY) === "true",
-    onMessage: (message) => {
-      switch (message.type) {
-        case "statusUpdate":
-          status.textContent = formatSlateStatus(message.status);
-          break;
-        case "settingsUpdate":
-          if (message.settings.rulerGridVisible !== undefined) {
-            localStorage.setItem(RULER_GRID_STORAGE_KEY, String(message.settings.rulerGridVisible));
-          }
-          break;
-      }
-    },
-  });
-
-  const createMenu = initDropdownMenu(
-    element("btn-create-menu"),
-    element("create-menu-content"),
-    () => editMenu.close(),
-  );
-  const editMenu = initDropdownMenu(
-    element("btn-edit-menu"),
-    element("edit-menu-content"),
-    () => createMenu.close(),
-  );
-  const cheatsheet = initCheatsheet();
-  help.addEventListener("click", () => {
-    slate.closePopups();
-    cheatsheet.toggle();
-  });
-  replay.addEventListener("click", () => {
-    cheatsheet.hide();
-    slate.toggleReplay();
-  });
-
-  function cancel() {
-    slate.cancelInteraction();
-  }
-
-  function refreshActions() {
-    const hasSelection = model.selection.length > 0;
-    for (const id of ["btn-cut", "btn-copy", "btn-delete", "btn-duplicate-right", "btn-duplicate-down"]) {
-      element<HTMLButtonElement>(id).disabled = !hasSelection;
-    }
-    element<HTMLButtonElement>("btn-undo").disabled = !history.canUndo;
-    element<HTMLButtonElement>("btn-redo").disabled = !history.canRedo;
-  }
-
-  function bindCreateButton(id: string, kind: "box" | "line" | "hub" | "text") {
-    element(id).addEventListener("click", () => {
-      slate.startDrawing(kind);
-      createMenu.close();
-      refreshActions();
+    const edit = materialize(editMenuTemplate, [
+      {
+        duplicateRight: () => model.duplicateSelection(1, 0),
+        duplicateDown: () => model.duplicateSelection(0, 1),
+      },
+      this,
+    ]);
+    this.editRefs = edit.refs;
+    refs.editMenuDropdown.append(edit.fragment);
+    appendChild(refs.createMenuDropdown, createMenuTemplate, {
+      createBox: () => this.startDrawing("box"),
+      createText: () => this.startDrawing("text"),
+      createLine: () => this.startDrawing("line"),
+      createHub: () => this.startDrawing("hub"),
     });
+
+    this.slate = new Slate({
+      container: refs.panelBody,
+      model,
+      hideChrome: true,
+      nativeClipboard: true,
+      rulerGridVisible: rulerGrid.value,
+      onMessage: (message) => {
+        switch (message.type) {
+          case "statusUpdate":
+            refs.slateStatus.textContent = formatSlateStatus(message.status);
+            break;
+          case "settingsUpdate":
+            if (message.settings.rulerGridVisible !== undefined) rulerGrid.value = message.settings.rulerGridVisible;
+            break;
+        }
+      },
+    });
+    this.focus = this.slate.focus.bind(this.slate);
+    this.onResize = this.slate.refresh.bind(this.slate);
+    rulerGrid.subscribe((visible) => this.slate.setRulerGridVisible(visible));
+    this.createMenu = initDropdownMenu(refs.createMenuDropdown);
+    this.editMenu = initDropdownMenu(refs.editMenuDropdown);
+    cancelInteraction.subscribe((initiator) => {
+      if (initiator !== this.startDrawing) this.slate.cancelInteraction();
+      if (initiator !== this.toggleReplay) this.slate.closePopups();
+    });
+    model.subscribe(this.refreshActions);
+    globalThis.addEventListener("keydown", this.onKeyDown);
   }
 
-  bindCreateButton("btn-create-box", "box");
-  bindCreateButton("btn-create-text", "text");
-  bindCreateButton("btn-create-line", "line");
-  bindCreateButton("btn-create-hub", "hub");
+  toggleReplay = () => {
+    cancelInteraction.value = this.toggleReplay;
+    this.slate.toggleReplay();
+  };
 
-  function clipboardError(operation: string, error: unknown) {
-    console.error(error);
-    alert(`${operation} failed. Try the keyboard shortcut.`);
+  refreshActions = () => {
+    const hasSelection = this.model.selection.length > 0;
+    const refs = this.editRefs;
+    for (const button of [refs.cut, refs.copy, refs.delete, refs.duplicateRight, refs.duplicateDown]) {
+      button.disabled = !hasSelection;
+    }
+    refs.undo.disabled = !this.history.canUndo;
+    refs.redo.disabled = !this.history.canRedo;
+  };
+
+  startDrawing = (kind: "box" | "line" | "hub" | "text") => {
+    cancelInteraction.value = this.startDrawing;
+    this.slate.startDrawing(kind);
+    this.refreshActions();
+  };
+
+  async copy() {
+    try {
+      await navigator.clipboard.writeText(this.model.getClipboardText());
+    } catch (error) {
+      clipboardError("Copy", error);
+    }
   }
 
-  function pasteText(text: string): void {
-    model.pasteText(text);
+  async cut() {
+    const text = this.model.cutClipboardText();
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      clipboardError("Cut", error);
+    }
   }
 
-  element("btn-undo").addEventListener("click", () => history.undo());
-  element("btn-redo").addEventListener("click", () => history.redo());
-  element("btn-delete").addEventListener("click", () => model.deleteSelected());
-  element("btn-duplicate-right").addEventListener("click", () => model.duplicateSelection(1, 0));
-  element("btn-duplicate-down").addEventListener("click", () => model.duplicateSelection(0, 1));
-  element("btn-copy").addEventListener("click", () => {
-    void navigator.clipboard.writeText(model.getClipboardText()).catch((error) => clipboardError("Copy", error));
-  });
-  element("btn-cut").addEventListener("click", () => {
-    const text = model.cutClipboardText();
-    if (text) void navigator.clipboard.writeText(text).catch((error) => clipboardError("Cut", error));
-  });
-  element("btn-paste").addEventListener("click", () => {
-    void navigator.clipboard.readText().then(pasteText).catch((error) => clipboardError("Paste", error));
-  });
+  async paste() {
+    try {
+      this.model.pasteText(await navigator.clipboard.readText());
+    } catch (error) {
+      clipboardError("Paste", error);
+    }
+  }
 
-  model.subscribe(refreshActions);
-  globalThis.addEventListener("keydown", onKeyDown);
-
-  function onKeyDown(event: KeyboardEvent) {
-    if (!visible) return;
+  onKeyDown = (event: KeyboardEvent) => {
+    if (!this.visible) return;
     const key = event.key.toLowerCase();
     const mod = event.metaKey || event.ctrlKey;
-
     if (mod && event.altKey && event.shiftKey && event.code === "KeyR") {
       event.preventDefault();
-      slate.toggleReplay();
+      this.toggleReplay();
       return;
     }
-
     if (event.key === "?") {
       if (!isTypingTarget(event.target)) {
         event.preventDefault();
-        cheatsheet.toggle();
+        this.toggleCheatsheet();
       }
       return;
     }
-    if (event.key === "Escape") cheatsheet.hide();
     if (isTypingTarget(event.target)) return;
-
     if (!event.defaultPrevented && !mod && !event.altKey) {
       const drawingKind = ({ b: "box", t: "text", l: "line", h: "hub" } as const)[key as "b" | "t" | "l" | "h"];
       if (drawingKind) {
         event.preventDefault();
-        slate.startDrawing(drawingKind);
-        refreshActions();
+        this.startDrawing(drawingKind);
         return;
       }
     }
-
     if (event.defaultPrevented || !mod) return;
-    if (key === "z" && !event.shiftKey) history.undo();
-    else if (key === "y" || (key === "z" && event.shiftKey)) history.redo();
+    if (key === "z" && !event.shiftKey) this.history.undo();
+    else if (key === "y" || (key === "z" && event.shiftKey)) this.history.redo();
     else return;
     event.preventDefault();
-  }
-
-  return {
-    focus: slate.focus.bind(slate),
-    refresh: slate.refresh.bind(slate),
-    cancel,
-    setVisible(next) {
-      visible = next;
-      canvas.classList.toggle("hidden", !visible);
-      toolbar.classList.toggle("hidden", !visible);
-      if (!visible) {
-        cancel();
-        cheatsheet.hide();
-      }
-    },
   };
+}
+
+function clipboardError(operation: string, error: unknown) {
+  console.error(error);
+  alert(`${operation} failed. Try the keyboard shortcut.`);
 }
